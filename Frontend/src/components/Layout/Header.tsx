@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import { Menu, LogIn, UserPlus, User, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUI } from "../../contexts/UIContext";
@@ -11,9 +11,16 @@ import { CartDrawer } from "../cart/CartDrawer";
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
-  const { setShowAuthModal, toggleSidebar } = useUI();
+  const { setShowAuthModal, toggleSidebar, setHeaderHeight } = useUI();
   const [cartOpen, setCartOpen] = React.useState(false);
   const navigate = useNavigate();
+  const headerRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, []);
 
   const handleLogin = () => {
     setShowAuthModal("login");
@@ -248,7 +255,8 @@ export const Header: React.FC = () => {
           )}
 
           {/* Dropdown Menu */}
-          <div className="relative z-[99999] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 relative z-[99999] overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-50/50 to-transparent dark:from-gray-800/50 dark:to-transparent" />
             {/* User Info Section */}
             <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600">
               <div className="flex items-center space-x-4">
@@ -408,66 +416,69 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-orange-700 to-red-700 dark:from-gray-800 dark:to-gray-700 shadow-lg transition-all duration-300 overflow-hidden">
-      <div className="flex items-center justify-between px-2 sm:px-4 py-3 min-w-0">
-        {/* Left side - Menu button and Logo */}
-        <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:rotate-90 transform"
-            aria-label="Toggle menu">
-            <Menu size={24} />
-          </button>
+    <header
+      ref={headerRef}
+      className="fixed top-0 left-0 right-0 z-30 transition-all duration-300 bg-gradient-to-r from-orange-600 to-red-600 dark:from-gray-800 dark:to-black shadow-lg border-b border-white/10">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:rotate-90 transform"
+              aria-label="Toggle menu">
+              <Menu size={24} />
+            </button>
 
-          <div className="flex items-center">
-            <h1 className="text-white text-lg sm:text-2xl font-bold tracking-wider drop-shadow-lg truncate">
-              {BRANDING.name}
-            </h1>
+            <div className="flex items-center">
+              <h1 className="text-white text-lg sm:text-2xl font-bold tracking-wider drop-shadow-lg truncate">
+                {BRANDING.name}
+              </h1>
+            </div>
+          </div>
+
+          {/* Center - Search Bar (hidden on very small screens) */}
+          <div className="hidden sm:flex flex-1 max-w-md mx-4">
+            <SearchBar />
+          </div>
+
+          {/* Right side - Auth and Theme toggle */}
+          <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
+            <CartIcon onClick={() => setCartOpen(true)} />
+            {isAuthenticated ? (
+              <UserMenu />
+            ) : (
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <button
+                  onClick={handleLogin}
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform"
+                  aria-label="Login">
+                  <LogIn size={18} />
+                  <span className="hidden sm:inline text-sm font-medium">
+                    Login
+                  </span>
+                </button>
+                <button
+                  onClick={handleSignup}
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm"
+                  aria-label="Sign Up">
+                  <UserPlus size={18} />
+                  <span className="hidden sm:inline text-sm font-medium">
+                    Sign Up
+                  </span>
+                </button>
+              </div>
+            )}
+            <ThemeToggle />
           </div>
         </div>
 
-        {/* Center - Search Bar (hidden on very small screens) */}
-        <div className="hidden sm:flex flex-1 max-w-md mx-4">
+        {/* Mobile Search Bar (shown below header on small screens) */}
+        <div className="sm:hidden px-2 pb-3">
           <SearchBar />
         </div>
 
-        {/* Right side - Auth and Theme toggle */}
-        <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
-          <CartIcon onClick={() => setCartOpen(true)} />
-          {isAuthenticated ? (
-            <UserMenu />
-          ) : (
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <button
-                onClick={handleLogin}
-                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform"
-                aria-label="Login">
-                <LogIn size={18} />
-                <span className="hidden sm:inline text-sm font-medium">
-                  Login
-                </span>
-              </button>
-              <button
-                onClick={handleSignup}
-                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm"
-                aria-label="Sign Up">
-                <UserPlus size={18} />
-                <span className="hidden sm:inline text-sm font-medium">
-                  Sign Up
-                </span>
-              </button>
-            </div>
-          )}
-          <ThemeToggle />
-        </div>
+        <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       </div>
-
-      {/* Mobile Search Bar (shown below header on small screens) */}
-      <div className="sm:hidden px-2 pb-3">
-        <SearchBar />
-      </div>
-
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 };
