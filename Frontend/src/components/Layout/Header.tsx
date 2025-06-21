@@ -418,7 +418,7 @@ export const Header: React.FC = () => {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-30 transition-all duration-300 bg-gradient-to-r from-orange-600 to-red-600 dark:from-gray-800 dark:to-black shadow-lg border-b border-white/10">
+      className="fixed top-0 left-0 right-0 z-30 transition-all duration-300 bg-gradient-to-r from-orange-700 to-red-700 dark:from-gray-800 dark:to-gray-700 shadow-lg border-b border-white/10">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex items-center space-x-2 sm:space-x-4">
