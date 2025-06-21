@@ -107,6 +107,7 @@ export const Home: React.FC = () => {
           borderBottom: 1,
           borderColor: "divider",
           py: 2,
+          mt: 4,
         }}>
         <Container maxWidth="lg">
           <Box
