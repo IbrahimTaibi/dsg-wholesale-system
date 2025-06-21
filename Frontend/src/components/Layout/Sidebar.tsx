@@ -1,7 +1,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useUI } from "../../contexts/UIContext";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { MENU_ITEMS } from "../../config/constants";
 import { BRANDING } from "../../config/branding";
