@@ -8,7 +8,7 @@ import { Layout } from "./components";
 import { AuthModal } from "./components/auth/AuthModal";
 import { AppRoutes } from "./routes/AppRoutes";
 import { getTheme } from "./config/theme";
-import { useAuth } from "./contexts/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 
 const AppContent: React.FC = () => {
   const { loading } = useAuth();
