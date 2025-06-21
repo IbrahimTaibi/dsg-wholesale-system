@@ -16,6 +16,9 @@ const mongoose = require("mongoose");
 
 const app = express();
 
+// Trust proxy for rate limiting behind reverse proxy (Render)
+app.set("trust proxy", 1);
+
 // Connect to Database
 connectDB();
 
