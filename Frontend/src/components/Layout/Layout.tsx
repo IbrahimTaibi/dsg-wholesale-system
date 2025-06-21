@@ -13,7 +13,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Sidebar />
 
       {/* Main content area - always full width, sidebar overlays on top when open */}
-      <main className="transition-all duration-300 pt-16 md:pt-20">
+      <main className="transition-all duration-300 pt-24 md:pt-20">
         {children}
       </main>
     </div>
