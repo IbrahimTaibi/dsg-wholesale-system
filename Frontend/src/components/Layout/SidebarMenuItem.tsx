@@ -36,12 +36,12 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
     <button
       onClick={handleClick}
       className={`
-        w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left
+        w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-left
         transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
         ${
           isActive
-            ? "bg-white/25 text-white shadow-xl transform scale-105 border border-white/30"
-            : "text-white/85 hover:text-white hover:bg-white/15 hover:transform hover:scale-102 border border-transparent hover:border-white/20"
+            ? "bg-white/20 text-white shadow-lg transform scale-102 border border-white/25"
+            : "text-white/80 hover:text-white hover:bg-white/10 hover:transform hover:scale-100 border border-transparent hover:border-white/15"
         }
       `}
       aria-label={`Navigate to ${item.text}`}>
@@ -51,20 +51,20 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
       )}
 
       {/* Content */}
-      <div className="relative z-10 flex items-center gap-4 w-full">
+      <div className="relative z-10 flex items-center gap-3 w-full">
         {/* Icon container with enhanced styling */}
         <div
           className={`
-          p-2.5 rounded-xl transition-all duration-300 relative
+          p-2 rounded-lg transition-all duration-300 relative
           ${
             isActive
-              ? "bg-white/20 shadow-lg border border-white/30"
-              : "bg-white/10 group-hover:bg-white/20 border border-white/10 group-hover:border-white/25"
+              ? "bg-white/15 shadow-md border border-white/20"
+              : "bg-white/5 group-hover:bg-white/10 border border-white/5 group-hover:border-white/10"
           }
         `}>
           <IconComponent
-            size={20}
-            strokeWidth={2.5}
+            size={18}
+            strokeWidth={2}
             className={`
               transition-all duration-300 drop-shadow-sm
               ${
@@ -90,11 +90,11 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
 
         <span
           className={`
-          font-semibold text-base transition-all duration-300 tracking-wide
+          font-medium text-sm transition-all duration-300 tracking-normal
           ${
             isActive
               ? "text-white drop-shadow-sm"
-              : "text-white/90 group-hover:text-white"
+              : "text-white/85 group-hover:text-white"
           }
         `}>
           {item.text}
@@ -104,8 +104,8 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
       {/* Active indicator with enhanced styling */}
       {isActive && (
         <>
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1.5 h-10 bg-white rounded-l-full shadow-lg" />
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-6 bg-white/30 rounded-l-full blur-sm" />
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-white rounded-l-full shadow-md" />
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-5 bg-white/25 rounded-l-full blur-sm" />
         </>
       )}
 
