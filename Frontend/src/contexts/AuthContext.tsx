@@ -1,14 +1,8 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  ReactNode,
-  useContext,
-} from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { User, AuthFormData } from "../types";
 import { apiService } from "../config/api";
 
-interface AuthContextType {
+export interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   login: (credentials: AuthFormData) => Promise<boolean>;
@@ -17,7 +11,7 @@ interface AuthContextType {
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -131,12 +125,4 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };

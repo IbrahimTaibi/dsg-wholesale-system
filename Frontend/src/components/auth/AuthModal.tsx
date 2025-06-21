@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, Eye, EyeOff, LogIn, UserPlus, Loader2 } from "lucide-react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useUI } from "../../contexts/UIContext";
 import { AuthFormData } from "../../types";
 

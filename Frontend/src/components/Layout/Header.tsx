@@ -2,7 +2,7 @@ import React from "react";
 import { Menu, LogIn, UserPlus, User, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUI } from "../../contexts/UIContext";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { SearchBar } from "../ui/SearchBar";
 import { BRANDING } from "../../config/branding";
