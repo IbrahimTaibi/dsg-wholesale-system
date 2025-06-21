@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { X, Eye, EyeOff, LogIn, UserPlus, Loader2 } from "lucide-react";
-import { useAppState } from "../../hooks";
+import { useAuth } from "../../contexts/AuthContext";
+import { useUI } from "../../contexts/UIContext";
 import { AuthFormData } from "../../types";
 
 export const AuthModal: React.FC = () => {
-  const { showAuthModal, setShowAuthModal, login, signup } = useAppState();
+  const { login, signup } = useAuth();
+  const { showAuthModal, setShowAuthModal } = useUI();
   const [formData, setFormData] = useState<AuthFormData>({
     phone: "",
     password: "",
@@ -19,6 +21,7 @@ export const AuthModal: React.FC = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!showAuthModal) return null;
 
@@ -27,11 +30,22 @@ export const AuthModal: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
-      await (isLogin ? login(formData) : signup(formData));
+      const success = await (isLogin ? login(formData) : signup(formData));
+      if (success) {
+        closeModal();
+      } else {
+        setError(
+          isLogin
+            ? "Invalid phone number or password"
+            : "Failed to create account. Please try again.",
+        );
+      }
     } catch (error) {
       console.error(error);
+      setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +73,7 @@ export const AuthModal: React.FC = () => {
 
   const closeModal = () => {
     setShowAuthModal(null);
+    setError(null);
     setFormData({
       phone: "",
       password: "",
@@ -75,6 +90,7 @@ export const AuthModal: React.FC = () => {
 
   const switchMode = () => {
     setShowAuthModal(isLogin ? "signup" : "login");
+    setError(null);
   };
 
   return (
@@ -98,6 +114,11 @@ export const AuthModal: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+            </div>
+          )}
           {!isLogin && (
             <>
               <div>

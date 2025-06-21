@@ -3,12 +3,19 @@ const Product = require("../models/Product");
 const fs = require("fs").promises;
 const path = require("path");
 
-// Get all products
+// Get all products with optimized queries for M0 cluster
 const getAllProducts = async (req, res, next) => {
   try {
-    const { category, available, search, page = 1, limit = 10 } = req.query;
+    const {
+      category,
+      available,
+      search,
+      page = 1,
+      limit = 20,
+      sort = "createdAt",
+    } = req.query;
 
-    // Build query
+    // Build query with optimized patterns
     let query = {};
 
     if (category) {
@@ -19,32 +26,85 @@ const getAllProducts = async (req, res, next) => {
       query.isAvailable = available === "true";
     }
 
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ];
-    }
-
-    // For regular users, only show available products
-    if (req.user.role !== "admin") {
+    // For non-admin users, only show available products
+    // If a user is logged in and is an admin, they can see all products
+    const isAdmin = req.user && req.user.role === "admin";
+    if (!isAdmin) {
       query.isAvailable = true;
     }
 
-    const products = await Product.find(query)
-      .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
+    // Optimize search queries
+    if (search) {
+      // Use text search if available, otherwise use regex
+      if (search.length > 2) {
+        query.$text = { $search: search };
+      } else {
+        query.$or = [
+          { name: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+        ];
+      }
+    }
 
-    const total = await Product.countDocuments(query);
+    // Optimize pagination
+    const pageNum = parseInt(page);
+    const limitNum = Math.min(parseInt(limit), 50); // Cap at 50 items per page
+    const skip = (pageNum - 1) * limitNum;
+
+    // Use projection to only fetch needed fields
+    const projection = {
+      name: 1,
+      category: 1,
+      photo: 1,
+      price: 1,
+      stock: 1,
+      description: 1,
+      isAvailable: 1,
+      createdAt: 1,
+    };
+
+    // Optimize sorting
+    let sortOption = {};
+    switch (sort) {
+      case "price":
+        sortOption = { price: 1 };
+        break;
+      case "price_desc":
+        sortOption = { price: -1 };
+        break;
+      case "name":
+        sortOption = { name: 1 };
+        break;
+      case "stock":
+        sortOption = { stock: 1 };
+        break;
+      default:
+        sortOption = { createdAt: -1 };
+    }
+
+    // Execute queries with optimization
+    const [products, total] = await Promise.all([
+      Product.find(query, projection)
+        .sort(sortOption)
+        .limit(limitNum)
+        .skip(skip)
+        .lean() // Use lean() for better performance when you don't need Mongoose documents
+        .exec(),
+      Product.countDocuments(query).exec(),
+    ]);
+
+    // Add text score for search results if using text search
+    if (search && search.length > 2) {
+      products.sort((a, b) => (b.score || 0) - (a.score || 0));
+    }
 
     res.json({
-      products,
+      products: products,
       pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page: pageNum,
+        limit: limitNum,
         total,
-        pages: Math.ceil(total / limit),
+        pages: Math.ceil(total / limitNum),
       },
     });
   } catch (error) {
@@ -60,8 +120,8 @@ const getProductById = async (req, res, next) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Non-admin users can only see available products
-    if (req.user.role !== "admin" && !product.isAvailable) {
+    // Non-admin or unauthenticated users can only see available products
+    if ((!req.user || req.user.role !== "admin") && !product.isAvailable) {
       return res.status(404).json({ error: "Product not found" });
     }
 
@@ -219,7 +279,7 @@ const getProductsByCategory = async (req, res, next) => {
     let query = { category };
 
     // Non-admin users can only see available products
-    if (req.user.role !== "admin") {
+    if (!req.user || req.user.role !== "admin") {
       query.isAvailable = true;
     }
 
@@ -269,7 +329,7 @@ const searchProducts = async (req, res, next) => {
     };
 
     // Non-admin users can only see available products
-    if (req.user.role !== "admin") {
+    if (!req.user || req.user.role !== "admin") {
       searchQuery.$and.push({ isAvailable: true });
     }
 

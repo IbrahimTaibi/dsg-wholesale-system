@@ -86,9 +86,23 @@ const orderSchema = new mongoose.Schema(
   },
 );
 
-// Indexes for better query performance
-orderSchema.index({ user: 1 });
-orderSchema.index({ status: 1 });
-orderSchema.index({ orderDate: -1 });
+// Optimized indexes for M0 cluster performance
+// Single field indexes
+orderSchema.index({ user: 1 }); // For user-specific order queries
+orderSchema.index({ status: 1 }); // For status-based filtering
+orderSchema.index({ orderDate: -1 }); // For date-based sorting (most recent first)
+orderSchema.index({ totalAmount: 1 }); // For amount-based queries
+
+// Compound indexes for common query patterns
+orderSchema.index({ user: 1, status: 1 }); // User orders by status
+orderSchema.index({ user: 1, orderDate: -1 }); // User orders by date
+orderSchema.index({ status: 1, orderDate: -1 }); // Orders by status and date
+orderSchema.index({ user: 1, status: 1, orderDate: -1 }); // User orders by status and date
+
+// Index for payment method queries
+orderSchema.index({ paymentMethod: 1 });
+
+// Index for delivery date queries
+orderSchema.index({ deliveryDate: 1 });
 
 module.exports = mongoose.model("Order", orderSchema);

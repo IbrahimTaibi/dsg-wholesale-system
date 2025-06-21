@@ -429,8 +429,9 @@ const getOrderById = async (req, res, next) => {
 
     // Users can only see their own orders, admins can see all
     if (
-      req.user.role !== "admin" &&
-      order.user._id.toString() !== req.user._id.toString()
+      !req.user ||
+      (req.user.role !== "admin" &&
+        order.user._id.toString() !== req.user._id.toString())
     ) {
       return res.status(403).json({ error: "Access denied" });
     }
@@ -521,8 +522,9 @@ const cancelOrder = async (req, res, next) => {
 
     // Users can only cancel their own orders, admins can cancel any
     if (
-      req.user.role !== "admin" &&
-      order.user.toString() !== req.user._id.toString()
+      !req.user ||
+      (req.user.role !== "admin" &&
+        order.user.toString() !== req.user._id.toString())
     ) {
       return res.status(403).json({ error: "Access denied" });
     }

@@ -30,9 +30,9 @@ export interface Product {
   description: string;
   price: number;
   category: string;
-  image?: string;
   stock: number;
-  unit?: string; // e.g., "piece", "kg", "liter"
+  photo: string;
+  unit?: string;
   minOrderQuantity?: number;
 }
 
@@ -54,18 +54,17 @@ export interface ApiProduct {
 export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => ({
   id: apiProduct._id,
   name: apiProduct.name,
-  description: apiProduct.description,
+  description: apiProduct.description || "",
   price: apiProduct.price,
   category: apiProduct.category,
-  image: apiProduct.photo,
   stock: apiProduct.stock,
-  unit: apiProduct.unit || "piece",
-  minOrderQuantity: apiProduct.minOrderQuantity || 1,
+  photo: apiProduct.photo,
+  unit: apiProduct.unit,
+  minOrderQuantity: apiProduct.minOrderQuantity,
 });
 
 // Cart types
-export interface CartItem {
-  product: Product;
+export interface CartItem extends Product {
   quantity: number;
 }
 
@@ -150,36 +149,3 @@ export interface AuthFormData {
 }
 
 export type AuthModalType = "login" | "signup" | null;
-
-export interface AppStateContextType {
-  isSidebarOpen: boolean;
-  selectedMenuItem: string;
-  searchQuery: string;
-  // Auth state
-  isAuthenticated: boolean;
-  user: User | null;
-  showAuthModal: AuthModalType;
-  // Cart state
-  cart: Cart;
-  // Methods
-  toggleSidebar: () => void;
-  closeSidebar: () => void;
-  selectMenuItem: (itemId: string) => void;
-  setSearchQuery: (query: string) => void;
-  // Auth methods
-  login: (credentials: AuthFormData) => Promise<boolean>;
-  signup: (userData: AuthFormData) => Promise<boolean>;
-  logout: () => void;
-  setShowAuthModal: (type: AuthModalType) => void;
-  // Cart methods
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateCartItemQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
-  // Checkout methods
-  createOrder: (
-    shippingAddress: ShippingAddress,
-    paymentMethod: PaymentMethod,
-  ) => Promise<Order>;
-  loading: boolean;
-}

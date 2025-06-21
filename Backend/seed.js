@@ -5,218 +5,306 @@ const Product = require("./src/models/Product");
 const Order = require("./src/models/Order");
 require("dotenv").config();
 
-// Sample users data
-const sampleUsers = [
-  {
-    phone: "+1234567890",
-    password: "password123",
-    name: "John Smith",
-    storeName: "Smith's Grocery Store",
-    address: {
-      street: "123 Main Street",
-      city: "New York",
-      state: "NY",
-      zipCode: "10001",
-    },
-    role: "admin",
-  },
-  {
-    phone: "+1987654321",
-    password: "password123",
-    name: "Sarah Johnson",
-    storeName: "Johnson's Market",
-    address: {
-      street: "456 Oak Avenue",
-      city: "Los Angeles",
-      state: "CA",
-      zipCode: "90210",
-    },
-    role: "user",
-  },
-  {
-    phone: "+1555123456",
-    password: "password123",
-    name: "Mike Wilson",
-    storeName: "Wilson's Convenience",
-    address: {
-      street: "789 Pine Street",
-      city: "Chicago",
-      state: "IL",
-      zipCode: "60601",
-    },
-    role: "user",
-  },
-  {
-    phone: "+1444567890",
-    password: "password123",
-    name: "Emily Davis",
-    storeName: "Davis Corner Store",
-    address: {
-      street: "321 Elm Street",
-      city: "Houston",
-      state: "TX",
-      zipCode: "77001",
-    },
-    role: "user",
-  },
+// Generate 30 unique users
+const firstNames = [
+  "John",
+  "Sarah",
+  "Mike",
+  "Emily",
+  "Ahmed",
+  "Maria",
+  "David",
+  "Lisa",
+  "Robert",
+  "Jennifer",
+  "Michael",
+  "Amanda",
+  "James",
+  "Jessica",
+  "William",
+  "Linda",
+  "Richard",
+  "Barbara",
+  "Joseph",
+  "Susan",
+  "Thomas",
+  "Karen",
+  "Charles",
+  "Nancy",
+  "Christopher",
+  "Betty",
+  "Daniel",
+  "Margaret",
+  "Matthew",
+  "Sandra",
+];
+const lastNames = [
+  "Smith",
+  "Johnson",
+  "Wilson",
+  "Davis",
+  "Hassan",
+  "Rodriguez",
+  "Chen",
+  "Thompson",
+  "Brown",
+  "White",
+  "Garcia",
+  "Lee",
+  "Martinez",
+  "Clark",
+  "Lewis",
+  "Walker",
+  "Hall",
+  "Allen",
+  "Young",
+  "King",
+  "Wright",
+  "Scott",
+  "Green",
+  "Baker",
+  "Adams",
+  "Nelson",
+  "Carter",
+  "Mitchell",
+  "Perez",
+  "Roberts",
+  "Smith",
+];
+const cities = [
+  "New York",
+  "Los Angeles",
+  "Chicago",
+  "Houston",
+  "Miami",
+  "Phoenix",
+  "Seattle",
+  "Denver",
+  "Boston",
+  "Atlanta",
+  "San Francisco",
+  "Portland",
+  "Dallas",
+  "Austin",
+  "Orlando",
+  "Detroit",
+  "Baltimore",
+  "Cleveland",
+  "Tampa",
+  "Minneapolis",
+  "Las Vegas",
+  "San Diego",
+  "Charlotte",
+  "Columbus",
+  "Indianapolis",
+  "Nashville",
+  "Louisville",
+  "Milwaukee",
+  "Raleigh",
+  "Omaha",
+];
+const states = [
+  "NY",
+  "CA",
+  "IL",
+  "TX",
+  "FL",
+  "AZ",
+  "WA",
+  "CO",
+  "MA",
+  "GA",
+  "CA",
+  "OR",
+  "TX",
+  "TX",
+  "FL",
+  "MI",
+  "MD",
+  "OH",
+  "FL",
+  "MN",
+  "NV",
+  "CA",
+  "NC",
+  "OH",
+  "IN",
+  "TN",
+  "KY",
+  "WI",
+  "NC",
+  "NE",
 ];
 
-// Sample products data
-const sampleProducts = [
-  // Water products
-  {
-    name: "Premium Spring Water 500ml",
-    category: "water",
-    photo:
-      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
-    price: 0.75,
-    stock: 500,
-    description:
-      "Pure spring water sourced from natural springs, perfect for hydration.",
-  },
-  {
-    name: "Mineral Water 1L",
-    category: "water",
-    photo:
-      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
-    price: 1.25,
-    stock: 300,
-    description: "Rich in essential minerals, great for daily consumption.",
-  },
-  {
-    name: "Sparkling Water 330ml",
-    category: "water",
-    photo:
-      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
-    price: 0.95,
-    stock: 200,
-    description: "Refreshing sparkling water with natural carbonation.",
-  },
-  {
-    name: "Distilled Water 2L",
-    category: "water",
-    photo:
-      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=400&fit=crop",
-    price: 2.5,
-    stock: 150,
-    description: "Pure distilled water, ideal for medical and laboratory use.",
-  },
+const sampleUsers = Array.from({ length: 30 }, (_, i) => {
+  const first = firstNames[i % firstNames.length];
+  const last = lastNames[i % lastNames.length];
+  return {
+    phone: `+1${(5550000000 + i).toString()}`,
+    password: "password123",
+    name: `${first} ${last}`,
+    storeName: `${last}'s Market`,
+    photo: `https://picsum.photos/200/200?random=${i + 1000}`,
+    address: {
+      street: `${100 + i} Main Street`,
+      city: cities[i % cities.length],
+      state: states[i % states.length],
+      zipCode: (10000 + i * 7).toString().padStart(5, "0"),
+    },
+    role: i === 0 ? "admin" : "user",
+  };
+});
 
-  // Chips products
-  {
-    name: "Classic Potato Chips",
-    category: "chips",
-    photo:
-      "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=400&fit=crop",
-    price: 2.99,
-    stock: 100,
-    description:
-      "Crispy potato chips with sea salt, perfect snack for any occasion.",
-  },
-  {
-    name: "BBQ Flavored Chips",
-    category: "chips",
-    photo:
-      "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=400&fit=crop",
-    price: 3.25,
-    stock: 80,
-    description: "Smoky BBQ flavored chips with a tangy kick.",
-  },
-  {
-    name: "Sour Cream & Onion Chips",
-    category: "chips",
-    photo:
-      "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=400&fit=crop",
-    price: 3.15,
-    stock: 90,
-    description: "Creamy sour cream and onion flavored potato chips.",
-  },
-  {
-    name: "Tortilla Chips",
-    category: "chips",
-    photo:
-      "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=400&fit=crop",
-    price: 2.75,
-    stock: 120,
-    description: "Authentic Mexican tortilla chips, perfect for dipping.",
-  },
-
-  // Mini cakes products
-  {
-    name: "Chocolate Mini Cakes",
-    category: "mini-cakes",
-    photo:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
-    price: 4.99,
-    stock: 50,
-    description: "Rich chocolate mini cakes with creamy frosting.",
-  },
-  {
-    name: "Vanilla Mini Cakes",
-    category: "mini-cakes",
-    photo:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
-    price: 4.75,
-    stock: 45,
-    description: "Light vanilla mini cakes with buttercream frosting.",
-  },
-  {
-    name: "Red Velvet Mini Cakes",
-    category: "mini-cakes",
-    photo:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
-    price: 5.25,
-    stock: 40,
-    description: "Classic red velvet mini cakes with cream cheese frosting.",
-  },
-  {
-    name: "Carrot Mini Cakes",
-    category: "mini-cakes",
-    photo:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop",
-    price: 4.5,
-    stock: 35,
-    description: "Moist carrot mini cakes with cream cheese frosting.",
-  },
-
-  // Biscuits products
-  {
-    name: "Butter Cookies",
-    category: "biscuits",
-    photo:
-      "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
-    price: 3.99,
-    stock: 75,
-    description: "Classic butter cookies with a melt-in-your-mouth texture.",
-  },
-  {
-    name: "Chocolate Chip Cookies",
-    category: "biscuits",
-    photo:
-      "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
-    price: 4.25,
-    stock: 60,
-    description: "Soft chocolate chip cookies with generous chocolate chunks.",
-  },
-  {
-    name: "Oatmeal Raisin Cookies",
-    category: "biscuits",
-    photo:
-      "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
-    price: 3.75,
-    stock: 55,
-    description: "Hearty oatmeal cookies with plump raisins.",
-  },
-  {
-    name: "Shortbread Cookies",
-    category: "biscuits",
-    photo:
-      "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop",
-    price: 4.5,
-    stock: 40,
-    description: "Traditional Scottish shortbread cookies, rich and buttery.",
-  },
+// Generate 60 unique products with unique Unsplash photos
+const productNames = [
+  // Water
+  "Premium Spring Water 500ml",
+  "Mineral Water 1L",
+  "Sparkling Water 330ml",
+  "Distilled Water 2L",
+  "Alkaline Water 750ml",
+  "Coconut Water 330ml",
+  "Electrolyte Water 500ml",
+  "Glacier Water 1.5L",
+  // Chips
+  "Classic Potato Chips",
+  "BBQ Flavored Chips",
+  "Sour Cream & Onion Chips",
+  "Tortilla Chips",
+  "Salt & Vinegar Chips",
+  "Jalapeño Chips",
+  "Cheese & Onion Chips",
+  "Sea Salt Chips",
+  "Sweet Chili Chips",
+  "Lime Chips",
+  // Mini Cakes
+  "Chocolate Mini Cakes",
+  "Vanilla Mini Cakes",
+  "Red Velvet Mini Cakes",
+  "Carrot Mini Cakes",
+  "Lemon Mini Cakes",
+  "Strawberry Mini Cakes",
+  "Coffee Mini Cakes",
+  "Coconut Mini Cakes",
+  // Biscuits
+  "Butter Cookies",
+  "Chocolate Chip Cookies",
+  "Oatmeal Raisin Cookies",
+  "Shortbread Cookies",
+  "Peanut Butter Cookies",
+  "Sugar Cookies",
+  "Gingerbread Cookies",
+  "Macadamia Nut Cookies",
+  "Almond Biscuits",
+  "Hazelnut Biscuits",
+  // Juices
+  "Orange Juice 1L",
+  "Apple Juice 1L",
+  "Grape Juice 1L",
+  "Pineapple Juice 1L",
+  "Cranberry Juice 1L",
+  "Mango Juice 1L",
+  "Strawberry Juice 1L",
+  "Lemonade 1L",
+  "Peach Juice 1L",
+  "Watermelon Juice 1L",
+  // Groceries
+  "Organic Bananas 1kg",
+  "Fresh Apples 1kg",
+  "Ripe Tomatoes 500g",
+  "Fresh Lettuce",
+  "Organic Carrots 1kg",
+  "Fresh Onions 1kg",
+  "Fresh Potatoes 2kg",
+  "Fresh Garlic 250g",
+  "Broccoli 500g",
+  "Spinach 250g",
 ];
+const categories = [
+  "water",
+  "water",
+  "water",
+  "water",
+  "water",
+  "water",
+  "water",
+  "water",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "chips",
+  "mini-cakes",
+  "mini-cakes",
+  "mini-cakes",
+  "mini-cakes",
+  "mini-cakes",
+  "mini-cakes",
+  "mini-cakes",
+  "mini-cakes",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "biscuits",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "juices",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+  "groceries",
+];
+const productPhotos = Array.from(
+  { length: 60 },
+  (_, i) => `https://picsum.photos/400/400?random=${i}`,
+);
+const descriptions = [
+  "High quality and fresh.",
+  "Best seller in its category.",
+  "Loved by our customers.",
+  "Perfect for any occasion.",
+  "Top-rated product.",
+  "Great taste and value.",
+  "Premium selection.",
+  "A must-have item.",
+  "Popular choice for families.",
+  "Excellent for daily use.",
+];
+
+const sampleProducts = Array.from({ length: 60 }, (_, i) => ({
+  name:
+    productNames[i % productNames.length] +
+    (i >= productNames.length ? ` (${i + 1})` : ""),
+  category: categories[i % categories.length],
+  photo: productPhotos[i],
+  price: (Math.random() * 10 + 1).toFixed(2),
+  stock: Math.floor(Math.random() * 200 + 10),
+  description: descriptions[i % descriptions.length],
+}));
 
 // Connect to MongoDB
 const connectDB = async () => {
@@ -271,24 +359,24 @@ const seedProducts = async () => {
   }
 };
 
-// Seed orders
+// Seed orders with more variety
 const seedOrders = async (users, products) => {
   try {
     // Clear existing orders
     await Order.deleteMany({});
     console.log("Cleared existing orders");
 
-    // Get a regular user (not admin) to create orders for
-    const regularUser = users.find((user) => user.role === "user");
-    if (!regularUser) {
-      console.log("No regular user found, skipping orders");
+    // Get regular users (not admin) to create orders for
+    const regularUsers = users.filter((user) => user.role === "user");
+    if (regularUsers.length === 0) {
+      console.log("No regular users found, skipping orders");
       return [];
     }
 
-    // Create sample orders
+    // Create sample orders with more variety
     const sampleOrders = [
       {
-        user: regularUser._id,
+        user: regularUsers[0]._id,
         items: [
           {
             product: products[0]._id, // Premium Spring Water
@@ -296,12 +384,12 @@ const seedOrders = async (users, products) => {
             price: products[0].price,
           },
           {
-            product: products[4]._id, // Classic Potato Chips
+            product: products[6]._id, // Classic Potato Chips
             quantity: 2,
-            price: products[4].price,
+            price: products[6].price,
           },
         ],
-        totalAmount: products[0].price * 5 + products[4].price * 2,
+        totalAmount: products[0].price * 5 + products[6].price * 2,
         status: "pending",
         paymentMethod: "cash_on_delivery",
         deliveryAddress: {
@@ -314,20 +402,20 @@ const seedOrders = async (users, products) => {
         orderDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       },
       {
-        user: regularUser._id,
+        user: regularUsers[1]._id,
         items: [
           {
-            product: products[8]._id, // Chocolate Mini Cakes
+            product: products[14]._id, // Chocolate Mini Cakes
             quantity: 3,
-            price: products[8].price,
+            price: products[14].price,
           },
           {
-            product: products[12]._id, // Butter Cookies
+            product: products[22]._id, // Butter Cookies
             quantity: 1,
-            price: products[12].price,
+            price: products[22].price,
           },
         ],
-        totalAmount: products[8].price * 3 + products[12].price,
+        totalAmount: products[14].price * 3 + products[22].price,
         status: "delivered",
         paymentMethod: "cash_on_delivery",
         deliveryAddress: {
@@ -341,7 +429,7 @@ const seedOrders = async (users, products) => {
         deliveryDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
       },
       {
-        user: regularUser._id,
+        user: regularUsers[2]._id,
         items: [
           {
             product: products[1]._id, // Mineral Water 1L
@@ -360,6 +448,65 @@ const seedOrders = async (users, products) => {
           country: "Demo Country",
         },
         orderDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      },
+      {
+        user: regularUsers[3]._id,
+        items: [
+          {
+            product: products[30]._id, // Orange Juice
+            quantity: 2,
+            price: products[30].price,
+          },
+          {
+            product: products[38]._id, // Organic Bananas
+            quantity: 1,
+            price: products[38].price,
+          },
+          {
+            product: products[7]._id, // BBQ Chips
+            quantity: 3,
+            price: products[7].price,
+          },
+        ],
+        totalAmount:
+          products[30].price * 2 + products[38].price + products[7].price * 3,
+        status: "pending",
+        paymentMethod: "cash_on_delivery",
+        deliveryAddress: {
+          street: "321 Market Street",
+          city: "Market City",
+          state: "Market State",
+          zipCode: "22222",
+          country: "Market Country",
+        },
+        orderDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+      },
+      {
+        user: regularUsers[4]._id,
+        items: [
+          {
+            product: products[16]._id, // Red Velvet Mini Cakes
+            quantity: 5,
+            price: products[16].price,
+          },
+          {
+            product: products[26]._id, // Peanut Butter Cookies
+            quantity: 2,
+            price: products[26].price,
+          },
+        ],
+        totalAmount: products[16].price * 5 + products[26].price * 2,
+        status: "delivered",
+        paymentMethod: "cash_on_delivery",
+        deliveryAddress: {
+          street: "654 Business Blvd",
+          city: "Business City",
+          state: "Business State",
+          zipCode: "33333",
+          country: "Business Country",
+        },
+        orderDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+        deliveryDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000), // 8 days ago
       },
     ];
 
@@ -386,8 +533,13 @@ const seedDatabase = async () => {
 
     console.log("Database seeding completed successfully!");
     console.log("\nSample login credentials:");
-    console.log("Admin: +1234567890 / password123");
-    console.log("User: +1987654321 / password123");
+    console.log("Admin: +15550000000 / password123");
+    console.log(
+      "Users: +15550000001, +15550000002, +15550000003 / password123",
+    );
+    console.log(
+      `\nCreated ${users.length} users and ${products.length} products`,
+    );
 
     process.exit(0);
   } catch (error) {

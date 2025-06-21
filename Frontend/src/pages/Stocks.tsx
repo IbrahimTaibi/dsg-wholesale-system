@@ -41,7 +41,7 @@ import {
   TrendingDown,
   AlertTriangle,
 } from "lucide-react";
-import { useAppState } from "../hooks/useAppState";
+import { useAuth } from "../contexts/AuthContext";
 import { apiService, Product } from "../config/api";
 
 // Define stock status color type
@@ -90,7 +90,7 @@ const CATEGORIES = [
 ];
 
 const StocksManagementPage: React.FC = () => {
-  const { user: currentUser } = useAppState();
+  const { user: currentUser } = useAuth();
   const [products, setProducts] = useState<StockProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -5,35 +5,37 @@ import {
   Container,
   Card,
   CardContent,
-  Button,
+  CardActionArea,
   Chip,
 } from "@mui/material";
-import { useAppState } from "../hooks";
 import { useProducts } from "../hooks";
 import { mapApiProductToProduct } from "../types";
 import { ProductItem } from "../components/products/ProductItem";
-import {
-  ShoppingCart,
-  TrendingUp,
-  Star,
-  LocalOffer,
-} from "@mui/icons-material";
+import { Star, Flame, Droplets, Cookie, Beef } from "lucide-react";
+import { Link } from "react-router-dom";
+import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
+
+const categoryRoutes: { [key: string]: string } = {
+  "Water & Beverages": "/water",
+  Juices: "/juices",
+  "Mini Cakes": "/cakes",
+  "Chips & Snacks": "/chips",
+  Groceries: "/groceries",
+};
 
 export const UserHome: React.FC = () => {
-  const { user } = useAppState();
-
   // Fetch different product categories
   const { products: waterProducts } = useProducts({
     category: "water",
-    limit: 4,
+    limit: 6,
   });
   const { products: chipsProducts } = useProducts({
     category: "chips",
-    limit: 4,
+    limit: 6,
   });
   const { products: cakesProducts } = useProducts({
     category: "mini-cakes",
-    limit: 4,
+    limit: 6,
   });
   const { products: allProducts } = useProducts({ limit: 8 });
 
@@ -45,67 +47,58 @@ export const UserHome: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
-      {/* Hero Section */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          color: "white",
-          py: 8,
-          mb: 6,
-        }}>
+      {/* Categories Section */}
+      <Box sx={{ py: { xs: 4, md: 6 } }}>
         <Container maxWidth="xl">
-          <Typography
-            variant="h2"
-            sx={{
-              fontWeight: 700,
-              mb: 2,
-              textAlign: { xs: "center", md: "left" },
-              fontSize: { xs: "2rem", md: "3rem" },
-            }}>
-            Welcome back, {user?.name}! 👋
-          </Typography>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 4,
-              opacity: 0.9,
-              textAlign: { xs: "center", md: "left" },
-              fontSize: { xs: "1.1rem", md: "1.5rem" },
-            }}>
-            Ready to discover great wholesale deals today?
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: 700, color: "text.primary" }}>
+              Shop by Category
+            </Typography>
+          </Box>
           <Box
             sx={{
               display: "flex",
-              gap: 2,
               flexWrap: "wrap",
-              justifyContent: { xs: "center", md: "flex-start" },
+              justifyContent: "center",
+              gap: { xs: 2, sm: 3 }, // Adjust gap for different screen sizes
             }}>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<ShoppingCart />}
-              sx={{
-                bgcolor: "white",
-                color: "primary.main",
-                "&:hover": { bgcolor: "grey.100" },
-              }}>
-              Browse Products
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<TrendingUp />}
-              sx={{
-                borderColor: "white",
-                color: "white",
-                "&:hover": {
-                  borderColor: "white",
-                  bgcolor: "rgba(255,255,255,0.1)",
-                },
-              }}>
-              View Deals
-            </Button>
+            {Object.entries(PRODUCT_CATEGORIES).map(([title, config]) => {
+              const IconComponent =
+                ICON_MAP[config.icon as keyof typeof ICON_MAP];
+              const route = categoryRoutes[title];
+              return (
+                <Card
+                  key={title}
+                  sx={{
+                    width: { xs: "calc(50% - 16px)", sm: 200 },
+                    flexGrow: 1,
+                    maxWidth: 240,
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      boxShadow: "0 6px 16px rgba(0,0,0,0.12)",
+                    },
+                  }}>
+                  <CardActionArea
+                    component={Link}
+                    to={route}
+                    sx={{ height: "100%" }}>
+                    <CardContent
+                      sx={{ textAlign: "center", p: { xs: 2, sm: 3 } }}>
+                      <Box
+                        className={`flex items-center justify-center w-14 h-14 rounded-full mx-auto mb-2 text-white bg-gradient-to-br ${config.gradient}`}>
+                        {IconComponent && <IconComponent size={28} />}
+                      </Box>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {title}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              );
+            })}
           </Box>
         </Container>
       </Box>
@@ -114,15 +107,28 @@ export const UserHome: React.FC = () => {
         {/* Featured Products Section */}
         <Box sx={{ mb: 6 }}>
           <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
-            <Star sx={{ color: "primary.main", mr: 2, fontSize: 32 }} />
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                bgcolor: "primary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mr: 2,
+                color: "primary.contrastText",
+              }}>
+              <Star size={24} />
+            </Box>
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
               Featured Products
             </Typography>
           </Box>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {mappedAllProducts.slice(0, 4).map((product) => (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
+            {mappedAllProducts.slice(0, 6).map((product) => (
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
@@ -135,17 +141,15 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: 2,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                borderRadius: "50%",
+                bgcolor: "info.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: "info.contrastText",
               }}>
-              <Typography
-                sx={{ color: "white", fontWeight: 700, fontSize: "1.2rem" }}>
-                💧
-              </Typography>
+              <Droplets size={24} />
             </Box>
             <Typography
               variant="h4"
@@ -153,7 +157,7 @@ export const UserHome: React.FC = () => {
               Water & Beverages
             </Typography>
           </Box>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
             {mappedWaterProducts.map((product) => (
               <ProductItem key={product.id} product={product} />
             ))}
@@ -167,17 +171,15 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: 2,
-                background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                borderRadius: "50%",
+                bgcolor: "warning.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: "warning.contrastText",
               }}>
-              <Typography
-                sx={{ color: "white", fontWeight: 700, fontSize: "1.2rem" }}>
-                🍿
-              </Typography>
+              <Beef size={24} />
             </Box>
             <Typography
               variant="h4"
@@ -185,7 +187,7 @@ export const UserHome: React.FC = () => {
               Chips & Snacks
             </Typography>
           </Box>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
             {mappedChipsProducts.map((product) => (
               <ProductItem key={product.id} product={product} />
             ))}
@@ -199,17 +201,15 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: 2,
-                background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                borderRadius: "50%",
+                bgcolor: "secondary.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: "secondary.contrastText",
               }}>
-              <Typography
-                sx={{ color: "white", fontWeight: 700, fontSize: "1.2rem" }}>
-                🧁
-              </Typography>
+              <Cookie size={24} />
             </Box>
             <Typography
               variant="h4"
@@ -217,7 +217,7 @@ export const UserHome: React.FC = () => {
               Mini Cakes
             </Typography>
           </Box>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
             {mappedCakesProducts.map((product) => (
               <ProductItem key={product.id} product={product} />
             ))}
@@ -227,7 +227,20 @@ export const UserHome: React.FC = () => {
         {/* Special Offers Section */}
         <Box sx={{ mb: 6 }}>
           <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
-            <LocalOffer sx={{ color: "error.main", mr: 2, fontSize: 32 }} />
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                bgcolor: "error.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mr: 2,
+                color: "error.contrastText",
+              }}>
+              <Flame size={24} />
+            </Box>
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>

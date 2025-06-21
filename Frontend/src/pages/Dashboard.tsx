@@ -20,14 +20,14 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { apiService, DashboardOverview } from "../config/api";
-import { useAppState } from "../hooks/useAppState";
+import { useAuth } from "../contexts/AuthContext";
 import { StatsCard } from "../components/dashboard/StatsCard";
 import { RevenueChart } from "../components/dashboard/RevenueChart";
 import { CategoryChart } from "../components/dashboard/CategoryChart";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
-  const { user } = useAppState();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

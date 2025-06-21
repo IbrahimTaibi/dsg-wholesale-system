@@ -27,6 +27,7 @@ import {
   TableRow,
   TablePagination,
   Chip,
+  Avatar,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
@@ -39,9 +40,11 @@ import {
   RefreshCw,
   MapPin,
   Phone,
+  Search,
 } from "lucide-react";
-import { useAppState } from "../hooks/useAppState";
+import { useAuth } from "../contexts/AuthContext";
 import { apiService, User as ApiUser } from "../config/api";
+import useDebounce from "../hooks/useDebounce";
 
 // Define the AdminUser interface for the admin interface to avoid conflicts
 interface AdminUser {
@@ -49,6 +52,7 @@ interface AdminUser {
   name: string;
   phone: string;
   storeName: string;
+  photo?: string;
   role: "user" | "admin";
   isActive?: boolean;
   createdAt: string;
@@ -76,19 +80,20 @@ interface UserFormData {
 
 // Users Management Page Component
 const UsersManagementPage: React.FC = () => {
-  const { user: currentUser } = useAppState();
-  const [users, setUsers] = useState<AdminUser[]>([]);
+  const { user: authUser } = useAuth();
+  const [allUsers, setAllUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalUsers, setTotalUsers] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
   const [viewingUser, setViewingUser] = useState<AdminUser | null>(null);
   const [deleteDialog, setDeleteDialog] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [visiblePhones, setVisiblePhones] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
@@ -128,8 +133,7 @@ const UsersManagementPage: React.FC = () => {
           },
         }),
       );
-      setUsers(extendedUsers);
-      setTotalUsers(response.pagination.total);
+      setAllUsers(extendedUsers);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to load users");
     } finally {
@@ -138,10 +142,10 @@ const UsersManagementPage: React.FC = () => {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    if (currentUser?.role === "admin") {
+    if (authUser?.role === "admin") {
       fetchUsers();
     }
-  }, [currentUser, fetchUsers]);
+  }, [authUser, fetchUsers]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
@@ -269,10 +273,25 @@ const UsersManagementPage: React.FC = () => {
     });
   };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    setPage(0); // Reset to first page when searching
+  };
+
+  // Filter users based on search query
+  const filteredUsers = allUsers.filter((user) => {
+    const searchLower = debouncedSearchQuery.toLowerCase();
+    return (
+      user.name.toLowerCase().includes(searchLower) ||
+      user.phone.toLowerCase().includes(searchLower) ||
+      user.storeName.toLowerCase().includes(searchLower)
+    );
+  });
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  if (currentUser?.role !== "admin") {
+  if (authUser?.role !== "admin") {
     return (
       <Container maxWidth="md" sx={{ py: 8 }}>
         <Typography variant="h4" align="center" sx={{ mt: 8 }}>
@@ -359,7 +378,25 @@ const UsersManagementPage: React.FC = () => {
               </Alert>
             )}
 
-            <Paper sx={{ p: 3, overflow: "hidden" }}>
+            {/* Search Bar */}
+            <Paper sx={{ p: 2, mb: 3 }}>
+              <TextField
+                fullWidth
+                placeholder="Search users by name, phone, or store name..."
+                value={searchQuery}
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: (
+                    <Box sx={{ mr: 1, color: "text.secondary" }}>
+                      <Search size={20} />
+                    </Box>
+                  ),
+                }}
+                sx={{ maxWidth: 400 }}
+              />
+            </Paper>
+
+            <Paper sx={{ p: 3 }}>
               {loading ? (
                 <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
                   <CircularProgress size={60} />
@@ -368,116 +405,147 @@ const UsersManagementPage: React.FC = () => {
                 <>
                   {isMobile ? (
                     // Mobile Card Layout
-                    <Box
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      {users.map((user) => (
-                        <Paper
-                          key={user._id}
-                          sx={{
-                            p: 2,
-                            borderRadius: 2,
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                            border: "1px solid rgba(0,0,0,0.08)",
-                          }}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "flex-start",
-                              mb: 1,
-                            }}>
-                            <Box sx={{ flex: 1 }}>
-                              <Typography
-                                variant="h6"
-                                fontWeight="bold"
-                                sx={{ fontSize: "1rem", mb: 0.5 }}>
-                                {user.name}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{ mb: 1 }}>
-                                {user.storeName}
-                              </Typography>
+                    <Box sx={{ overflowX: "auto", pb: 2 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                          minWidth: "320px",
+                        }}>
+                        {filteredUsers
+                          .slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage,
+                          )
+                          .map((user) => (
+                            <Paper
+                              key={user._id}
+                              sx={{
+                                p: 2,
+                                borderRadius: 2,
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                                border: "1px solid rgba(0,0,0,0.08)",
+                              }}>
                               <Box
                                 sx={{
                                   display: "flex",
-                                  alignItems: "center",
-                                  gap: 1,
+                                  justifyContent: "space-between",
+                                  alignItems: "flex-start",
                                   mb: 1,
                                 }}>
-                                {visiblePhones.has(user._id) ? (
-                                  <>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 2,
+                                    flex: 1,
+                                  }}>
+                                  <Avatar
+                                    src={user.photo}
+                                    alt={user.name}
+                                    sx={{ width: 48, height: 48 }}>
+                                    {user.name.charAt(0)}
+                                  </Avatar>
+                                  <Box>
+                                    <Typography
+                                      variant="h6"
+                                      fontWeight="bold"
+                                      sx={{ fontSize: "1rem", mb: 0.5 }}>
+                                      {user.name}
+                                    </Typography>
                                     <Typography
                                       variant="body2"
-                                      sx={{ fontSize: "0.875rem" }}>
-                                      {user.phone}
+                                      color="text.secondary"
+                                      sx={{ mb: 1 }}>
+                                      {user.storeName}
                                     </Typography>
-                                    <IconButton
-                                      onClick={() =>
-                                        handleTogglePhone(user._id)
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        mb: 1,
+                                      }}>
+                                      {visiblePhones.has(user._id) ? (
+                                        <>
+                                          <Typography
+                                            variant="body2"
+                                            sx={{ fontSize: "0.875rem" }}>
+                                            {user.phone}
+                                          </Typography>
+                                          <IconButton
+                                            onClick={() =>
+                                              handleTogglePhone(user._id)
+                                            }
+                                            size="small"
+                                            sx={{ padding: "2px" }}>
+                                            <Phone size={14} />
+                                          </IconButton>
+                                        </>
+                                      ) : (
+                                        <IconButton
+                                          onClick={() =>
+                                            handleTogglePhone(user._id)
+                                          }
+                                          size="small"
+                                          sx={{ padding: "2px" }}>
+                                          <Phone size={16} />
+                                        </IconButton>
+                                      )}
+                                    </Box>
+                                    <Chip
+                                      label={user.role}
+                                      color={
+                                        getRoleColor(user.role) as
+                                          | "default"
+                                          | "error"
                                       }
                                       size="small"
-                                      sx={{ padding: "2px" }}>
-                                      <Phone size={14} />
+                                      sx={{ fontSize: "0.75rem" }}
+                                    />
+                                  </Box>
+                                </Box>
+                                <Box sx={{ display: "flex", gap: 0.5 }}>
+                                  <Tooltip title="View Details">
+                                    <IconButton
+                                      onClick={() => setViewingUser(user)}
+                                      size="small"
+                                      sx={{ padding: "4px" }}>
+                                      <Eye size={16} />
                                     </IconButton>
-                                  </>
-                                ) : (
-                                  <IconButton
-                                    onClick={() => handleTogglePhone(user._id)}
-                                    size="small"
-                                    sx={{ padding: "2px" }}>
-                                    <Phone size={16} />
-                                  </IconButton>
-                                )}
+                                  </Tooltip>
+                                  <Tooltip title="Edit User">
+                                    <IconButton
+                                      onClick={() => handleOpenDialog(user)}
+                                      size="small"
+                                      sx={{ padding: "4px" }}>
+                                      <Edit size={16} />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip title="Delete User">
+                                    <IconButton
+                                      onClick={() => setDeleteDialog(user._id)}
+                                      disabled={user._id === authUser?.id}
+                                      size="small"
+                                      color="error"
+                                      sx={{ padding: "4px" }}>
+                                      <Trash2 size={16} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Box>
                               </Box>
-                              <Chip
-                                label={user.role}
-                                color={
-                                  getRoleColor(user.role) as "default" | "error"
-                                }
-                                size="small"
-                                sx={{ fontSize: "0.75rem" }}
-                              />
-                            </Box>
-                            <Box sx={{ display: "flex", gap: 0.5 }}>
-                              <Tooltip title="View Details">
-                                <IconButton
-                                  onClick={() => setViewingUser(user)}
-                                  size="small"
-                                  sx={{ padding: "4px" }}>
-                                  <Eye size={16} />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Edit User">
-                                <IconButton
-                                  onClick={() => handleOpenDialog(user)}
-                                  size="small"
-                                  sx={{ padding: "4px" }}>
-                                  <Edit size={16} />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Delete User">
-                                <IconButton
-                                  onClick={() => setDeleteDialog(user._id)}
-                                  disabled={user._id === currentUser?.id}
-                                  size="small"
-                                  color="error"
-                                  sx={{ padding: "4px" }}>
-                                  <Trash2 size={16} />
-                                </IconButton>
-                              </Tooltip>
-                            </Box>
-                          </Box>
-                        </Paper>
-                      ))}
+                            </Paper>
+                          ))}
+                      </Box>
                     </Box>
                   ) : (
                     // Desktop Table Layout
-                    <TableContainer sx={{ maxWidth: "100%" }}>
+                    <TableContainer>
                       <Table>
                         <TableHead>
                           <TableRow>
+                            <TableCell>Photo</TableCell>
                             <TableCell>Name</TableCell>
                             <TableCell>Phone</TableCell>
                             <TableCell>Store</TableCell>
@@ -486,80 +554,97 @@ const UsersManagementPage: React.FC = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {users.map((user) => (
-                            <TableRow key={user._id} hover>
-                              <TableCell sx={{ wordBreak: "break-word" }}>
-                                {user.name}
-                              </TableCell>
-                              <TableCell sx={{ wordBreak: "break-word" }}>
-                                {user.phone}
-                              </TableCell>
-                              <TableCell sx={{ wordBreak: "break-word" }}>
-                                {user.storeName}
-                              </TableCell>
-                              <TableCell>
-                                <Chip
-                                  label={user.role}
-                                  color={
-                                    getRoleColor(user.role) as
-                                      | "default"
-                                      | "error"
-                                  }
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    gap: 0.5,
-                                    flexWrap: "wrap",
-                                  }}>
-                                  <Tooltip title="View Details">
-                                    <IconButton
-                                      onClick={() => setViewingUser(user)}
-                                      size="small">
-                                      <Eye size={16} />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip title="Edit User">
-                                    <IconButton
-                                      onClick={() => handleOpenDialog(user)}
-                                      size="small">
-                                      <Edit size={16} />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip title="Delete User">
-                                    <IconButton
-                                      onClick={() => setDeleteDialog(user._id)}
-                                      disabled={user._id === currentUser?.id}
-                                      size="small"
-                                      color="error">
-                                      <Trash2 size={16} />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Box>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {filteredUsers
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage,
+                            )
+                            .map((user) => (
+                              <TableRow key={user._id} hover>
+                                <TableCell>
+                                  <Avatar
+                                    src={user.photo}
+                                    alt={user.name}
+                                    sx={{ width: 40, height: 40 }}>
+                                    {user.name.charAt(0)}
+                                  </Avatar>
+                                </TableCell>
+                                <TableCell sx={{ wordBreak: "break-word" }}>
+                                  {user.name}
+                                </TableCell>
+                                <TableCell sx={{ wordBreak: "break-word" }}>
+                                  {user.phone}
+                                </TableCell>
+                                <TableCell sx={{ wordBreak: "break-word" }}>
+                                  {user.storeName}
+                                </TableCell>
+                                <TableCell>
+                                  <Chip
+                                    label={user.role}
+                                    color={
+                                      getRoleColor(user.role) as
+                                        | "default"
+                                        | "error"
+                                    }
+                                    size="small"
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      gap: 0.5,
+                                      flexWrap: "wrap",
+                                    }}>
+                                    <Tooltip title="View Details">
+                                      <IconButton
+                                        onClick={() => setViewingUser(user)}
+                                        size="small">
+                                        <Eye size={16} />
+                                      </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Edit User">
+                                      <IconButton
+                                        onClick={() => handleOpenDialog(user)}
+                                        size="small">
+                                        <Edit size={16} />
+                                      </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Delete User">
+                                      <IconButton
+                                        onClick={() =>
+                                          setDeleteDialog(user._id)
+                                        }
+                                        disabled={user._id === authUser?.id}
+                                        size="small"
+                                        color="error">
+                                        <Trash2 size={16} />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            ))}
                         </TableBody>
                       </Table>
                     </TableContainer>
                   )}
-                  <TablePagination
-                    component="div"
-                    count={totalUsers}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{
-                      ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows":
-                        {
-                          fontSize: isMobile ? "0.75rem" : "inherit",
-                        },
-                    }}
-                  />
+                  <Box sx={{ width: "100%", overflowX: "auto" }}>
+                    <TablePagination
+                      component="div"
+                      count={filteredUsers.length}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      rowsPerPage={rowsPerPage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      sx={{
+                        ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows":
+                          {
+                            fontSize: isMobile ? "0.75rem" : "inherit",
+                          },
+                      }}
+                    />
+                  </Box>
                 </>
               )}
             </Paper>
@@ -708,9 +793,18 @@ const UsersManagementPage: React.FC = () => {
           <DialogContent>
             {viewingUser && (
               <Box sx={{ mt: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  {viewingUser.name}
-                </Typography>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                  <Avatar
+                    src={viewingUser.photo}
+                    alt={viewingUser.name}
+                    sx={{ width: 64, height: 64 }}>
+                    {viewingUser.name.charAt(0)}
+                  </Avatar>
+                  <Typography variant="h6" gutterBottom>
+                    {viewingUser.name}
+                  </Typography>
+                </Box>
                 <Typography gutterBottom>
                   <strong>Phone:</strong> {viewingUser.phone}
                 </Typography>

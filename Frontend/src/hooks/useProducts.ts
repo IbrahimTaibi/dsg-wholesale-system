@@ -28,7 +28,12 @@ export const useProducts = (options: UseProductsOptions = {}) => {
     refetch,
   } = useQuery<ApiProductsResponse, Error>({
     queryKey: ["products", { category, search, page, limit }],
-    queryFn: () => apiService.getProducts(options),
+    queryFn: async () => {
+      console.log("Fetching products with options:", options);
+      const result = await apiService.getProducts(options);
+      console.log("Products API response:", result);
+      return result;
+    },
   });
 
   return {

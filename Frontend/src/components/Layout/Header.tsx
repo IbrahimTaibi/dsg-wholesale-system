@@ -1,7 +1,8 @@
 import React from "react";
 import { Menu, LogIn, UserPlus, User, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAppState } from "../../hooks";
+import { useUI } from "../../contexts/UIContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { SearchBar } from "../ui/SearchBar";
 import { BRANDING } from "../../config/branding";
@@ -9,8 +10,8 @@ import { CartIcon } from "../cart/CartIcon";
 import { CartDrawer } from "../cart/CartDrawer";
 
 export const Header: React.FC = () => {
-  const { toggleSidebar, isAuthenticated, user, logout, setShowAuthModal } =
-    useAppState();
+  const { isAuthenticated, user, logout } = useAuth();
+  const { setShowAuthModal, toggleSidebar } = useUI();
   const [cartOpen, setCartOpen] = React.useState(false);
   const navigate = useNavigate();
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiService, Order } from "../config/api";
-import { useAppState } from "../hooks/useAppState";
+import { useAuth } from "../contexts/AuthContext";
 import {
   Package,
   Clock,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const MyOrders: React.FC = () => {
-  const { isAuthenticated } = useAppState();
+  const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

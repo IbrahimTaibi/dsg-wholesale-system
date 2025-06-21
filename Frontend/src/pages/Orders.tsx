@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, Typography, Container, Paper, Fade } from "@mui/material";
 import { Package } from "lucide-react";
-import { useAppState } from "../hooks/useAppState";
+import { useAuth } from "../contexts/AuthContext";
 import OrdersTable from "../components/dashboard/OrdersTable";
 
 const Orders: React.FC = () => {
-  const { user } = useAppState();
+  const { user } = useAuth();
 
   if (user?.role !== "admin") {
     return (

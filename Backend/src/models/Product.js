@@ -46,9 +46,35 @@ const productSchema = new mongoose.Schema(
   },
 );
 
-// Indexes for better query performance
+// Optimized indexes for M0 cluster performance
+// Single field indexes
 productSchema.index({ category: 1 });
 productSchema.index({ isAvailable: 1 });
-productSchema.index({ name: "text", description: "text" });
+productSchema.index({ price: 1 }); // For price-based queries and sorting
+productSchema.index({ stock: 1 }); // For stock-based queries
+
+// Compound indexes for common query patterns
+productSchema.index({ category: 1, isAvailable: 1 }); // Most common query pattern
+productSchema.index({ isAvailable: 1, price: 1 }); // For price filtering on available products
+productSchema.index({ category: 1, price: 1 }); // For category + price queries
+
+// Text index for search functionality (optimized for M0)
+productSchema.index(
+  {
+    name: "text",
+    description: "text",
+  },
+  {
+    weights: {
+      name: 3, // Product name has higher relevance
+      description: 1, // Description has lower relevance
+    },
+    name: "product_text_search",
+  },
+);
+
+// Index for timestamp-based queries and sorting
+productSchema.index({ createdAt: -1 }); // For sorting by creation date
+productSchema.index({ updatedAt: -1 }); // For sorting by update date
 
 module.exports = mongoose.model("Product", productSchema);

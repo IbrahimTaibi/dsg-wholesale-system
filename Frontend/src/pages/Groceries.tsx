@@ -1,14 +1,12 @@
 // src/pages/Groceries.tsx
 import React, { useState } from "react";
-import { ShoppingCart, Filter, SortAsc, Loader2 } from "lucide-react";
+import { ShoppingBasket, Filter, SortAsc, Loader2 } from "lucide-react";
 import { SearchBar } from "../components";
 import { ProductItem } from "../components/products/ProductItem";
 import { useProducts } from "../hooks";
-import { useAppState } from "../hooks";
 import { mapApiProductToProduct } from "../types";
 
 export const Groceries: React.FC = () => {
-  const { isAuthenticated, setShowAuthModal } = useAppState();
   const [searchQuery, setSearchQuery] = useState("");
   const {
     products: apiProducts,
@@ -16,6 +14,7 @@ export const Groceries: React.FC = () => {
     error,
     pagination,
   } = useProducts({
+    category: "groceries",
     search: searchQuery || undefined,
     limit: 20,
   });
@@ -23,36 +22,13 @@ export const Groceries: React.FC = () => {
   // Map API products to frontend products
   const products = apiProducts.map(mapApiProductToProduct);
 
-  if (!isAuthenticated) {
-    return (
-      <div className="p-6 pt-20 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-            <div className="text-6xl mb-4">🔒</div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Authentication Required
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Please log in to access our groceries section.
-            </p>
-            <button
-              onClick={() => setShowAuthModal("login")}
-              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-lg hover:from-purple-600 hover:to-purple-800 transition-all duration-300">
-              Sign In
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 sm:p-6 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-purple-500 to-purple-700 rounded-lg">
-            <ShoppingCart className="h-6 w-6 text-white" />
+          <div className="p-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
+            <ShoppingBasket className="h-6 w-6 text-gray-700 dark:text-gray-200" />
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -87,7 +63,7 @@ export const Groceries: React.FC = () => {
         {loading && (
           <div className="flex items-center justify-center py-12">
             <div className="flex items-center gap-3">
-              <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <span className="text-gray-600 dark:text-gray-300">
                 Loading products...
               </span>
@@ -121,12 +97,12 @@ export const Groceries: React.FC = () => {
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300">
                   {searchQuery
-                    ? `No products found matching "${searchQuery}"`
-                    : "No products available at the moment."}
+                    ? `No grocery products found matching "${searchQuery}"`
+                    : "No grocery products available at the moment."}
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
                 {products.map((product) => (
                   <ProductItem key={product.id} product={product} />
                 ))}

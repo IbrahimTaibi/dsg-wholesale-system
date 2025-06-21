@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAppState } from "../hooks/useAppState";
+import { useAuth } from "../contexts/AuthContext";
 import { apiService } from "../config/api";
 import { Lock, User as UserIcon } from "lucide-react";
 
@@ -21,7 +21,7 @@ interface PasswordFormData {
 }
 
 const Settings: React.FC = () => {
-  const { user } = useAppState();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<"profile" | "password">("profile");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{

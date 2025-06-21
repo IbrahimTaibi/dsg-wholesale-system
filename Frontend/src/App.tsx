@@ -1,20 +1,17 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+// import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
-import {
-  AppStateProvider,
-  CustomThemeContext,
-  CustomThemeProvider,
-} from "./contexts";
+import { CustomThemeContext, CustomThemeProvider } from "./contexts";
+import { AppProvider } from "./contexts/AppProvider";
 import { Layout } from "./components";
 import { AuthModal } from "./components/auth/AuthModal";
 import { AppRoutes } from "./routes/AppRoutes";
 import { getTheme } from "./config/theme";
-import { useAppState } from "./hooks";
+import { useAuth } from "./contexts/AuthContext";
 
 const AppContent: React.FC = () => {
-  const { loading } = useAppState();
+  const { loading } = useAuth();
 
   if (loading) {
     return (
@@ -47,11 +44,9 @@ const ThemedApp: React.FC = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <AppStateProvider>
-        <Router>
-          <AppContent />
-        </Router>
-      </AppStateProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
     </MuiThemeProvider>
   );
 };

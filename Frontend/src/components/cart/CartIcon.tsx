@@ -1,14 +1,14 @@
 import React from "react";
 import { Badge, IconButton, Box, Zoom, Fade } from "@mui/material";
 import { ShoppingCart } from "lucide-react";
-import { useAppState } from "../../hooks";
+import { useCart } from "../../contexts/CartContext";
 
 interface CartIconProps {
   onClick: () => void;
 }
 
 export const CartIcon: React.FC<CartIconProps> = ({ onClick }) => {
-  const { cart } = useAppState();
+  const { cart } = useCart();
 
   return (
     <Box sx={{ position: "relative" }}>

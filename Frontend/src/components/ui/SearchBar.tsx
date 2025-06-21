@@ -1,13 +1,13 @@
 import React from "react";
 import { Search } from "lucide-react";
-import { useAppState } from "../../hooks";
+import { useUI } from "../../contexts/UIContext";
 
 interface SearchBarProps {
   onSearch?: (query: string) => void;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const { searchQuery, setSearchQuery } = useAppState();
+  const { searchQuery, setSearchQuery } = useUI();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;

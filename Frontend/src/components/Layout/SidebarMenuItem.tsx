@@ -1,7 +1,8 @@
 import React from "react";
-import { useNavigation, useAppState } from "../../hooks";
+import { useNavigation } from "../../hooks";
 import { ICON_MAP } from "../../config/constants";
 import { MenuItem } from "../../types";
+import { useUI } from "../../contexts/UIContext";
 
 interface SidebarMenuItemProps {
   item: MenuItem;
@@ -9,7 +10,7 @@ interface SidebarMenuItemProps {
 
 export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
   const { navigateToMenuItem, isCurrentRoute, ROUTES } = useNavigation();
-  const { selectedMenuItem } = useAppState();
+  const { selectedMenuItem } = useUI();
 
   // Route mapping for active state checking
   const ROUTE_MAP: Record<string, string> = {

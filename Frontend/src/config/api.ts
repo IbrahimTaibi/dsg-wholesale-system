@@ -17,10 +17,17 @@ api.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/";
+      // Only redirect for authenticated routes, not for public product browsing
+      const url = error.config?.url || "";
+      const isPublicRoute =
+        url.includes("/products") && error.config?.method === "get";
+
+      if (!isPublicRoute) {
+        // Handle unauthorized access for protected routes
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/";
+      }
     }
     return Promise.reject(error);
   },
@@ -114,6 +121,7 @@ export interface User {
   email: string;
   phone: string;
   storeName?: string;
+  photo?: string;
   role: string;
   address?: {
     street: string;
@@ -401,6 +409,7 @@ export const apiService = {
     limit?: number;
     role?: string;
     isActive?: boolean;
+    search?: string;
   }): Promise<{ users: User[]; pagination: PaginationInfo }> {
     const response = await api.get("/users", { params });
     return response.data;

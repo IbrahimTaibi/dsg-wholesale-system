@@ -1,12 +1,14 @@
 import React from "react";
 import { X } from "lucide-react";
-import { useAppState } from "../../hooks";
+import { useUI } from "../../contexts/UIContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { MENU_ITEMS } from "../../config/constants";
 import { BRANDING } from "../../config/branding";
 
 export const Sidebar: React.FC = () => {
-  const { isSidebarOpen, closeSidebar, user } = useAppState();
+  const { isSidebarOpen, closeSidebar } = useUI();
+  const { user } = useAuth();
 
   // Filter menu items based on user role
   const filteredMenuItems = MENU_ITEMS.filter((item) => {

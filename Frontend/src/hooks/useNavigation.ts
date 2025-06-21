@@ -1,12 +1,14 @@
 // src/hooks/useNavigation.ts
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAppState } from "./useAppState";
-import { ROUTES } from "../routes/AppRoutes";
+import { useAuth } from "../contexts/AuthContext";
+import { useUI } from "../contexts/UIContext";
+import { ROUTES } from "../routes/RouteManager";
 
 export const useNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectMenuItem, closeSidebar, isAuthenticated, user } = useAppState();
+  const { isAuthenticated, user } = useAuth();
+  const { closeSidebar, selectMenuItem } = useUI();
 
   // Route mapping for menu items
   const ROUTE_MAP: Record<string, string> = {
@@ -23,19 +25,15 @@ export const useNavigation = () => {
 
   const navigateToMenuItem = (itemId: string) => {
     selectMenuItem(itemId);
-
     const route = ROUTE_MAP[itemId];
     if (route) {
       navigate(route);
     }
-
-    // Close sidebar on mobile after navigation
     closeSidebar();
   };
 
   const navigateToRoute = (route: string, updateMenuItem = true) => {
     navigate(route);
-
     if (updateMenuItem) {
       // Find the menu item ID for this route
       const menuItemId = Object.entries(ROUTE_MAP).find(
@@ -46,7 +44,6 @@ export const useNavigation = () => {
         selectMenuItem(menuItemId);
       }
     }
-
     closeSidebar();
   };
 

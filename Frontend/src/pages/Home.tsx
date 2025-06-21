@@ -19,8 +19,11 @@ import {
   Coffee,
   Droplets,
   Cake,
+  Package2,
+  ShoppingCart,
 } from "lucide-react";
-import { useAppState } from "../hooks";
+import { useUI } from "../contexts/UIContext";
+import { useNavigation } from "../hooks";
 import { BRANDING } from "../config/branding";
 
 const features = [
@@ -55,24 +58,37 @@ const categories = [
     icon: Droplets,
     title: "Water & Beverages",
     description: "Fresh and pure drinking water",
-    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    route: "/water",
   },
   {
     icon: Coffee,
     title: "Juices",
     description: "100% natural fruit juices",
-    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    route: "/juices",
   },
   {
     icon: Cake,
     title: "Mini Cakes",
     description: "Delicious sweet treats",
-    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+    route: "/cakes",
+  },
+  {
+    icon: Package2,
+    title: "Chips & Snacks",
+    description: "Crunchy and tasty snacks",
+    route: "/chips",
+  },
+  {
+    icon: ShoppingCart,
+    title: "Groceries",
+    description: "Daily essentials and more",
+    route: "/groceries",
   },
 ];
 
 export const Home: React.FC = () => {
-  const { setShowAuthModal } = useAppState();
+  const { setShowAuthModal } = useUI();
+  const { navigateToRoute } = useNavigation();
 
   const handleGetStarted = () => {
     setShowAuthModal("signup");
@@ -84,6 +100,41 @@ export const Home: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      {/* Navigation Bar for Unauthenticated Users */}
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderBottom: 1,
+          borderColor: "divider",
+          py: 2,
+        }}>
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 2,
+              flexWrap: "wrap",
+            }}>
+            {categories.map((category) => (
+              <Button
+                key={category.title}
+                onClick={() => navigateToRoute(category.route, false)}
+                variant="text"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: 500,
+                  "&:hover": {
+                    bgcolor: "action.hover",
+                  },
+                }}>
+                {category.title}
+              </Button>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
       {/* Hero Section */}
       <Box
         sx={{
@@ -259,37 +310,40 @@ export const Home: React.FC = () => {
                     sx={{ flex: "1 1 300px", minWidth: 300 }}>
                     <Zoom in timeout={1000 + index * 200}>
                       <Card
+                        onClick={() => navigateToRoute(category.route, false)}
                         sx={{
-                          height: 200,
-                          background: category.gradient,
-                          color: "white",
-                          cursor: "pointer",
-                          transition: "transform 0.3s ease",
-                          "&:hover": {
-                            transform: "scale(1.05)",
-                          },
+                          textAlign: "center",
+                          p: 3,
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          bgcolor: "background.paper",
+                          border: 1,
+                          borderColor: "divider",
                         }}>
-                        <CardContent
+                        <Box
                           sx={{
-                            height: "100%",
+                            mx: "auto",
+                            mb: 2,
+                            width: 64,
+                            height: 64,
                             display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
                             alignItems: "center",
-                            textAlign: "center",
+                            justifyContent: "center",
+                            borderRadius: "50%",
+                            bgcolor: "action.hover",
                           }}>
-                          <Box sx={{ mb: 2 }}>
-                            <category.icon size={48} />
-                          </Box>
-                          <Typography
-                            variant="h5"
-                            sx={{ fontWeight: 600, mb: 1 }}>
-                            {category.title}
-                          </Typography>
-                          <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                            {category.description}
-                          </Typography>
-                        </CardContent>
+                          <category.icon size={32} color="text.primary" />
+                        </Box>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 600, mb: 1 }}>
+                          {category.title}
+                        </Typography>
+                        <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                          {category.description}
+                        </Typography>
                       </Card>
                     </Zoom>
                   </Box>

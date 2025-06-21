@@ -14,8 +14,6 @@ import { MenuItem, ProductCategory } from "../types";
 export const MENU_ITEMS: MenuItem[] = [
   { id: "userHome", text: "Home", icon: "Home", category: "main" },
   { id: "dashboard", text: "Dashboard", icon: "Grid3x3", category: "admin" },
-  { id: "orders", text: "Orders", icon: "Package", category: "admin" },
-  { id: "users", text: "Users", icon: "Users", category: "admin" },
   {
     id: "water",
     text: "Water & Beverages",

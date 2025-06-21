@@ -15,14 +15,14 @@ import {
 } from "@mui/material";
 import { Plus, Minus, ShoppingCart, Check } from "lucide-react";
 import { Product } from "../../types";
-import { useAppState } from "../../hooks";
+import { useCart } from "../../contexts/CartContext";
 
 interface ProductItemProps {
   product: Product;
 }
 
 export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
-  const { addToCart } = useAppState();
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(product.minOrderQuantity || 1);
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -50,21 +50,25 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           display: "flex",
           flexDirection: "column",
           height: "100%",
+          minHeight: "290px",
+          width: "100%",
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           transform: isHovered ? "translateY(-4px)" : "translateY(0)",
           boxShadow: isHovered
-            ? "0 8px 20px rgba(0,0,0,0.12)"
+            ? "0 6px 16px rgba(0,0,0,0.12)"
             : "0 2px 8px rgba(0,0,0,0.08)",
           borderRadius: 2,
           overflow: "hidden",
           position: "relative",
+          border: "1px solid",
+          borderColor: "divider",
           "&::before": {
             content: '""',
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: 3,
+            height: 2,
             background:
               "linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4)",
             transform: "scaleX(0)",
@@ -77,26 +81,32 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         }}>
         <CardMedia
           component="img"
-          height="140"
-          image={product.image || "/placeholder.jpg"}
+          height="110"
+          image={product.photo || "/placeholder.jpg"}
           alt={product.name}
           sx={{
             objectFit: "cover",
             transition: "transform 0.3s ease",
-            transform: isHovered ? "scale(1.03)" : "scale(1)",
+            transform: isHovered ? "scale(1.02)" : "scale(1)",
+            minHeight: "110px",
           }}
         />
-        <CardContent sx={{ flexGrow: 1, p: 2 }}>
+        <CardContent sx={{ flexGrow: 1, p: 1.5 }}>
           <Typography
             gutterBottom
             variant="h6"
             component="div"
             sx={{
               fontWeight: 600,
-              color: "#2c3e50",
-              mb: 1,
-              fontSize: "1rem",
-              lineHeight: 1.3,
+              color: "text.primary",
+              mb: 0.5,
+              fontSize: "0.9rem",
+              lineHeight: 1.2,
+              minHeight: "2.1em",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
             }}>
             {product.name}
           </Typography>
@@ -104,10 +114,14 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             variant="body2"
             color="text.secondary"
             sx={{
-              lineHeight: 1.4,
-              mb: 2,
-              minHeight: "2.8em",
-              fontSize: "0.875rem",
+              lineHeight: 1.3,
+              mb: 1,
+              minHeight: "1.3em",
+              fontSize: "0.75rem",
+              display: "-webkit-box",
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
             }}>
             {product.description}
           </Typography>
@@ -116,7 +130,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              mb: 1.5,
+              mb: 0.5,
             }}>
             <Typography
               variant="h6"
@@ -126,7 +140,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                fontSize: "1.25rem",
+                fontSize: "1.1rem",
               }}>
               ${product.price.toFixed(2)}
             </Typography>
@@ -147,37 +161,38 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                     ? "#856404"
                     : "#721c24",
                 fontWeight: 500,
-                fontSize: "0.75rem",
-                height: 24,
+                fontSize: "0.65rem",
+                height: 20,
+                px: 1,
               }}
             />
           </Box>
           <Typography
             variant="caption"
             sx={{
-              color: "#7f8c8d",
+              color: "text.secondary",
               fontStyle: "italic",
               display: "block",
-              mb: 1,
-              fontSize: "0.75rem",
+              mb: 0.5,
+              fontSize: "0.65rem",
             }}>
             Min. order: {product.minOrderQuantity} {product.unit}(s)
           </Typography>
         </CardContent>
-        <CardActions sx={{ p: 2, pt: 0, justifyContent: "space-between" }}>
+        <CardActions sx={{ p: 1.5, pt: 0, justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <IconButton
               size="small"
               onClick={() => handleQuantityChange(-1)}
               sx={{
-                backgroundColor: "#f8f9fa",
-                width: 28,
-                height: 28,
+                backgroundColor: "action.hover",
+                width: 24,
+                height: 24,
                 "&:hover": {
-                  backgroundColor: "#e9ecef",
+                  backgroundColor: "action.selected",
                 },
               }}>
-              <Minus size={14} />
+              <Minus size={12} />
             </IconButton>
             <TextField
               size="small"
@@ -191,10 +206,10 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 )
               }
               sx={{
-                width: 60,
+                width: 50,
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: 1.5,
-                  height: 28,
+                  borderRadius: 1,
+                  height: 24,
                 },
               }}
               inputProps={{
@@ -202,7 +217,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 style: {
                   textAlign: "center",
                   fontWeight: 600,
-                  fontSize: "0.875rem",
+                  fontSize: "0.75rem",
                 },
               }}
             />
@@ -210,14 +225,14 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               size="small"
               onClick={() => handleQuantityChange(1)}
               sx={{
-                backgroundColor: "#f8f9fa",
-                width: 28,
-                height: 28,
+                backgroundColor: "action.hover",
+                width: 24,
+                height: 24,
                 "&:hover": {
-                  backgroundColor: "#e9ecef",
+                  backgroundColor: "action.selected",
                 },
               }}>
-              <Plus size={14} />
+              <Plus size={12} />
             </IconButton>
           </Box>
           <Zoom in={!isAdded} timeout={200}>
@@ -225,7 +240,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               size="small"
               variant="contained"
               startIcon={
-                isAdded ? <Check size={16} /> : <ShoppingCart size={16} />
+                isAdded ? <Check size={12} /> : <ShoppingCart size={12} />
               }
               onClick={handleAddToCart}
               disabled={isAdded}
@@ -233,17 +248,18 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 background: isAdded
                   ? "linear-gradient(45deg, #4caf50, #66bb6a)"
                   : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
-                borderRadius: 1.5,
-                px: 2,
-                py: 0.75,
+                borderRadius: 1,
+                px: 1.5,
+                py: 0.5,
                 fontWeight: 600,
                 textTransform: "none",
-                fontSize: "0.875rem",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+                fontSize: "0.75rem",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
                 transition: "all 0.3s ease",
+                minWidth: "60px",
                 "&:hover": {
                   transform: "translateY(-1px)",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  boxShadow: "0 3px 10px rgba(0,0,0,0.15)",
                 },
                 "&:disabled": {
                   background: "linear-gradient(45deg, #4caf50, #66bb6a)",

@@ -15,7 +15,7 @@ import {
   Zoom,
 } from "@mui/material";
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
-import { useAppState } from "../../hooks";
+import { useCart } from "../../contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 
 interface CartDrawerProps {
@@ -24,7 +24,7 @@ interface CartDrawerProps {
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
-  const { cart, removeFromCart, updateCartItemQuantity } = useAppState();
+  const { cart, removeFromCart, updateCartItemQuantity } = useCart();
   const navigate = useNavigate();
 
   const handleCheckout = () => {

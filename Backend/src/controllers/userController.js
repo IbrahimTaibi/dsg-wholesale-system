@@ -69,11 +69,7 @@ const getAllUsers = async (req, res, next) => {
     }
 
     if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { storeName: { $regex: search, $options: "i" } },
-        { phone: { $regex: search, $options: "i" } },
-      ];
+      query.$text = { $search: search };
     }
 
     const users = await User.find(query)

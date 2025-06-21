@@ -6,6 +6,7 @@ const { BCRYPT_ROUNDS } = require("../config/config");
 
 // Register new user
 const register = async (req, res, next) => {
+  console.log("Received registration request:", req.body);
   try {
     const { phone, password, name, storeName, address } = req.body;
 
@@ -57,6 +58,7 @@ const register = async (req, res, next) => {
       phone: user.phone,
       name: user.name,
       storeName: user.storeName,
+      photo: user.photo,
       address: user.address,
       role: user.role,
       isActive: user.isActive,
@@ -69,6 +71,7 @@ const register = async (req, res, next) => {
       user: userResponse,
     });
   } catch (error) {
+    console.error("Error during registration:", error.message);
     next(error);
   }
 };
@@ -108,6 +111,7 @@ const login = async (req, res, next) => {
       phone: user.phone,
       name: user.name,
       storeName: user.storeName,
+      photo: user.photo,
       address: user.address,
       role: user.role,
       isActive: user.isActive,

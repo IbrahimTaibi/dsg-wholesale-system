@@ -10,24 +10,36 @@ const {
   searchProducts,
 } = require("../controllers/productController");
 const { authenticateToken, requireAdmin } = require("../middleware/auth");
+const { cacheMiddleware } = require("../middleware/cache");
 const upload = require("../middleware/upload");
 
 const router = express.Router();
 
-// All product routes require authentication
-router.use(authenticateToken);
+// Public routes (no authentication required for browsing)
+router.get("/search", cacheMiddleware(2 * 60 * 1000), searchProducts); // 2 min cache for search
+router.get(
+  "/category/:category",
+  cacheMiddleware(5 * 60 * 1000),
+  getProductsByCategory,
+); // 5 min cache for category
+router.get("/", cacheMiddleware(3 * 60 * 1000), getAllProducts); // 3 min cache for all products
+router.get("/:id", cacheMiddleware(10 * 60 * 1000), getProductById); // 10 min cache for individual products
 
-// Specific routes MUST come before parameterized routes
-router.get("/search", searchProducts); // Changed from /search/:query
-router.get("/category/:category", getProductsByCategory);
-
-// General routes
-router.get("/", getAllProducts);
-router.get("/:id", getProductById); // This MUST come after specific routes
-
-// Admin routes
-router.post("/", requireAdmin, upload.single("photo"), createProduct);
-router.put("/:id", requireAdmin, upload.single("photo"), updateProduct);
-router.delete("/:id", requireAdmin, deleteProduct);
+// Protected routes (authentication required for admin operations)
+router.post(
+  "/",
+  authenticateToken,
+  requireAdmin,
+  upload.single("photo"),
+  createProduct,
+);
+router.put(
+  "/:id",
+  authenticateToken,
+  requireAdmin,
+  upload.single("photo"),
+  updateProduct,
+);
+router.delete("/:id", authenticateToken, requireAdmin, deleteProduct);
 
 module.exports = router;

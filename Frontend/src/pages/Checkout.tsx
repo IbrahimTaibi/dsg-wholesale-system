@@ -23,7 +23,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { useAppState } from "../hooks/useAppState";
+import { useCart } from "../contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import {
   apiService,
@@ -36,7 +36,7 @@ import {
 const steps = ["Cart Review", "Shipping", "Payment", "Confirmation"];
 
 export const Checkout: React.FC = () => {
-  const { cart, clearCart } = useAppState();
+  const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);

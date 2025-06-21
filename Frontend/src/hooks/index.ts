@@ -1,4 +1,3 @@
-export { useAppState } from "./useAppState";
 // src/hooks/index.ts
 
 export { useNavigation } from "./useNavigation";
