@@ -241,7 +241,7 @@ export const Header: React.FC = () => {
 
         {/* Desktop Dropdown */}
         <div
-          className={`absolute top-full right-0 mt-2 w-80 transition-all duration-300 ease-out transform origin-top-right z-50 ${
+          className={`absolute top-full right-0 mt-2 w-80 transition-all duration-300 ease-out transform origin-top-right z-50 hidden sm:block ${
             isMenuOpen
               ? "opacity-100 scale-100 translate-y-0"
               : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
