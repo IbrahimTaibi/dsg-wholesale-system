@@ -53,19 +53,19 @@ export const Header: React.FC = () => {
 
         {/* Mobile Right Sidebar */}
         <div
-          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200/50 dark:border-gray-700/50 transform transition-transform duration-300 ease-in-out z-[99999] sm:hidden ${
+          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200/50 dark:border-gray-700/50 transform transition-transform duration-300 ease-in-out z-50 sm:hidden ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}>
           {/* Backdrop for mobile */}
           {isMenuOpen && (
             <div
-              className="fixed inset-0 z-[99998] bg-black/20 backdrop-blur-sm sm:hidden"
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm sm:hidden"
               onClick={() => setIsMenuOpen(false)}
             />
           )}
 
           {/* Sidebar Content */}
-          <div className="relative z-[99999] h-full flex flex-col">
+          <div className="relative z-50 h-full flex flex-col">
             {/* Header */}
             <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600">
               <div className="flex items-center justify-between mb-4">
@@ -241,7 +241,7 @@ export const Header: React.FC = () => {
 
         {/* Desktop Dropdown */}
         <div
-          className={`fixed top-16 right-4 w-80 transition-all duration-300 ease-out transform origin-top-right z-[99999] hidden sm:block ${
+          className={`absolute top-full right-0 mt-2 w-80 transition-all duration-300 ease-out transform origin-top-right z-50 ${
             isMenuOpen
               ? "opacity-100 scale-100 translate-y-0"
               : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
@@ -249,16 +249,16 @@ export const Header: React.FC = () => {
           {/* Backdrop */}
           {isMenuOpen && (
             <div
-              className="fixed inset-0 z-[99998] bg-black/20 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
               onClick={() => setIsMenuOpen(false)}
             />
           )}
 
           {/* Dropdown Menu */}
-          <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 relative z-[99999] overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 relative z-50 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-gray-50/50 to-transparent dark:from-gray-800/50 dark:to-transparent" />
             {/* User Info Section */}
-            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600">
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 relative z-10">
               <div className="flex items-center space-x-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
                   {user?.name?.charAt(0)?.toUpperCase() || "U"}
@@ -275,7 +275,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Menu Items */}
-            <div className="py-3">
+            <div className="py-3 relative z-10">
               <button
                 onClick={handleSettings}
                 className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all duration-200 group">
