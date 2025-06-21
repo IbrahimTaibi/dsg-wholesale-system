@@ -100,42 +100,6 @@ export const Home: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
-      {/* Navigation Bar for Unauthenticated Users */}
-      <Box
-        sx={{
-          bgcolor: "background.paper",
-          borderBottom: 1,
-          borderColor: "divider",
-          py: 2,
-          mt: 4,
-        }}>
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 2,
-              flexWrap: "wrap",
-            }}>
-            {categories.map((category) => (
-              <Button
-                key={category.title}
-                onClick={() => navigateToRoute(category.route, false)}
-                variant="text"
-                sx={{
-                  color: "text.primary",
-                  fontWeight: 500,
-                  "&:hover": {
-                    bgcolor: "action.hover",
-                  },
-                }}>
-                {category.title}
-              </Button>
-            ))}
-          </Box>
-        </Container>
-      </Box>
-
       {/* Hero Section */}
       <Box
         sx={{
