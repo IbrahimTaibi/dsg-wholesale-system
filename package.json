@@ -1,0 +1,30 @@
+{
+  "name": "dsg-wholesale",
+  "version": "1.0.0",
+  "description": "DSG Wholesale Management System",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd Backend && npm install && cd ../Frontend && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd Backend && npm run dev",
+    "dev:frontend": "cd Frontend && npm run dev",
+    "build": "cd Frontend && npm run build",
+    "start": "cd Backend && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wholesale",
+    "management",
+    "react",
+    "nodejs",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.80.10"
+  }
+}

@@ -1,0 +1,472 @@
+import React from "react";
+import { Menu, LogIn, UserPlus, User, LogOut, Settings } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAppState } from "../../hooks";
+import { ThemeToggle } from "../ui/ThemeToggle";
+import { SearchBar } from "../ui/SearchBar";
+import { BRANDING } from "../../config/branding";
+import { CartIcon } from "../cart/CartIcon";
+import { CartDrawer } from "../cart/CartDrawer";
+
+export const Header: React.FC = () => {
+  const { toggleSidebar, isAuthenticated, user, logout, setShowAuthModal } =
+    useAppState();
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    setShowAuthModal("login");
+  };
+
+  const handleSignup = () => {
+    setShowAuthModal("signup");
+  };
+
+  const UserMenu = () => {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+    const handleSettings = () => {
+      setIsMenuOpen(false);
+      navigate("/settings");
+    };
+
+    return (
+      <div className="relative">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="flex items-center space-x-2 px-2 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform">
+          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+            <User size={16} />
+          </div>
+          <span className="hidden sm:inline text-sm font-medium">
+            {user?.name || "User"}
+          </span>
+        </button>
+
+        {/* Mobile Right Sidebar */}
+        <div
+          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200/50 dark:border-gray-700/50 transform transition-transform duration-300 ease-in-out z-[99999] sm:hidden ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}>
+          {/* Backdrop for mobile */}
+          {isMenuOpen && (
+            <div
+              className="fixed inset-0 z-[99998] bg-black/20 backdrop-blur-sm sm:hidden"
+              onClick={() => setIsMenuOpen(false)}
+            />
+          )}
+
+          {/* Sidebar Content */}
+          <div className="relative z-[99999] h-full flex flex-col">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600">
+              <div className="flex items-center justify-between mb-4">
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 dark:text-white truncate text-lg">
+                    {user?.name}
+                  </p>
+                  <p className="text-base text-gray-500 dark:text-gray-400 truncate">
+                    {user?.phone}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Menu Items */}
+            <div className="flex-1 py-4">
+              <button
+                onClick={handleSettings}
+                className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 transition-colors duration-200">
+                  <Settings
+                    size={20}
+                    className="text-orange-600 dark:text-orange-400"
+                  />
+                </div>
+                <span className="font-medium text-base">Settings</span>
+                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </button>
+
+              {user?.role === "admin" ? (
+                <button
+                  onClick={() => {
+                    navigate("/dashboard");
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
+                    <svg
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 3h18v18H3V3zm3 3v12h12V6H6zm3 3h6v6H9V9z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="font-medium text-base">Dashboard</span>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    navigate("/orders");
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
+                    <svg
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                  </div>
+                  <span className="font-medium text-base">My Orders</span>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              )}
+
+              <div className="mx-6 my-3 border-t border-gray-100 dark:border-gray-700"></div>
+
+              <button
+                onClick={() => {
+                  logout();
+                  setIsMenuOpen(false);
+                }}
+                className="flex items-center w-full px-6 py-4 text-base text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors duration-200">
+                  <LogOut
+                    size={20}
+                    className="text-red-600 dark:text-red-400"
+                  />
+                </div>
+                <span className="font-medium text-base">Sign Out</span>
+                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <svg
+                    className="w-5 h-5 text-red-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Dropdown */}
+        <div
+          className={`fixed top-16 right-4 w-80 transition-all duration-300 ease-out transform origin-top-right z-[99999] hidden sm:block ${
+            isMenuOpen
+              ? "opacity-100 scale-100 translate-y-0"
+              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+          }`}>
+          {/* Backdrop */}
+          {isMenuOpen && (
+            <div
+              className="fixed inset-0 z-[99998] bg-black/20 backdrop-blur-sm"
+              onClick={() => setIsMenuOpen(false)}
+            />
+          )}
+
+          {/* Dropdown Menu */}
+          <div className="relative z-[99999] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+            {/* User Info Section */}
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600">
+              <div className="flex items-center space-x-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 dark:text-white truncate text-lg">
+                    {user?.name}
+                  </p>
+                  <p className="text-base text-gray-500 dark:text-gray-400 truncate">
+                    {user?.phone}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Menu Items */}
+            <div className="py-3">
+              <button
+                onClick={handleSettings}
+                className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 transition-colors duration-200">
+                  <Settings
+                    size={20}
+                    className="text-orange-600 dark:text-orange-400"
+                  />
+                </div>
+                <span className="font-medium text-base">Settings</span>
+                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </button>
+
+              {user?.role === "admin" ? (
+                <button
+                  onClick={() => {
+                    navigate("/dashboard");
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
+                    <svg
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 3h18v18H3V3zm3 3v12h12V6H6zm3 3h6v6H9V9z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="font-medium text-base">Dashboard</span>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    navigate("/orders");
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
+                    <svg
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                  </div>
+                  <span className="font-medium text-base">My Orders</span>
+                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              )}
+
+              <div className="mx-6 my-3 border-t border-gray-100 dark:border-gray-700"></div>
+
+              <button
+                onClick={() => {
+                  logout();
+                  setIsMenuOpen(false);
+                }}
+                className="flex items-center w-full px-6 py-4 text-base text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors duration-200">
+                  <LogOut
+                    size={20}
+                    className="text-red-600 dark:text-red-400"
+                  />
+                </div>
+                <span className="font-medium text-base">Sign Out</span>
+                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <svg
+                    className="w-5 h-5 text-red-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-orange-700 to-red-700 dark:from-gray-800 dark:to-gray-700 shadow-lg transition-all duration-300 overflow-hidden">
+      <div className="flex items-center justify-between px-2 sm:px-4 py-3 min-w-0">
+        {/* Left side - Menu button and Logo */}
+        <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:rotate-90 transform"
+            aria-label="Toggle menu">
+            <Menu size={24} />
+          </button>
+
+          <div className="flex items-center">
+            <h1 className="text-white text-lg sm:text-2xl font-bold tracking-wider drop-shadow-lg truncate">
+              {BRANDING.name}
+            </h1>
+          </div>
+        </div>
+
+        {/* Center - Search Bar (hidden on very small screens) */}
+        <div className="hidden sm:flex flex-1 max-w-md mx-4">
+          <SearchBar />
+        </div>
+
+        {/* Right side - Auth and Theme toggle */}
+        <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
+          <CartIcon onClick={() => setCartOpen(true)} />
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <button
+                onClick={handleLogin}
+                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform"
+                aria-label="Login">
+                <LogIn size={18} />
+                <span className="hidden sm:inline text-sm font-medium">
+                  Login
+                </span>
+              </button>
+              <button
+                onClick={handleSignup}
+                className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm"
+                aria-label="Sign Up">
+                <UserPlus size={18} />
+                <span className="hidden sm:inline text-sm font-medium">
+                  Sign Up
+                </span>
+              </button>
+            </div>
+          )}
+          <ThemeToggle />
+        </div>
+      </div>
+
+      {/* Mobile Search Bar (shown below header on small screens) */}
+      <div className="sm:hidden px-2 pb-3">
+        <SearchBar />
+      </div>
+
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+    </header>
+  );
+};
