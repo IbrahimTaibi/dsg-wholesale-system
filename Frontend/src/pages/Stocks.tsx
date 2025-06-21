@@ -41,7 +41,7 @@ import {
   TrendingDown,
   AlertTriangle,
 } from "lucide-react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { apiService, Product } from "../config/api";
 
 // Define stock status color type

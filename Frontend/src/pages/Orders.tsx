@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Container, Paper, Fade } from "@mui/material";
 import { Package } from "lucide-react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import OrdersTable from "../components/dashboard/OrdersTable";
 
 const Orders: React.FC = () => {

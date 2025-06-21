@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { apiService } from "../config/api";
 import { Lock, User as UserIcon } from "lucide-react";
 

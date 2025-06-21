@@ -1,6 +1,6 @@
 // src/hooks/useNavigation.ts
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "./useAuth";
 import { useUI } from "../contexts/UIContext";
 import { ROUTES } from "../routes/RouteManager";
 

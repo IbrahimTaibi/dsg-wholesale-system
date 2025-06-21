@@ -42,7 +42,7 @@ import {
   Phone,
   Search,
 } from "lucide-react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { apiService, User as ApiUser } from "../config/api";
 import useDebounce from "../hooks/useDebounce";
 

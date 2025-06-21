@@ -20,7 +20,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { apiService, DashboardOverview } from "../config/api";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { StatsCard } from "../components/dashboard/StatsCard";
 import { RevenueChart } from "../components/dashboard/RevenueChart";
 import { CategoryChart } from "../components/dashboard/CategoryChart";
