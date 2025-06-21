@@ -1,10 +1,10 @@
 // src/pages/Juices.tsx
 import React, { useState } from "react";
-import { Grape, Filter, SortAsc, Loader2 } from "lucide-react";
+import { GlassWater, Filter, SortAsc, Loader2 } from "lucide-react";
 import { SearchBar } from "../components";
 import { ProductItem } from "../components/products/ProductItem";
 import { useProducts } from "../hooks";
-import { mapApiProductToProduct } from "../types";
+import { mapApiProductToProduct, Product } from "../types";
 
 export const Juices: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +28,7 @@ export const Juices: React.FC = () => {
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="p-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
-            <Grape className="h-6 w-6 text-gray-700 dark:text-gray-200" />
+            <GlassWater className="h-6 w-6 text-gray-700 dark:text-gray-200" />
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -103,7 +103,7 @@ export const Juices: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-                {products.map((product) => (
+                {products.map((product: Product) => (
                   <ProductItem key={product.id} product={product} />
                 ))}
               </div>

@@ -32,6 +32,7 @@ export interface Product {
   category: string;
   stock: number;
   photo: string;
+  image?: string; // Add image property for mock data
   unit?: string;
   minOrderQuantity?: number;
 }
@@ -64,7 +65,8 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => ({
 });
 
 // Cart types
-export interface CartItem extends Product {
+export interface CartItem {
+  product: Product;
   quantity: number;
 }
 

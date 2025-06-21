@@ -9,9 +9,9 @@ import {
   Chip,
 } from "@mui/material";
 import { useProducts } from "../hooks";
-import { mapApiProductToProduct } from "../types";
+import { mapApiProductToProduct, Product } from "../types";
 import { ProductItem } from "../components/products/ProductItem";
-import { Star, Flame, Droplets, Cookie, Beef } from "lucide-react";
+import { Droplets, Beef, Cookie, Flame, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
 
@@ -119,7 +119,7 @@ export const UserHome: React.FC = () => {
                 mr: 2,
                 color: "primary.contrastText",
               }}>
-              <Star size={24} />
+              <TrendingUp size={24} />
             </Box>
             <Typography
               variant="h4"
@@ -128,7 +128,7 @@ export const UserHome: React.FC = () => {
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-            {mappedAllProducts.slice(0, 6).map((product) => (
+            {mappedAllProducts.slice(0, 6).map((product: Product) => (
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
@@ -158,7 +158,7 @@ export const UserHome: React.FC = () => {
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-            {mappedWaterProducts.map((product) => (
+            {mappedWaterProducts.map((product: Product) => (
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
@@ -188,7 +188,7 @@ export const UserHome: React.FC = () => {
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-            {mappedChipsProducts.map((product) => (
+            {mappedChipsProducts.map((product: Product) => (
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
@@ -218,7 +218,7 @@ export const UserHome: React.FC = () => {
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-            {mappedCakesProducts.map((product) => (
+            {mappedCakesProducts.map((product: Product) => (
               <ProductItem key={product.id} product={product} />
             ))}
           </div>

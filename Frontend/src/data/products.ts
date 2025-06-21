@@ -7,6 +7,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: "Crispy, golden potato chips seasoned with a pinch of salt.",
     price: 2.99,
     category: "Chips",
+    photo:
+      "https://images.unsplash.com/photo-1599490659213-e2b92d720785?q=80&w=2400&auto=format&fit=crop",
     image:
       "https://images.unsplash.com/photo-1599490659213-e2b92d720785?q=80&w=2400&auto=format&fit=crop",
     stock: 150,
@@ -19,6 +21,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: "Pure and refreshing spring water, bottled at the source.",
     price: 1.25,
     category: "Water",
+    photo:
+      "https://images.unsplash.com/photo-1551022372-0bdac0c42738?q=80&w=2264&auto=format&fit=crop",
     image:
       "https://images.unsplash.com/photo-1551022372-0bdac0c42738?q=80&w=2264&auto=format&fit=crop",
     stock: 300,
@@ -32,6 +36,8 @@ export const MOCK_PRODUCTS: Product[] = [
       "Rich, decadent chocolate fudge cake, perfect for any occasion.",
     price: 15.0,
     category: "Cakes",
+    photo:
+      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=2589&auto=format&fit=crop",
     image:
       "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=2589&auto=format&fit=crop",
     stock: 50,
@@ -44,6 +50,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: "100% pure squeezed orange juice, full of vitamins.",
     price: 4.5,
     category: "Juices",
+    photo:
+      "https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=2400&auto=format&fit=crop",
     image:
       "https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=2400&auto=format&fit=crop",
     stock: 100,
@@ -56,6 +64,8 @@ export const MOCK_PRODUCTS: Product[] = [
     description: "Wholesome crackers made with ancient grains.",
     price: 3.75,
     category: "Groceries",
+    photo:
+      "https://images.unsplash.com/photo-1611274341752-a54c35694a1d?q=80&w=2592&auto=format&fit=crop",
     image:
       "https://images.unsplash.com/photo-1611274341752-a54c35694a1d?q=80&w=2592&auto=format&fit=crop",
     stock: 200,

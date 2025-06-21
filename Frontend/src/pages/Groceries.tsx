@@ -4,7 +4,7 @@ import { ShoppingBasket, Filter, SortAsc, Loader2 } from "lucide-react";
 import { SearchBar } from "../components";
 import { ProductItem } from "../components/products/ProductItem";
 import { useProducts } from "../hooks";
-import { mapApiProductToProduct } from "../types";
+import { mapApiProductToProduct, Product } from "../types";
 
 export const Groceries: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -103,7 +103,7 @@ export const Groceries: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-                {products.map((product) => (
+                {products.map((product: Product) => (
                   <ProductItem key={product.id} product={product} />
                 ))}
               </div>
