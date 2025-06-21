@@ -179,8 +179,22 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             Min. order: {product.minOrderQuantity} {product.unit}(s)
           </Typography>
         </CardContent>
-        <CardActions sx={{ p: 1.5, pt: 0, justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+        <CardActions
+          sx={{
+            p: 1.5,
+            pt: 0,
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            gap: 1,
+          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              flex: "1 1 120px",
+            }}>
             <IconButton
               size="small"
               onClick={() => handleQuantityChange(-1)}
@@ -235,39 +249,64 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               <Plus size={12} />
             </IconButton>
           </Box>
-          <Zoom in={!isAdded} timeout={200}>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={
-                isAdded ? <Check size={12} /> : <ShoppingCart size={12} />
-              }
-              onClick={handleAddToCart}
-              disabled={isAdded}
-              sx={{
-                background: isAdded
-                  ? "linear-gradient(45deg, #4caf50, #66bb6a)"
-                  : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
-                borderRadius: 1,
-                px: 1.5,
-                py: 0.5,
-                fontWeight: 600,
-                textTransform: "none",
-                fontSize: "0.75rem",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-                transition: "all 0.3s ease",
-                minWidth: "60px",
-                "&:hover": {
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 3px 10px rgba(0,0,0,0.15)",
-                },
-                "&:disabled": {
+          <Box
+            sx={{
+              flex: "1 1 120px",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}>
+            <Zoom in={!isAdded} timeout={200} style={{ width: "100%" }}>
+              <Button
+                size="small"
+                variant="contained"
+                startIcon={
+                  isAdded ? <Check size={12} /> : <ShoppingCart size={12} />
+                }
+                onClick={handleAddToCart}
+                disabled={isAdded}
+                sx={{
+                  width: "100%",
+                  minWidth: "110px",
+                  background: isAdded
+                    ? "linear-gradient(45deg, #4caf50, #66bb6a)"
+                    : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
+                  borderRadius: 1,
+                  px: 1.5,
+                  py: 0.5,
+                  fontWeight: 600,
+                  textTransform: "none",
+                  fontSize: "0.7rem",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+                  },
+                }}>
+                {isAdded ? "Added" : "Add to Cart"}
+              </Button>
+            </Zoom>
+            <Zoom
+              in={isAdded}
+              timeout={200}
+              style={{ position: "absolute", width: "100%" }}>
+              <Button
+                size="small"
+                variant="contained"
+                startIcon={<Check size={12} />}
+                disabled
+                sx={{
+                  width: "100%",
+                  minWidth: "110px",
                   background: "linear-gradient(45deg, #4caf50, #66bb6a)",
-                },
-              }}>
-              {isAdded ? "Added!" : "Add"}
-            </Button>
-          </Zoom>
+                  color: "white",
+                  py: 0.8,
+                  px: 1,
+                  fontSize: "0.7rem",
+                }}>
+                Added
+              </Button>
+            </Zoom>
+          </Box>
         </CardActions>
       </Card>
     </Fade>
