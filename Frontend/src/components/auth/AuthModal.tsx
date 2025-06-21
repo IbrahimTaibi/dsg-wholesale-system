@@ -94,13 +94,13 @@ export const AuthModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-auto flex flex-col max-h-full">
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-700 to-red-700 dark:from-gray-700 dark:to-gray-600 px-6 py-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-orange-700 to-red-700 dark:from-gray-700 dark:to-gray-600 px-4 sm:px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center space-x-2 text-white">
-            {isLogin ? <LogIn size={24} /> : <UserPlus size={24} />}
-            <h2 className="text-xl font-bold">
+            {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
+            <h2 className="text-lg sm:text-xl font-bold">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h2>
           </div>
@@ -113,7 +113,9 @@ export const AuthModal: React.FC = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 sm:p-6 space-y-4 overflow-y-auto">
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
               <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
