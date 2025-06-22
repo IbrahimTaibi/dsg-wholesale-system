@@ -21,7 +21,7 @@ export const MENU_ITEMS: MenuItem[] = [
     category: "products",
   },
   {
-    id: "premiumJuices",
+    id: "juices",
     text: "Premium Juices",
     icon: "Package2",
     category: "products",
