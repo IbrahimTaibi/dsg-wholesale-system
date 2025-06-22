@@ -139,10 +139,6 @@ const createProduct = async (req, res, next) => {
   try {
     const { name, category, price, stock, description } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ error: "Product photo is required" });
-    }
-
     // Validate required fields
     if (!name || !category || !price || stock === undefined) {
       return res.status(400).json({
@@ -150,15 +146,27 @@ const createProduct = async (req, res, next) => {
       });
     }
 
-    const product = new Product({
+    // Validate price and stock are numbers
+    if (isNaN(parseFloat(price)) || isNaN(parseInt(stock))) {
+      return res.status(400).json({
+        error: "Price and stock must be valid numbers",
+      });
+    }
+
+    const productData = {
       name,
       category,
-      photo: req.file.filename,
       price: parseFloat(price),
       stock: parseInt(stock),
       description: description || "",
-    });
+    };
 
+    // Add photo if uploaded
+    if (req.file) {
+      productData.photo = req.file.filename;
+    }
+
+    const product = new Product(productData);
     await product.save();
 
     res.status(201).json({
@@ -192,18 +200,27 @@ const updateProduct = async (req, res, next) => {
     const oldPhoto = product.photo;
 
     // Prepare update data
-    const updateData = {
-      name: name || product.name,
-      category: category || product.category,
-      price: price ? parseFloat(price) : product.price,
-      stock: stock !== undefined ? parseInt(stock) : product.stock,
-      description:
-        description !== undefined ? description : product.description,
-      isAvailable:
-        isAvailable !== undefined
-          ? isAvailable === "true"
-          : product.isAvailable,
-    };
+    const updateData = {};
+
+    // Only update fields that are provided
+    if (name !== undefined) updateData.name = name;
+    if (category !== undefined) updateData.category = category;
+    if (price !== undefined) {
+      if (isNaN(parseFloat(price))) {
+        return res.status(400).json({ error: "Price must be a valid number" });
+      }
+      updateData.price = parseFloat(price);
+    }
+    if (stock !== undefined) {
+      if (isNaN(parseInt(stock))) {
+        return res.status(400).json({ error: "Stock must be a valid number" });
+      }
+      updateData.stock = parseInt(stock);
+    }
+    if (description !== undefined) updateData.description = description;
+    if (isAvailable !== undefined) {
+      updateData.isAvailable = isAvailable === "true" || isAvailable === true;
+    }
 
     // Update photo if new one is uploaded
     if (req.file) {

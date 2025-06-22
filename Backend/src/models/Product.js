@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      required: [true, "Product photo is required"],
+      required: false,
     },
     price: {
       type: Number,
