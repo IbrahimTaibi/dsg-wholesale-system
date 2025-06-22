@@ -134,7 +134,7 @@ const StocksManagementPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiService.getProducts({
+      const response = await apiService.getAllProductsAdmin({
         page: page + 1,
         limit: rowsPerPage,
       });
@@ -222,14 +222,47 @@ const StocksManagementPage: React.FC = () => {
   const handleSubmit = async () => {
     setActionLoading(true);
     try {
-      // For now, we'll just show a success message since the API doesn't have these methods
-      // In a real implementation, you would call the appropriate API methods
-      console.log("Product data:", formData);
-      setError("Product management API methods not implemented yet");
+      if (editingProduct) {
+        // Update existing product
+        const result = await apiService.updateProduct(editingProduct._id, {
+          name: formData.name,
+          category: formData.category,
+          price: formData.price,
+          stock: formData.stockQuantity,
+          description: formData.description,
+          photo: selectedPhoto || undefined,
+        });
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: "success",
+        });
+      } else {
+        // Create new product
+        const result = await apiService.createProduct({
+          name: formData.name,
+          category: formData.category,
+          price: formData.price,
+          stock: formData.stockQuantity,
+          description: formData.description,
+          photo: selectedPhoto || undefined,
+        });
+        setSnackbar({
+          open: true,
+          message: result.message,
+          severity: "success",
+        });
+      }
       handleCloseDialog();
-      // fetchProducts(); // Uncomment when API methods are available
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save product");
+      fetchProducts(); // Refresh the products list
+    } catch (error) {
+      console.error("Error saving product:", error);
+      setSnackbar({
+        open: true,
+        message:
+          error instanceof Error ? error.message : "Failed to save product",
+        severity: "error",
+      });
     } finally {
       setActionLoading(false);
     }
@@ -237,16 +270,25 @@ const StocksManagementPage: React.FC = () => {
 
   const handleDeleteProduct = async () => {
     if (!deleteDialog) return;
+
     setActionLoading(true);
     try {
-      // For now, we'll just show a success message since the API doesn't have these methods
-      // In a real implementation, you would call the appropriate API methods
-      console.log("Delete product:", deleteDialog);
-      setError("Product deletion API method not implemented yet");
+      const result = await apiService.deleteProduct(deleteDialog);
+      setSnackbar({
+        open: true,
+        message: result.message,
+        severity: "success",
+      });
       setDeleteDialog(null);
-      // fetchProducts(); // Uncomment when API methods are available
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to delete product");
+      fetchProducts(); // Refresh the products list
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      setSnackbar({
+        open: true,
+        message:
+          error instanceof Error ? error.message : "Failed to delete product",
+        severity: "error",
+      });
     } finally {
       setActionLoading(false);
     }

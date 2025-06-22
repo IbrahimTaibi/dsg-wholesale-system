@@ -248,6 +248,94 @@ export const apiService = {
     return response.data;
   },
 
+  // Product Management Methods (Admin)
+  async createProduct(productData: {
+    name: string;
+    category: string;
+    price: number;
+    stock: number;
+    description?: string;
+    photo?: File;
+  }): Promise<{ message: string; product: Product }> {
+    const formData = new FormData();
+
+    // Add text fields
+    formData.append("name", productData.name);
+    formData.append("category", productData.category);
+    formData.append("price", productData.price.toString());
+    formData.append("stock", productData.stock.toString());
+    if (productData.description) {
+      formData.append("description", productData.description);
+    }
+
+    // Add photo if provided
+    if (productData.photo) {
+      formData.append("photo", productData.photo);
+    }
+
+    const response = await api.post("/products", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
+  async updateProduct(
+    productId: string,
+    productData: {
+      name?: string;
+      category?: string;
+      price?: number;
+      stock?: number;
+      description?: string;
+      isAvailable?: boolean;
+      photo?: File;
+    },
+  ): Promise<{ message: string; product: Product }> {
+    const formData = new FormData();
+
+    // Add text fields
+    if (productData.name) formData.append("name", productData.name);
+    if (productData.category) formData.append("category", productData.category);
+    if (productData.price !== undefined)
+      formData.append("price", productData.price.toString());
+    if (productData.stock !== undefined)
+      formData.append("stock", productData.stock.toString());
+    if (productData.description !== undefined)
+      formData.append("description", productData.description);
+    if (productData.isAvailable !== undefined)
+      formData.append("isAvailable", productData.isAvailable.toString());
+
+    // Add photo if provided
+    if (productData.photo) {
+      formData.append("photo", productData.photo);
+    }
+
+    const response = await api.put(`/products/${productId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
+  async deleteProduct(productId: string): Promise<{ message: string }> {
+    const response = await api.delete(`/products/${productId}`);
+    return response.data;
+  },
+
+  async getAllProductsAdmin(params?: {
+    page?: number;
+    limit?: number;
+    category?: string;
+    search?: string;
+    isAvailable?: boolean;
+  }): Promise<{ products: Product[]; pagination: PaginationInfo }> {
+    const response = await api.get("/products/admin", { params });
+    return response.data;
+  },
+
   // Cart Validation
   async validateCart(items: CartItem[]): Promise<CartValidationResponse> {
     const response = await api.post("/orders/validate-cart", { items });

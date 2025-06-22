@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Filter, SortAsc, ChevronDown, X } from "lucide-react";
+import { SortAsc, ChevronDown, X, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface SortFilterProps {
@@ -19,11 +19,11 @@ export interface FilterOptions {
 }
 
 const sortOptions = [
-  { value: "createdAt", label: "Newest First" },
-  { value: "name", label: "Name A-Z" },
-  { value: "price", label: "Price Low to High" },
-  { value: "price_desc", label: "Price High to Low" },
-  { value: "stock", label: "Stock Level" },
+  { value: "createdAt", label: "Newest First", icon: "🆕" },
+  { value: "name", label: "Name A-Z", icon: "📝" },
+  { value: "price", label: "Price Low to High", icon: "💰" },
+  { value: "price_desc", label: "Price High to Low", icon: "💎" },
+  { value: "stock", label: "Stock Level", icon: "📦" },
 ];
 
 export const SortFilter: React.FC<SortFilterProps> = ({
@@ -63,97 +63,135 @@ export const SortFilter: React.FC<SortFilterProps> = ({
   const hasActiveFilters = Object.keys(currentFilters).length > 0;
 
   return (
-    <div className="flex gap-3 relative">
-      {/* Sort Button */}
-      <div className="relative">
+    <div className="flex flex-col sm:flex-row gap-3 w-full">
+      {/* Enhanced Sort Button */}
+      <div className="relative flex-1">
         <button
           onClick={() => setShowSortMenu(!showSortMenu)}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-          <SortAsc className="h-4 w-4" />
-          <span className="text-sm">{getCurrentSortLabel()}</span>
-          <ChevronDown className="h-4 w-4" />
+          className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+              <SortAsc className="h-4 w-4 text-white" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Sort by
+              </p>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {getCurrentSortLabel()}
+              </p>
+            </div>
+          </div>
+          <ChevronDown
+            className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+              showSortMenu ? "rotate-180" : ""
+            }`}
+          />
         </button>
 
-        {/* Sort Dropdown */}
+        {/* Enhanced Sort Dropdown */}
         {showSortMenu && (
-          <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-10 overflow-hidden">
             {sortOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => handleSortChange(option.value)}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
                   currentSort === option.value
-                    ? "bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400"
-                    : ""
+                    ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 text-blue-600 dark:text-blue-400"
+                    : "text-gray-700 dark:text-gray-300"
                 }`}>
-                {option.label}
+                <span className="text-lg">{option.icon}</span>
+                <span className="font-medium">{option.label}</span>
+                {currentSort === option.value && (
+                  <div className="ml-auto w-2 h-2 bg-blue-500 rounded-full"></div>
+                )}
               </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* Filter Button */}
+      {/* Enhanced Filter Button */}
       <div className="relative">
         <button
           onClick={() => setShowFilterMenu(!showFilterMenu)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+          className={`flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md ${
             hasActiveFilters
-              ? "bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400"
-              : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+              ? "bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600"
+              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
           }`}>
-          <Filter className="h-4 w-4" />
-          <span className="text-sm">{t("filter")}</span>
+          <div className="p-2 rounded-lg bg-white/20">
+            <SlidersHorizontal className="h-4 w-4" />
+          </div>
+          <span className="font-medium">{t("filter")}</span>
           {hasActiveFilters && (
-            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
           )}
         </button>
 
-        {/* Filter Dropdown */}
+        {/* Enhanced Filter Dropdown */}
         {showFilterMenu && (
-          <div className="absolute top-full right-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 p-4">
-            <div className="space-y-4">
+          <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-10 p-6">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Filters
+                </h3>
+                {hasActiveFilters && (
+                  <button
+                    onClick={handleFilterReset}
+                    className="text-sm text-red-500 hover:text-red-600 transition-colors">
+                    Clear all
+                  </button>
+                )}
+              </div>
+
               {/* Price Range */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Price Range
                 </label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={localFilters.priceRange?.min || ""}
-                    onChange={(e) =>
-                      setLocalFilters({
-                        ...localFilters,
-                        priceRange: {
-                          ...localFilters.priceRange,
-                          min: parseFloat(e.target.value) || 0,
-                        },
-                      })
-                    }
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={localFilters.priceRange?.max || ""}
-                    onChange={(e) =>
-                      setLocalFilters({
-                        ...localFilters,
-                        priceRange: {
-                          ...localFilters.priceRange,
-                          max: parseFloat(e.target.value) || 0,
-                        },
-                      })
-                    }
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={localFilters.priceRange?.min || ""}
+                      onChange={(e) =>
+                        setLocalFilters({
+                          ...localFilters,
+                          priceRange: {
+                            ...localFilters.priceRange,
+                            min: parseFloat(e.target.value) || 0,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={localFilters.priceRange?.max || ""}
+                      onChange={(e) =>
+                        setLocalFilters({
+                          ...localFilters,
+                          priceRange: {
+                            ...localFilters.priceRange,
+                            max: parseFloat(e.target.value) || 0,
+                          },
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* In Stock Only */}
-              <div className="flex items-center">
+              <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <input
                   type="checkbox"
                   id="inStock"
@@ -164,25 +202,25 @@ export const SortFilter: React.FC<SortFilterProps> = ({
                       inStock: e.target.checked,
                     })
                   }
-                  className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   htmlFor="inStock"
-                  className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
                   In Stock Only
                 </label>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={handleFilterApply}
-                  className="flex-1 px-3 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors">
-                  Apply
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200">
+                  Apply Filters
                 </button>
                 <button
                   onClick={handleFilterReset}
-                  className="px-3 py-2 text-gray-600 dark:text-gray-400 text-sm hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+                  className="px-4 py-2 text-gray-600 dark:text-gray-400 text-sm hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
                   Reset
                 </button>
               </div>
@@ -191,13 +229,13 @@ export const SortFilter: React.FC<SortFilterProps> = ({
         )}
       </div>
 
-      {/* Clear Filters */}
+      {/* Clear Filters Button */}
       {hasActiveFilters && (
         <button
           onClick={handleFilterReset}
-          className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+          className="flex items-center gap-2 px-4 py-3 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors bg-red-50 dark:bg-red-900/20 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30">
           <X className="h-4 w-4" />
-          Clear
+          <span className="text-sm font-medium">Clear</span>
         </button>
       )}
     </div>
