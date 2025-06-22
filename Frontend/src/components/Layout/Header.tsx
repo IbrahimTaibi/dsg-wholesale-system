@@ -8,6 +8,7 @@ import { SearchBar } from "../ui/SearchBar";
 import { BRANDING } from "../../config/branding";
 import { CartIcon } from "../cart/CartIcon";
 import { CartDrawer } from "../cart/CartDrawer";
+import { useTranslation } from "react-i18next";
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -15,6 +16,7 @@ export const Header: React.FC = () => {
   const [cartOpen, setCartOpen] = React.useState(false);
   const navigate = useNavigate();
   const headerRef = useRef<HTMLElement>(null);
+  const { i18n } = useTranslation();
 
   useLayoutEffect(() => {
     if (headerRef.current) {
@@ -469,6 +471,13 @@ export const Header: React.FC = () => {
               </div>
             )}
             <ThemeToggle />
+            <button
+              onClick={() =>
+                i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")
+              }
+              className="hidden sm:flex items-center px-3 py-2 rounded-lg text-white hover:bg-white/10">
+              {i18n.language.toUpperCase()}
+            </button>
           </div>
         </div>
 

@@ -6,6 +6,7 @@ import { CustomThemeProvider } from "./contexts/ThemeContext";
 import { AppProvider } from "./contexts/AppProvider";
 import "./index.css"; // Tailwind CSS imports
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./i18n";
 
 // Create a client with better configuration
 const queryClient = new QueryClient({

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Typography,
@@ -38,6 +39,7 @@ export const UserHome: React.FC = () => {
     limit: 6,
   });
   const { products: allProducts } = useProducts({ limit: 8 });
+  const { t } = useTranslation();
 
   // Map API products to frontend products
   const mappedWaterProducts = waterProducts.map(mapApiProductToProduct);
@@ -47,6 +49,13 @@ export const UserHome: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      <Container maxWidth="xl" sx={{ pt: 4 }}>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 700, color: "text.primary", mb: 4 }}>
+          {t("greeting")}
+        </Typography>
+      </Container>
       {/* Categories Section */}
       <Box sx={{ py: { xs: 4, md: 6 } }}>
         <Container maxWidth="xl">
