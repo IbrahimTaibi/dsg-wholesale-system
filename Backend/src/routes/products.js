@@ -23,11 +23,12 @@ router.get(
   cacheMiddleware(5 * 60 * 1000),
   getProductsByCategory,
 ); // 5 min cache for category
-router.get("/", cacheMiddleware(3 * 60 * 1000), getAllProducts); // 3 min cache for all products
-router.get("/:id", cacheMiddleware(10 * 60 * 1000), getProductById); // 10 min cache for individual products
 
 // Admin routes (authentication and admin role required)
 router.get("/admin", authenticateToken, requireAdmin, getAllProductsAdmin); // Admin version of getAllProducts
+
+router.get("/", cacheMiddleware(3 * 60 * 1000), getAllProducts); // 3 min cache for all products
+router.get("/:id", cacheMiddleware(10 * 60 * 1000), getProductById); // 10 min cache for individual products
 
 // Protected routes (authentication required for admin operations)
 router.post(
