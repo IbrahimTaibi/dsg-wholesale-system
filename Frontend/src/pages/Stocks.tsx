@@ -138,6 +138,19 @@ const StocksManagementPage: React.FC = () => {
         page: page + 1,
         limit: rowsPerPage,
       });
+
+      // Ensure response.products exists and is an array
+      if (
+        !response ||
+        !response.products ||
+        !Array.isArray(response.products)
+      ) {
+        console.error("Invalid response format:", response);
+        setProducts([]);
+        setTotalProducts(0);
+        return;
+      }
+
       // Convert API products to our StockProduct type
       const stockProducts: StockProduct[] = response.products.map(
         (product: Product) => ({
@@ -153,9 +166,12 @@ const StocksManagementPage: React.FC = () => {
         }),
       );
       setProducts(stockProducts);
-      setTotalProducts(response.pagination.total);
+      setTotalProducts(response.pagination?.total || 0);
     } catch (err: unknown) {
+      console.error("Error fetching products:", err);
       setError(err instanceof Error ? err.message : "Failed to load products");
+      setProducts([]); // Ensure products is always an array
+      setTotalProducts(0);
     } finally {
       setLoading(false);
     }
@@ -469,7 +485,7 @@ const StocksManagementPage: React.FC = () => {
                     // Mobile Card Layout
                     <Box
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      {products.map((product) => {
+                      {(products || []).map((product) => {
                         const stockStatus = getStockStatus(product);
                         return (
                           <Paper
@@ -583,7 +599,7 @@ const StocksManagementPage: React.FC = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {products.map((product) => {
+                          {(products || []).map((product) => {
                             const stockStatus = getStockStatus(product);
                             return (
                               <TableRow key={product._id} hover>
@@ -727,7 +743,7 @@ const StocksManagementPage: React.FC = () => {
                       setFormData({ ...formData, category: e.target.value })
                     }
                     label="Category">
-                    {CATEGORIES.map((category) => (
+                    {(CATEGORIES || []).map((category) => (
                       <MenuItem key={category} value={category}>
                         {category}
                       </MenuItem>
