@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
   const [cartOpen, setCartOpen] = React.useState(false);
   const navigate = useNavigate();
   const headerRef = useRef<HTMLElement>(null);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useLayoutEffect(() => {
     if (headerRef.current) {
@@ -114,7 +114,7 @@ export const Header: React.FC = () => {
                     className="text-orange-600 dark:text-orange-400"
                   />
                 </div>
-                <span className="font-medium text-base">Settings</span>
+                <span className="font-medium text-base">{t("settings")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <svg
                     className="w-5 h-5 text-gray-400"
@@ -152,7 +152,9 @@ export const Header: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <span className="font-medium text-base">Dashboard</span>
+                  <span className="font-medium text-base">
+                    {t("dashboard")}
+                  </span>
                   <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <svg
                       className="w-5 h-5 text-gray-400"
@@ -189,7 +191,7 @@ export const Header: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <span className="font-medium text-base">My Orders</span>
+                  <span className="font-medium text-base">{t("myOrders")}</span>
                   <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <svg
                       className="w-5 h-5 text-gray-400"
@@ -221,7 +223,7 @@ export const Header: React.FC = () => {
                     className="text-red-600 dark:text-red-400"
                   />
                 </div>
-                <span className="font-medium text-base">Sign Out</span>
+                <span className="font-medium text-base">{t("signOut")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <svg
                     className="w-5 h-5 text-red-400"
@@ -287,7 +289,7 @@ export const Header: React.FC = () => {
                     className="text-orange-600 dark:text-orange-400"
                   />
                 </div>
-                <span className="font-medium text-base">Settings</span>
+                <span className="font-medium text-base">{t("settings")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <svg
                     className="w-5 h-5 text-gray-400"
@@ -325,7 +327,9 @@ export const Header: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <span className="font-medium text-base">Dashboard</span>
+                  <span className="font-medium text-base">
+                    {t("dashboard")}
+                  </span>
                   <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <svg
                       className="w-5 h-5 text-gray-400"
@@ -362,7 +366,7 @@ export const Header: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <span className="font-medium text-base">My Orders</span>
+                  <span className="font-medium text-base">{t("myOrders")}</span>
                   <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <svg
                       className="w-5 h-5 text-gray-400"
@@ -394,7 +398,7 @@ export const Header: React.FC = () => {
                     className="text-red-600 dark:text-red-400"
                   />
                 </div>
-                <span className="font-medium text-base">Sign Out</span>
+                <span className="font-medium text-base">{t("signOut")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <svg
                     className="w-5 h-5 text-red-400"
@@ -456,7 +460,7 @@ export const Header: React.FC = () => {
                   aria-label="Login">
                   <LogIn size={18} />
                   <span className="hidden sm:inline text-sm font-medium">
-                    Login
+                    {t("login")}
                   </span>
                 </button>
                 <button
@@ -465,7 +469,7 @@ export const Header: React.FC = () => {
                   aria-label="Sign Up">
                   <UserPlus size={18} />
                   <span className="hidden sm:inline text-sm font-medium">
-                    Sign Up
+                    {t("signup")}
                   </span>
                 </button>
               </div>

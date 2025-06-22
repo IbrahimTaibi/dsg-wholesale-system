@@ -17,11 +17,11 @@ import { Link } from "react-router-dom";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
 
 const categoryRoutes: { [key: string]: string } = {
-  "Water & Beverages": "/water",
-  Juices: "/juices",
-  "Mini Cakes": "/cakes",
-  "Chips & Snacks": "/chips",
-  Groceries: "/groceries",
+  waterAndBeverages: "/water",
+  premiumJuices: "/juices",
+  miniCakes: "/cakes",
+  chipsAndSnacks: "/chips",
+  groceries: "/groceries",
 };
 
 export const UserHome: React.FC = () => {
@@ -63,7 +63,7 @@ export const UserHome: React.FC = () => {
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
-              Shop by Category
+              {t("shopByCategory")}
             </Typography>
           </Box>
           <Box
@@ -101,7 +101,7 @@ export const UserHome: React.FC = () => {
                         {IconComponent && <IconComponent size={28} />}
                       </Box>
                       <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        {title}
+                        {t(title)}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
@@ -133,7 +133,7 @@ export const UserHome: React.FC = () => {
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
-              Featured Products
+              {t("featuredProducts")}
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
@@ -163,7 +163,7 @@ export const UserHome: React.FC = () => {
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
-              Water & Beverages
+              {t("waterAndBeverages")}
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
@@ -193,7 +193,7 @@ export const UserHome: React.FC = () => {
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
-              Chips & Snacks
+              {t("chipsAndSnacks")}
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
@@ -223,7 +223,7 @@ export const UserHome: React.FC = () => {
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
-              Mini Cakes
+              {t("miniCakes")}
             </Typography>
           </Box>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
@@ -253,7 +253,7 @@ export const UserHome: React.FC = () => {
             <Typography
               variant="h4"
               sx={{ fontWeight: 700, color: "text.primary" }}>
-              Special Offers
+              {t("specialOffers")}
             </Typography>
           </Box>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">

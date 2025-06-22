@@ -1,3 +1,17 @@
 {
-  "greeting": "Hello, Welcome!"
+  "greeting": "Hello, Welcome!",
+  "login": "Login",
+  "signup": "Sign Up",
+  "settings": "Settings",
+  "dashboard": "Dashboard",
+  "myOrders": "My Orders",
+  "signOut": "Sign Out",
+  "shopByCategory": "Shop by Category",
+  "featuredProducts": "Featured Products",
+  "waterAndBeverages": "Water & Beverages",
+  "premiumJuices": "Premium Juices",
+  "miniCakes": "Mini Cakes",
+  "chipsAndSnacks": "Chips & Snacks",
+  "groceries": "Groceries",
+  "specialOffers": "Special Offers"
 }

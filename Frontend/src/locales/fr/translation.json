@@ -1,3 +1,17 @@
 {
-  "greeting": "Bonjour, Bienvenue!"
+  "greeting": "Bonjour, Bienvenue!",
+  "login": "Connexion",
+  "signup": "S'inscrire",
+  "settings": "Paramètres",
+  "dashboard": "Tableau de bord",
+  "myOrders": "Mes commandes",
+  "signOut": "Déconnexion",
+  "shopByCategory": "Acheter par catégorie",
+  "featuredProducts": "Produits vedettes",
+  "waterAndBeverages": "Eau et boissons",
+  "premiumJuices": "Jus de qualité supérieure",
+  "miniCakes": "Mini gâteaux",
+  "chipsAndSnacks": "Chips et snacks",
+  "groceries": "Épicerie",
+  "specialOffers": "Offres spéciales"
 }

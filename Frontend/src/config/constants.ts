@@ -20,7 +20,12 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: "Droplets",
     category: "products",
   },
-  { id: "juices", text: "Juices", icon: "Package2", category: "products" },
+  {
+    id: "premiumJuices",
+    text: "Premium Juices",
+    icon: "Package2",
+    category: "products",
+  },
   { id: "cakes", text: "Mini Cakes", icon: "Cookie", category: "products" },
   {
     id: "chips",
@@ -37,28 +42,35 @@ export const MENU_ITEMS: MenuItem[] = [
 ];
 
 export const PRODUCT_CATEGORIES: Record<string, ProductCategory> = {
-  "Water & Beverages": {
+  waterAndBeverages: {
     icon: "Droplets",
     gradient: "from-blue-500 to-blue-700",
     description: "Fresh & Pure",
     color: "blue",
     count: "250+",
   },
-  "Premium Juices": {
+  premiumJuices: {
     icon: "Package2",
     gradient: "from-green-500 to-green-700",
     description: "100% Natural",
     color: "green",
     count: "180+",
   },
-  "Mini Cakes": {
+  miniCakes: {
     icon: "Cookie",
     gradient: "from-pink-500 to-pink-700",
     description: "Sweet Delights",
     color: "pink",
     count: "120+",
   },
-  Groceries: {
+  chipsAndSnacks: {
+    icon: "Package2",
+    gradient: "from-yellow-500 to-yellow-700",
+    description: "Crunchy & Salty",
+    color: "yellow",
+    count: "90+",
+  },
+  groceries: {
     icon: "ShoppingCart",
     gradient: "from-purple-500 to-purple-700",
     description: "Daily Essentials",
