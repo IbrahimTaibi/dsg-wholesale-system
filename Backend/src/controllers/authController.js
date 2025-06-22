@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { generateToken } = require("../middleware/auth");
 const { BCRYPT_ROUNDS } = require("../config/config");
+const fs = require("fs");
+const path = require("path");
 
 // Register new user
 const register = async (req, res, next) => {
@@ -38,14 +40,22 @@ const register = async (req, res, next) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-    // Create user
-    const user = new User({
+    // Prepare user data
+    const userData = {
       phone,
       password: hashedPassword,
       name,
       storeName,
       address,
-    });
+    };
+
+    // Add photo if uploaded
+    if (req.file) {
+      userData.photo = req.file.filename;
+    }
+
+    // Create user
+    const user = new User(userData);
 
     await user.save();
 
@@ -71,6 +81,14 @@ const register = async (req, res, next) => {
       user: userResponse,
     });
   } catch (error) {
+    // Delete uploaded file if user creation fails
+    if (req.file) {
+      try {
+        await fs.unlink(path.join("uploads", req.file.filename));
+      } catch (unlinkError) {
+        console.error("Error deleting uploaded file:", unlinkError);
+      }
+    }
     console.error("Error during registration:", error.message);
     next(error);
   }

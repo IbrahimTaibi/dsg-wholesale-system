@@ -237,6 +237,7 @@ export const apiService = {
     search?: string;
     page?: number;
     limit?: number;
+    sort?: string;
   }): Promise<{ products: Product[]; pagination: PaginationInfo }> {
     const response = await api.get("/products", { params });
     return response.data;
@@ -302,11 +303,27 @@ export const apiService = {
       state: string;
       zipCode: string;
     };
-  }): Promise<{
-    token: string;
-    user: User;
-  }> {
-    const response = await api.post("/auth/register", userData);
+    photo?: File;
+  }): Promise<{ token: string; user: User }> {
+    const formData = new FormData();
+
+    // Add text fields
+    formData.append("name", userData.name);
+    formData.append("phone", userData.phone);
+    formData.append("password", userData.password);
+    formData.append("storeName", userData.storeName);
+    formData.append("address", JSON.stringify(userData.address));
+
+    // Add photo if provided
+    if (userData.photo) {
+      formData.append("photo", userData.photo);
+    }
+
+    const response = await api.post("/auth/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 

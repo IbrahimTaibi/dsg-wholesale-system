@@ -5,13 +5,17 @@ import { apiService } from "../config/api";
 export interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (credentials: AuthFormData) => Promise<boolean>;
-  signup: (userData: AuthFormData) => Promise<boolean>;
+  login: (
+    credentials: AuthFormData,
+  ) => Promise<{ success: boolean; error?: string }>;
+  signup: (
+    userData: AuthFormData & { photo?: File },
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   loading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -53,7 +57,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, []);
 
-  const login = async (credentials: AuthFormData) => {
+  const login = async (
+    credentials: AuthFormData,
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
       const { token, user: loggedInUser } = await apiService.login(credentials);
       localStorage.setItem("token", token);
@@ -70,17 +76,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       apiService.setAuthHeader(token);
       setUser(userData);
       setIsAuthenticated(true);
-      return true;
-    } catch (error) {
+      return { success: true };
+    } catch (error: unknown) {
       console.error("Login failed:", error);
-      return false;
+      let errorMessage = "Login failed. Please try again.";
+
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as {
+          response?: { data?: { error?: string } };
+        };
+        if (axiosError.response?.data?.error) {
+          errorMessage = axiosError.response.data.error;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      return { success: false, error: errorMessage };
     }
   };
 
-  const signup = async (userData: AuthFormData) => {
+  const signup = async (
+    userData: AuthFormData & { photo?: File },
+  ): Promise<{ success: boolean; error?: string }> => {
     if (!userData.name || !userData.storeName || !userData.address) {
-      throw new Error("Missing fields for signup");
+      return { success: false, error: "Missing required fields for signup" };
     }
+
     try {
       const { token, user: signedUpUser } = await apiService.register({
         name: userData.name,
@@ -88,6 +110,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         password: userData.password,
         storeName: userData.storeName,
         address: userData.address,
+        photo: userData.photo,
       });
       localStorage.setItem("token", token);
       const newUserData: User = {
@@ -103,10 +126,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       apiService.setAuthHeader(token);
       setUser(newUserData);
       setIsAuthenticated(true);
-      return true;
-    } catch (error) {
+      return { success: true };
+    } catch (error: unknown) {
       console.error("Signup failed:", error);
-      return false;
+      let errorMessage = "Failed to create account. Please try again.";
+
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as {
+          response?: { data?: { error?: string } };
+        };
+        if (axiosError.response?.data?.error) {
+          errorMessage = axiosError.response.data.error;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      return { success: false, error: errorMessage };
     }
   };
 

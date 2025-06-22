@@ -6,6 +6,7 @@ interface UseProductsOptions {
   search?: string;
   page?: number;
   limit?: number;
+  sort?: string;
 }
 
 interface ApiProductsResponse {
@@ -19,7 +20,7 @@ interface ApiProductsResponse {
 }
 
 export const useProducts = (options: UseProductsOptions = {}) => {
-  const { category, search, page, limit } = options;
+  const { category, search, page, limit, sort } = options;
 
   const {
     data,
@@ -27,7 +28,7 @@ export const useProducts = (options: UseProductsOptions = {}) => {
     error,
     refetch,
   } = useQuery<ApiProductsResponse, Error>({
-    queryKey: ["products", { category, search, page, limit }],
+    queryKey: ["products", { category, search, page, limit, sort }],
     queryFn: async () => {
       console.log("Fetching products with options:", options);
       const result = await apiService.getProducts(options);

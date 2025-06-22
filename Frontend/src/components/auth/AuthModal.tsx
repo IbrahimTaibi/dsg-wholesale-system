@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { X, Eye, EyeOff, LogIn, UserPlus, Loader2 } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { X, Eye, EyeOff, LogIn, UserPlus, Loader2, Camera } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useUI } from "../../contexts/UIContext";
 import { AuthFormData } from "../../types";
@@ -22,10 +22,52 @@ export const AuthModal: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!showAuthModal) return null;
 
   const isLogin = showAuthModal === "login";
+
+  const handlePhotoSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        setError("Please select a valid image file");
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size must be less than 5MB");
+        return;
+      }
+
+      setSelectedPhoto(file);
+      setError(null);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handlePhotoUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removePhoto = () => {
+    setSelectedPhoto(null);
+    setPhotoPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,15 +75,23 @@ export const AuthModal: React.FC = () => {
     setError(null);
 
     try {
-      const success = await (isLogin ? login(formData) : signup(formData));
-      if (success) {
-        closeModal();
+      if (isLogin) {
+        const result = await login(formData);
+        if (result.success) {
+          closeModal();
+        } else {
+          setError(result.error || "An error occurred. Please try again.");
+        }
       } else {
-        setError(
-          isLogin
-            ? "Invalid phone number or password"
-            : "Failed to create account. Please try again.",
-        );
+        const result = await signup({
+          ...formData,
+          photo: selectedPhoto || undefined,
+        });
+        if (result.success) {
+          closeModal();
+        } else {
+          setError(result.error || "An error occurred. Please try again.");
+        }
       }
     } catch (error) {
       console.error(error);
@@ -86,6 +136,8 @@ export const AuthModal: React.FC = () => {
         zipCode: "",
       },
     });
+    setSelectedPhoto(null);
+    setPhotoPreview(null);
   };
 
   const switchMode = () => {
@@ -258,6 +310,57 @@ export const AuthModal: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {/* Photo Upload Section - Only for Signup */}
+          {!isLogin && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Profile Photo (Optional)
+              </label>
+              <div className="space-y-3">
+                {/* Photo Preview */}
+                {photoPreview && (
+                  <div className="relative inline-block">
+                    <img
+                      src={photoPreview}
+                      alt="Profile preview"
+                      className="w-20 h-20 rounded-lg object-cover border-2 border-gray-300 dark:border-gray-600"
+                    />
+                    <button
+                      type="button"
+                      onClick={removePhoto}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                      <X size={12} />
+                    </button>
+                  </div>
+                )}
+
+                {/* Upload Button */}
+                <button
+                  type="button"
+                  onClick={handlePhotoUpload}
+                  className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-orange-500 dark:hover:border-orange-400 transition-colors text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400">
+                  <Camera className="h-4 w-4" />
+                  <span className="text-sm">
+                    {selectedPhoto ? selectedPhoto.name : "Upload Photo"}
+                  </span>
+                </button>
+
+                {/* Hidden File Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoSelect}
+                  className="hidden"
+                />
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  JPG, PNG, GIF up to 5MB
+                </p>
+              </div>
+            </div>
+          )}
 
           <button
             type="submit"

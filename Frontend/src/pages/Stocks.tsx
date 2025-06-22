@@ -29,7 +29,11 @@ import {
   Chip,
   useTheme,
   useMediaQuery,
+  Snackbar,
 } from "@mui/material";
+import { useAuth } from "../hooks/useAuth";
+import { apiService, Product } from "../config/api";
+import { useTranslation } from "react-i18next";
 import {
   Package,
   Plus,
@@ -40,10 +44,9 @@ import {
   TrendingUp,
   TrendingDown,
   AlertTriangle,
+  Camera,
+  X,
 } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
-import { apiService, Product } from "../config/api";
-import { useTranslation } from "react-i18next";
 
 // Define stock status color type
 type StockStatusColor = "error" | "warning" | "success";
@@ -79,6 +82,7 @@ interface ProductFormData {
   minStockLevel: number;
   maxStockLevel: number;
   description: string;
+  photo?: File;
 }
 
 const CATEGORIES = [
@@ -108,6 +112,13 @@ const StocksManagementPage: React.FC = () => {
   );
   const [deleteDialog, setDeleteDialog] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({ open: false, message: "", severity: "success" });
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
@@ -265,6 +276,58 @@ const StocksManagementPage: React.FC = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handlePhotoSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        setSnackbar({
+          open: true,
+          message: "Please select a valid image file",
+          severity: "error",
+        });
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setSnackbar({
+          open: true,
+          message: "Image size must be less than 5MB",
+          severity: "error",
+        });
+        return;
+      }
+
+      setSelectedPhoto(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handlePhotoUpload = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target.files?.[0]) {
+        handlePhotoSelect({ target } as React.ChangeEvent<HTMLInputElement>);
+      }
+    };
+    input.click();
+  };
+
+  const removePhoto = () => {
+    setSelectedPhoto(null);
+    setPhotoPreview(null);
+  };
 
   if (currentUser?.role !== "admin") {
     return (
@@ -712,6 +775,59 @@ const StocksManagementPage: React.FC = () => {
                 multiline
                 rows={3}
               />
+
+              {/* Photo Upload Section */}
+              <Box>
+                <Typography variant="subtitle2" gutterBottom>
+                  Product Photo
+                </Typography>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                  {/* Photo Preview */}
+                  {photoPreview && (
+                    <Box sx={{ position: "relative", display: "inline-block" }}>
+                      <img
+                        src={photoPreview}
+                        alt="Product preview"
+                        style={{
+                          width: 80,
+                          height: 80,
+                          objectFit: "cover",
+                          borderRadius: 8,
+                          border: "2px solid #e0e0e0",
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        onClick={removePhoto}
+                        sx={{
+                          position: "absolute",
+                          top: -8,
+                          right: -8,
+                          bgcolor: "error.main",
+                          color: "white",
+                          "&:hover": { bgcolor: "error.dark" },
+                        }}>
+                        <X size={16} />
+                      </IconButton>
+                    </Box>
+                  )}
+
+                  {/* Upload Button */}
+                  <Button
+                    variant="outlined"
+                    startIcon={<Camera size={20} />}
+                    onClick={handlePhotoUpload}
+                    sx={{ minWidth: 120 }}>
+                    {selectedPhoto
+                      ? selectedPhoto.name.substring(0, 15) + "..."
+                      : "Upload Photo"}
+                  </Button>
+                </Box>
+                <Typography variant="caption" color="text.secondary">
+                  JPG, PNG, GIF up to 5MB
+                </Typography>
+              </Box>
             </Box>
           </DialogContent>
           <DialogActions>
@@ -805,6 +921,18 @@ const StocksManagementPage: React.FC = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Snackbar for photo upload */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}>
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}>
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Container>
     </Box>
   );

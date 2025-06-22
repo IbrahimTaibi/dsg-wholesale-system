@@ -1,27 +1,45 @@
 import React, { useState } from "react";
-import { Droplets, Filter, SortAsc, Loader2 } from "lucide-react";
-import { SearchBar } from "../components";
+import { Droplets, Loader2 } from "lucide-react";
+import { SearchBar, SortFilter } from "../components";
 import { ProductItem } from "../components/products/ProductItem";
 import { useProducts } from "../hooks";
-import { mapApiProductToProduct, Product } from "../types";
+import { mapApiProductToProduct } from "../types";
 import { useTranslation } from "react-i18next";
+import { FilterOptions } from "../components/ui/SortFilter";
 
 export const WaterBeverages: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [filters, setFilters] = useState<FilterOptions>({});
   const { t } = useTranslation();
+
   const {
     products: apiProducts,
     loading,
     error,
-    pagination,
   } = useProducts({
     category: "water",
     search: searchQuery || undefined,
     limit: 20,
+    sort: sortBy,
   });
 
   // Map API products to frontend products
   const products = apiProducts.map(mapApiProductToProduct);
+
+  // Apply client-side filtering for price range and stock
+  const filteredProducts = products.filter((product) => {
+    if (filters.priceRange?.min && product.price < filters.priceRange.min) {
+      return false;
+    }
+    if (filters.priceRange?.max && product.price > filters.priceRange.max) {
+      return false;
+    }
+    if (filters.inStock && product.stock <= 0) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="p-4 sm:p-6 min-h-screen">
@@ -36,7 +54,7 @@ export const WaterBeverages: React.FC = () => {
               {t("waterAndBeverages")}
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
-              {t("freshAndPure")} - {pagination?.total || 0}{" "}
+              {t("freshAndPure")} - {filteredProducts.length}{" "}
               {t("productsAvailable")}
             </p>
           </div>
@@ -48,78 +66,48 @@ export const WaterBeverages: React.FC = () => {
             <div className="flex-1 max-w-md w-full">
               <SearchBar onSearch={setSearchQuery} />
             </div>
-            <div className="flex gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                <Filter className="h-4 w-4" />
-                {t("filter")}
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                <SortAsc className="h-4 w-4" />
-                {t("sort")}
-              </button>
-            </div>
+            <SortFilter
+              onSortChange={setSortBy}
+              onFilterChange={setFilters}
+              currentSort={sortBy}
+              currentFilters={filters}
+            />
           </div>
         </div>
 
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <div className="flex items-center gap-3">
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              <span className="text-gray-600 dark:text-gray-300">
-                {t("loadingProducts")}
-              </span>
-            </div>
+            <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
-            <div className="text-red-600 dark:text-red-400 mb-2">
-              <span className="font-medium">{t("errorLoadingProducts")}</span>{" "}
-              {error}
-            </div>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-              {t("tryAgain")}
-            </button>
+          <div className="text-center py-12">
+            <p className="text-red-600 dark:text-red-400">{error}</p>
           </div>
         )}
 
         {/* Products Grid */}
         {!loading && !error && (
           <>
-            {products.length === 0 ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-                <div className="text-6xl mb-4">💧</div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {t("noProductsFound")}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600 dark:text-gray-400">
                   {searchQuery
-                    ? `${t("noWaterFoundMatching")} "${searchQuery}"`
-                    : t("noWaterAvailable")}
+                    ? `No products found for "${searchQuery}"`
+                    : "No products available"}
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6">
-                {products.map((product: Product) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredProducts.map((product) => (
                   <ProductItem key={product.id} product={product} />
                 ))}
               </div>
             )}
           </>
-        )}
-
-        {/* Load More */}
-        {!loading && !error && pagination && pagination.pages > 1 && (
-          <div className="text-center mt-8">
-            <button className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-              {t("loadMoreProducts")}
-            </button>
-          </div>
         )}
       </div>
     </div>
