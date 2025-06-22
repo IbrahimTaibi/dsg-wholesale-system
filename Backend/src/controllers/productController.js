@@ -159,6 +159,7 @@ const createProduct = async (req, res, next) => {
       price: parseFloat(price),
       stock: parseInt(stock),
       description: description || "",
+      isAvailable: true,
     };
 
     // Add photo if uploaded
