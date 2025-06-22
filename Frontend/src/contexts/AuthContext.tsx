@@ -17,6 +17,8 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+export { AuthContext };
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {

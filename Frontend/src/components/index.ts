@@ -25,8 +25,3 @@ export { ProductItem } from "./products/ProductItem";
 export { SearchBar } from "./ui/SearchBar";
 export { ThemeToggle } from "./ui/ThemeToggle";
 export { SortFilter } from "./ui/SortFilter";
-
-// New components
-export { CategoryChart } from "./dashboard/CategoryChart";
-export { OrdersTable } from "./dashboard/OrdersTable";
-export { RevenueChart } from "./dashboard/RevenueChart";
