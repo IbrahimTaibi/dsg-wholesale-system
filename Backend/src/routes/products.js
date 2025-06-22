@@ -8,6 +8,7 @@ const {
   deleteProduct,
   getProductsByCategory,
   searchProducts,
+  getAllProductsAdmin,
 } = require("../controllers/productController");
 const { authenticateToken, requireAdmin } = require("../middleware/auth");
 const { cacheMiddleware } = require("../middleware/cache");
@@ -26,7 +27,7 @@ router.get("/", cacheMiddleware(3 * 60 * 1000), getAllProducts); // 3 min cache 
 router.get("/:id", cacheMiddleware(10 * 60 * 1000), getProductById); // 10 min cache for individual products
 
 // Admin routes (authentication and admin role required)
-router.get("/admin", authenticateToken, requireAdmin, getAllProducts); // Admin version of getAllProducts
+router.get("/admin", authenticateToken, requireAdmin, getAllProductsAdmin); // Admin version of getAllProducts
 
 // Protected routes (authentication required for admin operations)
 router.post(

@@ -6,12 +6,12 @@ module.exports = {
   ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/jpg", "image/png", "image/gif"],
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
   CATEGORIES: [
-    "water",
-    "chips",
-    "mini-cakes",
-    "biscuits",
-    "juices",
-    "groceries",
+    "Water & Beverages",
+    "Juices",
+    "Cakes",
+    "Chips",
+    "Groceries",
+    "Other",
   ],
   ORDER_STATUS: ["pending", "delivered", "cancelled"],
   USER_ROLES: ["user", "admin"],
