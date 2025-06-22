@@ -134,25 +134,27 @@ const StocksManagementPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiService.getAllProductsAdmin({
+      const responseData = await apiService.getAllProductsAdmin({
         page: page + 1,
         limit: rowsPerPage,
       });
 
-      // Ensure response.products exists and is an array
-      if (
-        !response ||
-        !response.products ||
-        !Array.isArray(response.products)
-      ) {
-        console.error("Invalid response format:", response);
+      let productsArray = [];
+      let paginationData = null;
+
+      if (responseData && Array.isArray(responseData.products)) {
+        productsArray = responseData.products;
+        paginationData = responseData.pagination;
+      } else if (Array.isArray(responseData)) {
+        productsArray = responseData;
+      } else {
+        console.error("Invalid response format:", responseData);
         setProducts([]);
         setTotalProducts(0);
         return;
       }
 
-      // Convert API products to our StockProduct type
-      const stockProducts: StockProduct[] = response.products.map(
+      const stockProducts: StockProduct[] = productsArray.map(
         (product: Product) => ({
           ...product,
           stockQuantity: product.stock || 0,
@@ -166,11 +168,11 @@ const StocksManagementPage: React.FC = () => {
         }),
       );
       setProducts(stockProducts);
-      setTotalProducts(response.pagination?.total || 0);
+      setTotalProducts(paginationData?.total || productsArray.length);
     } catch (err: unknown) {
       console.error("Error fetching products:", err);
       setError(err instanceof Error ? err.message : "Failed to load products");
-      setProducts([]); // Ensure products is always an array
+      setProducts([]);
       setTotalProducts(0);
     } finally {
       setLoading(false);
