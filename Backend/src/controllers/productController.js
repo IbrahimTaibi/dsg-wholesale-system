@@ -1,7 +1,5 @@
 // src/controllers/productController.js
 const Product = require("../models/Product");
-const fs = require("fs").promises;
-const path = require("path");
 
 // Get all products with optimized queries for M0 cluster
 const getAllProducts = async (req, res, next) => {
@@ -164,7 +162,7 @@ const createProduct = async (req, res, next) => {
 
     // Add photo if uploaded
     if (req.file) {
-      productData.photo = req.file.filename;
+      productData.photo = req.file.path;
     }
 
     const product = new Product(productData);
@@ -197,8 +195,9 @@ const updateProduct = async (req, res, next) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Store old photo filename for potential cleanup
-    const oldPhoto = product.photo;
+    // If a new file is uploaded, the old one is implicitly handled by Cloudinary logic if needed,
+    // or you might implement deletion of the old image here.
+    // For now, we are just removing the fs.unlink part.
 
     // Prepare update data
     const updateData = {};
@@ -225,7 +224,7 @@ const updateProduct = async (req, res, next) => {
 
     // Update photo if new one is uploaded
     if (req.file) {
-      updateData.photo = req.file.filename;
+      updateData.photo = req.file.path;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -234,28 +233,11 @@ const updateProduct = async (req, res, next) => {
       { new: true, runValidators: true },
     );
 
-    // Delete old photo if new one was uploaded
-    if (req.file && oldPhoto) {
-      try {
-        await fs.unlink(path.join("uploads", oldPhoto));
-      } catch (unlinkError) {
-        console.error("Error deleting old photo:", unlinkError);
-      }
-    }
-
     res.json({
       message: "Product updated successfully",
       product: updatedProduct,
     });
   } catch (error) {
-    // Delete uploaded file if update fails
-    if (req.file) {
-      try {
-        await fs.unlink(path.join("uploads", req.file.filename));
-      } catch (unlinkError) {
-        console.error("Error deleting uploaded file:", unlinkError);
-      }
-    }
     next(error);
   }
 };
@@ -268,14 +250,8 @@ const deleteProduct = async (req, res, next) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Delete product photo
-    if (product.photo) {
-      try {
-        await fs.unlink(path.join("uploads", product.photo));
-      } catch (unlinkError) {
-        console.error("Error deleting product photo:", unlinkError);
-      }
-    }
+    // Deletion of the image from Cloudinary would go here if needed.
+    // For now, we are just removing the fs.unlink part.
 
     await Product.findByIdAndDelete(req.params.id);
 

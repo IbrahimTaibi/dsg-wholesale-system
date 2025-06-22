@@ -76,6 +76,12 @@ app.use(limiter);
 app.use(express.json({ limit: "10mb" })); // Limit JSON payload size
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Security headers
+app.use(helmet());
+
+// Serve uploaded files statically - REMOVED for Cloudinary
+// app.use("/api/uploads", express.static(path.join(__dirname, "..", "uploads")));
+
 // CORS configuration with multiple origins support
 const allowedOrigins = [
   "http://localhost:5173",
@@ -173,5 +179,19 @@ app.use(errorTrackingMiddleware);
 
 // Error handling middleware
 app.use(errorHandler);
+
+// API Info
+app.get("/api/info", (req, res) => {
+  const info = {
+    status: "OK",
+    message: "Wholesale Backend API is running!",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    database:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  };
+  res.json(info);
+});
 
 module.exports = app;

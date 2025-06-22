@@ -3,8 +3,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { generateToken } = require("../middleware/auth");
 const { BCRYPT_ROUNDS } = require("../config/config");
-const fs = require("fs");
-const path = require("path");
 
 // Register new user
 const register = async (req, res, next) => {
@@ -51,7 +49,7 @@ const register = async (req, res, next) => {
 
     // Add photo if uploaded
     if (req.file) {
-      userData.photo = req.file.filename;
+      userData.photo = req.file.path;
     }
 
     // Create user
@@ -167,25 +165,28 @@ const getProfile = async (req, res, next) => {
 // Update user profile
 const updateProfile = async (req, res, next) => {
   try {
-    const { name, storeName, address } = req.body;
+    const userId = req.user._id;
+    const { name, phone, storeName, address } = req.body;
 
-    const updateData = {};
-    if (name) updateData.name = name;
-    if (storeName) updateData.storeName = storeName;
-    if (address) updateData.address = address;
+    const updateData = { name, phone, storeName, address };
 
-    const user = await User.findByIdAndUpdate(req.user._id, updateData, {
+    // Handle photo upload
+    if (req.file) {
+      updateData.photo = req.file.path;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
       new: true,
       runValidators: true,
     }).select("-password");
 
-    if (!user) {
+    if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
 
     res.json({
       message: "Profile updated successfully",
-      user,
+      user: updatedUser,
     });
   } catch (error) {
     next(error);
