@@ -18,7 +18,7 @@ export const WaterBeverages: React.FC = () => {
     loading,
     error,
   } = useProducts({
-    category: "water",
+    category: "Water & Beverages",
     search: searchQuery || undefined,
     limit: 20,
     sort: sortBy,

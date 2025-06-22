@@ -15,7 +15,7 @@ export const Chips: React.FC = () => {
     error,
     pagination,
   } = useProducts({
-    category: "chips",
+    category: "Chips",
     search: searchQuery || undefined,
     limit: 20,
   });

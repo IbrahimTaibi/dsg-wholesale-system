@@ -15,7 +15,7 @@ export const Groceries: React.FC = () => {
     error,
     pagination,
   } = useProducts({
-    category: "groceries",
+    category: "Groceries",
     search: searchQuery || undefined,
     limit: 20,
   });
