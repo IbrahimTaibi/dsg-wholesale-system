@@ -75,9 +75,26 @@ const authLimiter = rateLimit({
 // Middleware
 app.use(express.json({ limit: "10mb" })); // Limit JSON payload size
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// CORS configuration with multiple origins support
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://dsg-wholesale-system-4sci.vercel.app",
+  "https://dsg-wholesale-system-4sci-50mwoq048-ibrahimtaibis-projects.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
