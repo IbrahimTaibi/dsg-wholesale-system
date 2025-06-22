@@ -45,6 +45,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { apiService, User as ApiUser } from "../config/api";
 import useDebounce from "../hooks/useDebounce";
+import { useTranslation } from "react-i18next";
 
 // Define the AdminUser interface for the admin interface to avoid conflicts
 interface AdminUser {
@@ -81,6 +82,7 @@ interface UserFormData {
 // Users Management Page Component
 const UsersManagementPage: React.FC = () => {
   const { user: authUser } = useAuth();
+  const { t } = useTranslation();
   const [allUsers, setAllUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -135,11 +137,11 @@ const UsersManagementPage: React.FC = () => {
       );
       setAllUsers(extendedUsers);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load users");
+      setError(err instanceof Error ? err.message : t("failedToLoadUsers"));
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, t]);
 
   useEffect(() => {
     if (authUser?.role === "admin") {
@@ -230,7 +232,7 @@ const UsersManagementPage: React.FC = () => {
       handleCloseDialog();
       fetchUsers();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save user");
+      setError(err instanceof Error ? err.message : t("failedToSaveUser"));
     } finally {
       setActionLoading(false);
     }
@@ -244,7 +246,7 @@ const UsersManagementPage: React.FC = () => {
       setDeleteDialog(null);
       fetchUsers();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to delete user");
+      setError(err instanceof Error ? err.message : t("failedToDeleteUser"));
     } finally {
       setActionLoading(false);
     }
@@ -295,10 +297,10 @@ const UsersManagementPage: React.FC = () => {
     return (
       <Container maxWidth="md" sx={{ py: 8 }}>
         <Typography variant="h4" align="center" sx={{ mt: 8 }}>
-          Access Denied
+          {t("accessDenied")}
         </Typography>
         <Typography align="center" sx={{ color: "text.secondary", mb: 4 }}>
-          You don't have permission to access this page.
+          {t("noAccessPermission")}
         </Typography>
       </Container>
     );
@@ -329,7 +331,7 @@ const UsersManagementPage: React.FC = () => {
                       color: "text.primary",
                       fontSize: { xs: "1.5rem", md: "2.125rem" },
                     }}>
-                    Users Management
+                    {t("usersManagement")}
                   </Typography>
                   <Typography
                     variant="h6"
@@ -338,12 +340,12 @@ const UsersManagementPage: React.FC = () => {
                       fontWeight: 400,
                       fontSize: { xs: "0.875rem", md: "1.25rem" },
                     }}>
-                    Manage user accounts and permissions
+                    {t("manageUserRoles")}
                   </Typography>
                 </Box>
               </Box>
               <Box sx={{ display: "flex", gap: 2 }}>
-                <Tooltip title="Refresh Users">
+                <Tooltip title={t("refreshUsers")}>
                   <IconButton
                     onClick={fetchUsers}
                     disabled={loading}
@@ -367,7 +369,7 @@ const UsersManagementPage: React.FC = () => {
                         "linear-gradient(45deg, #1565c0 30%, #1976d2 90%)",
                     },
                   }}>
-                  Add User
+                  {t("addNewUser")}
                 </Button>
               </Box>
             </Box>
@@ -382,7 +384,7 @@ const UsersManagementPage: React.FC = () => {
             <Paper sx={{ p: 2, mb: 3 }}>
               <TextField
                 fullWidth
-                placeholder="Search users by name, phone, or store name..."
+                placeholder={t("searchUsers")}
                 value={searchQuery}
                 onChange={handleSearch}
                 InputProps={{
@@ -541,16 +543,16 @@ const UsersManagementPage: React.FC = () => {
                     </Box>
                   ) : (
                     // Desktop Table Layout
-                    <TableContainer>
+                    <TableContainer sx={{ maxWidth: "100%" }}>
                       <Table>
                         <TableHead>
                           <TableRow>
                             <TableCell>Photo</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Phone</TableCell>
-                            <TableCell>Store</TableCell>
-                            <TableCell>Role</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell>{t("user")}</TableCell>
+                            <TableCell>{t("phone")}</TableCell>
+                            <TableCell>{t("store")}</TableCell>
+                            <TableCell>{t("role")}</TableCell>
+                            <TableCell>{t("actions")}</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

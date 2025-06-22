@@ -12,6 +12,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const MyOrders: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -19,15 +20,16 @@ const MyOrders: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchOrders();
     } else {
       setLoading(false);
-      setError("Please log in to view your orders");
+      setError(t("pleaseLogInToViewOrders"));
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, t]);
 
   const fetchOrders = async () => {
     try {
@@ -46,7 +48,7 @@ const MyOrders: React.FC = () => {
     } catch (err) {
       console.error("Error fetching orders:", err);
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to load orders";
+        err instanceof Error ? err.message : t("failedToLoadOrders");
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -92,7 +94,7 @@ const MyOrders: React.FC = () => {
     if (order.status === "delivered") {
       return {
         status: "paid",
-        text: "Paid",
+        text: t("paid"),
         color:
           "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
         icon: <DollarSign className="w-4 h-4 text-green-500" />,
@@ -100,14 +102,14 @@ const MyOrders: React.FC = () => {
     } else if (order.status === "cancelled") {
       return {
         status: "cancelled",
-        text: "Cancelled",
+        text: t("cancelled"),
         color: "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400",
         icon: <XCircle className="w-4 h-4 text-red-500" />,
       };
     } else {
       return {
         status: "pending",
-        text: "Pay on Delivery",
+        text: t("payOnDelivery"),
         color:
           "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400",
         icon: <CreditCard className="w-4 h-4 text-orange-500" />,
@@ -152,7 +154,7 @@ const MyOrders: React.FC = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">
-            Loading your orders...
+            {t("loadingYourOrders")}
           </p>
         </div>
       </div>
@@ -165,13 +167,13 @@ const MyOrders: React.FC = () => {
         <div className="text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            Error Loading Orders
+            {t("errorLoadingOrders")}
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <button
             onClick={fetchOrders}
             className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-            Try Again
+            {t("tryAgain")}
           </button>
         </div>
       </div>
@@ -184,10 +186,10 @@ const MyOrders: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            My Orders
+            {t("myOrders")}
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Track your order history and current orders
+            {t("trackYourOrders")}
           </p>
         </div>
 
@@ -196,11 +198,10 @@ const MyOrders: React.FC = () => {
           <div className="text-center py-12">
             <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No Orders Yet
+              {t("noOrdersYet")}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              You haven't placed any orders yet. Start shopping to see your
-              orders here!
+              {t("startShoppingToSeeOrders")}
             </p>
           </div>
         ) : (
@@ -221,12 +222,11 @@ const MyOrders: React.FC = () => {
                           className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
                             order.status,
                           )}`}>
-                          {order.status.charAt(0).toUpperCase() +
-                            order.status.slice(1)}
+                          {t(order.status)}
                         </span>
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Order #{order._id.slice(-8).toUpperCase()}
+                        {t("order")} #{order._id.slice(-8).toUpperCase()}
                       </div>
                     </div>
                     <div className="flex items-center space-x-4">
@@ -263,7 +263,7 @@ const MyOrders: React.FC = () => {
                       })()}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Payment: {getPaymentStatus(order).text}
+                      {t("payment")}: {getPaymentStatus(order).text}
                     </div>
                   </div>
                 </div>
@@ -297,7 +297,7 @@ const MyOrders: React.FC = () => {
                               {item.product.name}
                             </h4>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                              Quantity: {item.quantity}
+                              {t("quantity")}: {item.quantity}
                             </p>
                           </div>
                           <div className="text-right">
@@ -316,10 +316,10 @@ const MyOrders: React.FC = () => {
                     <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                       <div className="flex items-center justify-between">
                         <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Order Date: {formatDate(order.orderDate)}
+                          {t("order")} Date: {formatDate(order.orderDate)}
                         </div>
                         <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                          Total: {formatPrice(order.totalAmount)}
+                          {t("total")}: {formatPrice(order.totalAmount)}
                         </div>
                       </div>
                     </div>

@@ -25,6 +25,7 @@ import { StatsCard } from "../components/dashboard/StatsCard";
 import { RevenueChart } from "../components/dashboard/RevenueChart";
 import { CategoryChart } from "../components/dashboard/CategoryChart";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
 
   const fetchOverview = useCallback(async () => {
     setLoading(true);
@@ -41,11 +43,11 @@ const Dashboard: React.FC = () => {
       const data = await apiService.getDashboardOverview();
       setOverview(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load dashboard");
+      setError(err instanceof Error ? err.message : t("failedToLoadDashboard"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -75,11 +77,10 @@ const Dashboard: React.FC = () => {
     return (
       <Container maxWidth="md" sx={{ py: 8 }}>
         <Typography variant="h4" align="center" sx={{ mt: 8 }}>
-          Welcome to DSG Wholesale
+          {t("welcomeToDSG")}
         </Typography>
         <Typography align="center" sx={{ color: "text.secondary", mb: 4 }}>
-          Your premier destination for wholesale products. Quality guaranteed
-          with competitive pricing.
+          {t("premierDestination")}
         </Typography>
         {/* Optionally, show the old dashboard for non-admins here */}
       </Container>
@@ -100,7 +101,7 @@ const Dashboard: React.FC = () => {
                 textAlign: "center",
                 color: "text.primary",
               }}>
-              Admin Dashboard
+              {t("adminDashboard")}
             </Typography>
             <Box
               sx={{
@@ -116,9 +117,9 @@ const Dashboard: React.FC = () => {
                   fontWeight: 400,
                   mr: 2,
                 }}>
-                Manage your store, orders, and analytics
+                {t("manageStore")}
               </Typography>
-              <Tooltip title="Refresh Dashboard">
+              <Tooltip title={t("refreshDashboard")}>
                 <IconButton
                   onClick={handleRefresh}
                   disabled={refreshing}
@@ -137,7 +138,7 @@ const Dashboard: React.FC = () => {
             {/* Navigation Links Section */}
             <Paper sx={{ p: 3, mb: 4 }}>
               <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-                Quick Navigation
+                {t("quickNavigation")}
               </Typography>
               <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
                 <Button
@@ -154,7 +155,7 @@ const Dashboard: React.FC = () => {
                         "linear-gradient(45deg, #f57c00 30%, #ff9800 90%)",
                     },
                   }}>
-                  Manage Users
+                  {t("manageUsers")}
                 </Button>
                 <Button
                   variant="contained"
@@ -170,7 +171,7 @@ const Dashboard: React.FC = () => {
                         "linear-gradient(45deg, #1976d2 30%, #2196f3 90%)",
                     },
                   }}>
-                  Manage Orders
+                  {t("manageOrders")}
                 </Button>
                 <Button
                   variant="contained"
@@ -186,7 +187,7 @@ const Dashboard: React.FC = () => {
                         "linear-gradient(45deg, #388e3c 30%, #4caf50 90%)",
                     },
                   }}>
-                  Manage Stocks
+                  {t("manageStocks")}
                 </Button>
               </Box>
             </Paper>
@@ -205,7 +206,7 @@ const Dashboard: React.FC = () => {
                 <div className="grid grid-cols-4 gap-4 mb-4">
                   <div className="col-span-4 sm:col-span-2 md:col-span-1">
                     <StatsCard
-                      title="Total Sales"
+                      title={t("totalSales")}
                       value={`$${
                         overview.summary.totalRevenue?.toLocaleString() ?? "0"
                       }`}
@@ -216,7 +217,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="col-span-4 sm:col-span-2 md:col-span-1">
                     <StatsCard
-                      title="Products"
+                      title={t("products")}
                       value={
                         overview.summary.totalProducts?.toLocaleString() ?? "0"
                       }
@@ -227,7 +228,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="col-span-4 sm:col-span-2 md:col-span-1">
                     <StatsCard
-                      title="Customers"
+                      title={t("customers")}
                       value={
                         overview.summary.totalUsers?.toLocaleString() ?? "0"
                       }
@@ -238,7 +239,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="col-span-4 sm:col-span-2 md:col-span-1">
                     <StatsCard
-                      title="Orders"
+                      title={t("orders")}
                       value={
                         overview.summary.totalOrders?.toLocaleString() ?? "0"
                       }
@@ -272,7 +273,7 @@ const Dashboard: React.FC = () => {
                       alignItems: "center",
                       mb: 2,
                     }}>
-                    <Typography variant="h5">Orders Management</Typography>
+                    <Typography variant="h5">{t("recentOrders")}</Typography>
                     <Button
                       variant="contained"
                       endIcon={<ArrowRight size={20} />}
@@ -286,7 +287,7 @@ const Dashboard: React.FC = () => {
                             "linear-gradient(45deg, #1565c0 30%, #1976d2 90%)",
                         },
                       }}>
-                      View All Orders
+                      {t("viewAllOrders")}
                     </Button>
                   </Box>
                   <Typography variant="body2" color="text.secondary">

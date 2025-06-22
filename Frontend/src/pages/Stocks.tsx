@@ -43,6 +43,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { apiService, Product } from "../config/api";
+import { useTranslation } from "react-i18next";
 
 // Define stock status color type
 type StockStatusColor = "error" | "warning" | "success";
@@ -91,6 +92,7 @@ const CATEGORIES = [
 
 const StocksManagementPage: React.FC = () => {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation();
   const [products, setProducts] = useState<StockProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -262,16 +264,16 @@ const StocksManagementPage: React.FC = () => {
   };
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (currentUser?.role !== "admin") {
     return (
       <Container maxWidth="md" sx={{ py: 8 }}>
         <Typography variant="h4" align="center" sx={{ mt: 8 }}>
-          Access Denied
+          {t("accessDenied")}
         </Typography>
         <Typography align="center" sx={{ color: "text.secondary", mb: 4 }}>
-          You don't have permission to access this page.
+          {t("noAccessPermission")}
         </Typography>
       </Container>
     );

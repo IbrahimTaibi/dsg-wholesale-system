@@ -32,8 +32,9 @@ import {
   PaymentMethod as ApiPaymentMethod,
   handleApiError,
 } from "../config/api";
+import { useTranslation } from "react-i18next";
 
-const steps = ["Cart Review", "Shipping", "Payment", "Confirmation"];
+const steps = ["cartReview", "shipping", "payment", "confirmation"];
 
 export const Checkout: React.FC = () => {
   const { cart, clearCart } = useCart();
@@ -46,6 +47,7 @@ export const Checkout: React.FC = () => {
     total: number;
     itemCount: number;
   } | null>(null);
+  const { t } = useTranslation();
 
   const [shippingData, setShippingData] = useState({
     firstName: "",
@@ -98,7 +100,7 @@ export const Checkout: React.FC = () => {
 
       if (missingFields.length > 0) {
         setError(
-          `Please fill in all required fields: ${missingFields.join(", ")}`,
+          `${t("pleaseFillInRequiredFields")} ${missingFields.join(", ")}`,
         );
         return;
       }
@@ -168,7 +170,7 @@ export const Checkout: React.FC = () => {
     <Fade in timeout={500}>
       <Box>
         <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-          Review Your Cart
+          {t("reviewYourCart")}
         </Typography>
         <Paper sx={{ p: 3, mb: 3 }}>
           <List>
@@ -200,7 +202,7 @@ export const Checkout: React.FC = () => {
                   />
                   <Box sx={{ textAlign: "right" }}>
                     <Typography variant="body2" color="text.secondary">
-                      Qty: {item.quantity}
+                      {t("quantity")}: {item.quantity}
                     </Typography>
                     <Typography
                       variant="subtitle1"
@@ -214,22 +216,22 @@ export const Checkout: React.FC = () => {
           </List>
           <Divider sx={{ my: 2 }} />
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography color="text.secondary">Subtotal:</Typography>
+            <Typography color="text.secondary">{t("subtotal")}:</Typography>
             <Typography sx={{ fontWeight: 600 }}>
               {formatPrice(cart.subtotal)}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography color="text.secondary">Tax (15%):</Typography>
+            <Typography color="text.secondary">{t("tax")}:</Typography>
             <Typography sx={{ fontWeight: 600 }}>
               {formatPrice(cart.tax)}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <Typography color="text.secondary">Shipping:</Typography>
+            <Typography color="text.secondary">{t("shipping")}:</Typography>
             <Typography>
               {cart.shipping === 0 ? (
-                <Chip label="FREE" size="small" color="success" />
+                <Chip label={t("free")} size="small" color="success" />
               ) : (
                 formatPrice(cart.shipping)
               )}
@@ -238,7 +240,7 @@ export const Checkout: React.FC = () => {
           <Divider sx={{ mb: 2 }} />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              Total:
+              {t("total")}:
             </Typography>
             <Typography
               variant="h6"
@@ -255,7 +257,7 @@ export const Checkout: React.FC = () => {
     <Fade in timeout={500}>
       <Box>
         <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-          Shipping Information
+          {t("shippingInformation")}
         </Typography>
         <Paper sx={{ p: 3 }}>
           <Box
@@ -266,7 +268,7 @@ export const Checkout: React.FC = () => {
               mb: 2,
             }}>
             <TextField
-              label="First Name"
+              label={t("firstName")}
               value={shippingData.firstName}
               onChange={(e) =>
                 handleShippingChange("firstName", e.target.value)
@@ -275,7 +277,7 @@ export const Checkout: React.FC = () => {
               required
             />
             <TextField
-              label="Last Name"
+              label={t("lastName")}
               value={shippingData.lastName}
               onChange={(e) => handleShippingChange("lastName", e.target.value)}
               fullWidth
@@ -290,7 +292,7 @@ export const Checkout: React.FC = () => {
               mb: 2,
             }}>
             <TextField
-              label="Email"
+              label={t("email")}
               type="email"
               value={shippingData.email}
               onChange={(e) => handleShippingChange("email", e.target.value)}
@@ -298,7 +300,7 @@ export const Checkout: React.FC = () => {
               required
             />
             <TextField
-              label="Phone"
+              label={t("phone")}
               value={shippingData.phone}
               onChange={(e) => handleShippingChange("phone", e.target.value)}
               fullWidth
@@ -306,7 +308,7 @@ export const Checkout: React.FC = () => {
             />
           </Box>
           <TextField
-            label="Address"
+            label={t("address")}
             value={shippingData.address}
             onChange={(e) => handleShippingChange("address", e.target.value)}
             fullWidth
@@ -323,21 +325,21 @@ export const Checkout: React.FC = () => {
               mb: 2,
             }}>
             <TextField
-              label="City"
+              label={t("city")}
               value={shippingData.city}
               onChange={(e) => handleShippingChange("city", e.target.value)}
               fullWidth
               required
             />
             <TextField
-              label="State"
+              label={t("state")}
               value={shippingData.state}
               onChange={(e) => handleShippingChange("state", e.target.value)}
               fullWidth
               required
             />
             <TextField
-              label="ZIP Code"
+              label={t("zipCode")}
               value={shippingData.zipCode}
               onChange={(e) => handleShippingChange("zipCode", e.target.value)}
               fullWidth
@@ -345,7 +347,7 @@ export const Checkout: React.FC = () => {
             />
           </Box>
           <TextField
-            label="Country"
+            label={t("country")}
             value={shippingData.country}
             onChange={(e) => handleShippingChange("country", e.target.value)}
             fullWidth
@@ -360,11 +362,11 @@ export const Checkout: React.FC = () => {
     <Fade in timeout={500}>
       <Box>
         <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-          Payment Method
+          {t("paymentMethod")}
         </Typography>
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
-            Payment Method
+            {t("cashOnDelivery")}
           </Typography>
 
           <Box
@@ -378,19 +380,16 @@ export const Checkout: React.FC = () => {
             <Typography
               variant="h6"
               sx={{ fontWeight: 600, mb: 2, color: "primary.main" }}>
-              💳 Cash on Delivery
+              💳 {t("cashOnDelivery")}
             </Typography>
             <Typography variant="body1" sx={{ mb: 2 }}>
-              Pay with cash when your order is delivered. This is the only
-              payment method available.
+              {t("cashOnDeliveryDescription")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              • No upfront payment required
-              <br />
-              • Pay the exact amount upon delivery
-              <br />
-              • Safe and secure transaction
-              <br />• Available for all orders
+              • {t("noUpfrontPaymentRequired")}
+              <br />• {t("payTheExactAmountUponDelivery")}
+              <br />• {t("safeAndSecureTransaction")}
+              <br />• {t("availableForAllOrders")}
             </Typography>
           </Box>
         </Paper>
@@ -419,36 +418,33 @@ export const Checkout: React.FC = () => {
           </Box>
         </Zoom>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          Order Confirmed!
+          {t("orderConfirmed")}
         </Typography>
         <Typography
           variant="body1"
           color="text.secondary"
           sx={{ mb: 4, maxWidth: 500, mx: "auto" }}>
-          Thank you for your order. We've received your order and will begin
-          processing it immediately. You'll receive a confirmation email with
-          your order details. Payment will be collected upon delivery. Your cart
-          has been cleared.
+          {t("thankYouForYourOrder")}
         </Typography>
         <Paper sx={{ p: 3, maxWidth: 400, mx: "auto" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            Order Summary
+            {t("orderSummary")}
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography color="text.secondary">Order Total:</Typography>
+            <Typography color="text.secondary">{t("orderTotal")}:</Typography>
             <Typography sx={{ fontWeight: 600, color: "primary.main" }}>
               {formatPrice(orderSummary?.total || 0)}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography color="text.secondary">Items:</Typography>
+            <Typography color="text.secondary">{t("items")}:</Typography>
             <Typography sx={{ fontWeight: 600 }}>
               {orderSummary?.itemCount || 0}
             </Typography>
           </Box>
           <Divider sx={{ my: 2 }} />
           <Typography variant="body2" color="text.secondary">
-            Order ID: {orderNumber}
+            {t("orderID")}: {orderNumber}
           </Typography>
         </Paper>
       </Box>
@@ -496,10 +492,10 @@ export const Checkout: React.FC = () => {
             </Typography>
 
             <Paper sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
-              <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+              <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 5 }}>
                 {steps.map((label) => (
                   <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
+                    <StepLabel>{t(label)}</StepLabel>
                   </Step>
                 ))}
               </Stepper>
@@ -518,7 +514,7 @@ export const Checkout: React.FC = () => {
                     disabled={activeStep === 0 || loading || activeStep === 3}
                     onClick={handleBack}
                     startIcon={<ChevronLeft />}>
-                    Back
+                    {t("back")}
                   </Button>
                   <Button
                     variant="contained"
@@ -534,10 +530,10 @@ export const Checkout: React.FC = () => {
                       )
                     }>
                     {loading
-                      ? "Processing..."
+                      ? t("processing")
                       : activeStep === steps.length - 2
-                      ? "Place Order"
-                      : "Next"}
+                      ? t("placeOrder")
+                      : t("next")}
                   </Button>
                 </Box>
               )}
@@ -549,7 +545,7 @@ export const Checkout: React.FC = () => {
                       variant="contained"
                       color="success"
                       onClick={() => navigate("/")}>
-                      Continue Shopping
+                      {t("continueShopping")}
                     </Button>
                   </Box>
                 </Zoom>

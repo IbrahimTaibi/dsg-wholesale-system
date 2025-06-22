@@ -25,30 +25,31 @@ import {
 import { useUI } from "../contexts/UIContext";
 import { useNavigation } from "../hooks";
 import { BRANDING } from "../config/branding";
+import { useTranslation } from "react-i18next";
 
 const features = [
   {
     icon: TrendingUp,
-    title: "Competitive Pricing",
-    description: "Get the best wholesale prices on all products",
+    title: "competitivePricing",
+    description: "competitivePricingDescription",
     color: "primary.main",
   },
   {
     icon: Clock,
-    title: "Fast Delivery",
-    description: "Quick and reliable delivery to your location",
+    title: "fastDelivery",
+    description: "fastDeliveryDescription",
     color: "success.main",
   },
   {
     icon: Award,
-    title: "Quality Assured",
-    description: "All products meet our high quality standards",
+    title: "qualityAssured",
+    description: "qualityAssuredDescription",
     color: "info.main",
   },
   {
     icon: Headphones,
-    title: "24/7 Support",
-    description: "Exceptional customer service and support",
+    title: "support247",
+    description: "support247Description",
     color: "warning.main",
   },
 ];
@@ -56,32 +57,32 @@ const features = [
 const categories = [
   {
     icon: Droplets,
-    title: "Water & Beverages",
-    description: "Fresh and pure drinking water",
+    title: "waterAndBeverages",
+    description: "waterDescription",
     route: "/water",
   },
   {
     icon: Coffee,
-    title: "Juices",
-    description: "100% natural fruit juices",
+    title: "juices",
+    description: "juicesDescription",
     route: "/juices",
   },
   {
     icon: Cake,
-    title: "Mini Cakes",
-    description: "Delicious sweet treats",
+    title: "miniCakes",
+    description: "cakesDescription",
     route: "/cakes",
   },
   {
     icon: Package2,
-    title: "Chips & Snacks",
-    description: "Crunchy and tasty snacks",
+    title: "chipsAndSnacks",
+    description: "snacksDescription",
     route: "/chips",
   },
   {
     icon: ShoppingCart,
-    title: "Groceries",
-    description: "Daily essentials and more",
+    title: "groceries",
+    description: "groceriesDescription",
     route: "/groceries",
   },
 ];
@@ -89,6 +90,7 @@ const categories = [
 export const Home: React.FC = () => {
   const { setShowAuthModal } = useUI();
   const { navigateToRoute } = useNavigation();
+  const { t } = useTranslation();
 
   const handleGetStarted = () => {
     setShowAuthModal("signup");
@@ -118,7 +120,7 @@ export const Home: React.FC = () => {
                   mb: 3,
                   fontSize: { xs: "2.5rem", md: "3.5rem" },
                 }}>
-                Welcome to {BRANDING.name}
+                {t("welcomeToDSG")} {BRANDING.name}
               </Typography>
               <Typography
                 variant="h5"
@@ -129,8 +131,7 @@ export const Home: React.FC = () => {
                   mx: "auto",
                   fontWeight: 400,
                 }}>
-                Your premier destination for wholesale products. Quality
-                guaranteed with competitive pricing.
+                {t("premierDestination")}
               </Typography>
               <Box
                 sx={{
@@ -154,7 +155,7 @@ export const Home: React.FC = () => {
                       bgcolor: "grey.100",
                     },
                   }}>
-                  Get Started
+                  {t("getStarted")}
                   <ArrowRight size={20} style={{ marginLeft: 8 }} />
                 </Button>
                 <Button
@@ -173,7 +174,7 @@ export const Home: React.FC = () => {
                       bgcolor: "rgba(255,255,255,0.1)",
                     },
                   }}>
-                  Sign In
+                  {t("signIn")}
                 </Button>
               </Box>
             </Box>
@@ -193,7 +194,7 @@ export const Home: React.FC = () => {
                 mb: 6,
                 color: "text.primary",
               }}>
-              Why Choose Us?
+              {t("whyChooseUs")}
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
               {features.map((feature, index) => (
@@ -235,13 +236,13 @@ export const Home: React.FC = () => {
                             mb: 1,
                             color: "text.primary",
                           }}>
-                          {feature.title}
+                          {t(feature.title)}
                         </Typography>
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           sx={{ lineHeight: 1.6 }}>
-                          {feature.description}
+                          {t(feature.description)}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -263,10 +264,22 @@ export const Home: React.FC = () => {
                 sx={{
                   textAlign: "center",
                   fontWeight: 700,
-                  mb: 6,
+                  mb: 2,
                   color: "text.primary",
                 }}>
-                Our Product Categories
+                {t("exploreCategories")}
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  fontWeight: 400,
+                  mb: 6,
+                  color: "text.secondary",
+                  maxWidth: 500,
+                  mx: "auto",
+                }}>
+                {t("browseOurSelection")}
               </Typography>
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
                 {categories.map((category, index) => (
@@ -275,40 +288,51 @@ export const Home: React.FC = () => {
                     sx={{ flex: "1 1 300px", minWidth: 300 }}>
                     <Zoom in timeout={1000 + index * 200}>
                       <Card
-                        onClick={() => navigateToRoute(category.route, false)}
+                        onClick={() => navigateToRoute(category.route)}
                         sx={{
-                          textAlign: "center",
-                          p: 3,
                           height: "100%",
+                          textAlign: "center",
+                          p: 4,
                           display: "flex",
                           flexDirection: "column",
+                          alignItems: "center",
                           justifyContent: "center",
-                          bgcolor: "background.paper",
-                          border: 1,
-                          borderColor: "divider",
+                          cursor: "pointer",
+                          transition:
+                            "box-shadow 0.3s ease, transform 0.3s ease",
+                          "&:hover": {
+                            transform: "translateY(-8px)",
+                            boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
+                          },
                         }}>
-                        <Box
-                          sx={{
-                            mx: "auto",
-                            mb: 2,
-                            width: 64,
-                            height: 64,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderRadius: "50%",
-                            bgcolor: "action.hover",
-                          }}>
-                          <category.icon size={32} color="text.primary" />
-                        </Box>
-                        <Typography
-                          variant="h6"
-                          sx={{ fontWeight: 600, mb: 1 }}>
-                          {category.title}
-                        </Typography>
-                        <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                          {category.description}
-                        </Typography>
+                        <CardContent>
+                          <Box
+                            sx={{
+                              p: 2,
+                              borderRadius: "50%",
+                              bgcolor: "primary.light",
+                              color: "primary.main",
+                              mb: 2,
+                              display: "inline-flex",
+                            }}>
+                            <category.icon size={40} />
+                          </Box>
+                          <Typography
+                            variant="h5"
+                            sx={{
+                              fontWeight: 600,
+                              mb: 1,
+                              color: "text.primary",
+                            }}>
+                            {t(category.title)}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            color="text.secondary"
+                            sx={{ lineHeight: 1.6 }}>
+                            {t(category.description)}
+                          </Typography>
+                        </CardContent>
                       </Card>
                     </Zoom>
                   </Box>
@@ -318,46 +342,6 @@ export const Home: React.FC = () => {
           </Slide>
         </Container>
       </Box>
-
-      {/* CTA Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Fade in timeout={1600}>
-          <Box
-            sx={{
-              textAlign: "center",
-              p: 6,
-              borderRadius: 4,
-              bgcolor: "primary.main",
-              color: "white",
-            }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
-              Ready to Get Started?
-            </Typography>
-            <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
-              Join thousands of satisfied customers who trust us for their
-              wholesale needs.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleGetStarted}
-              sx={{
-                bgcolor: "white",
-                color: "primary.main",
-                px: 6,
-                py: 2,
-                fontSize: "1.2rem",
-                fontWeight: 600,
-                "&:hover": {
-                  bgcolor: "grey.100",
-                },
-              }}>
-              Create Your Account
-              <ArrowRight size={24} style={{ marginLeft: 12 }} />
-            </Button>
-          </Box>
-        </Fade>
-      </Container>
     </Box>
   );
 };

@@ -3,6 +3,7 @@ import { useNavigation } from "../../hooks";
 import { ICON_MAP } from "../../config/constants";
 import { MenuItem } from "../../types";
 import { useUI } from "../../contexts/UIContext";
+import { useTranslation } from "react-i18next";
 
 interface SidebarMenuItemProps {
   item: MenuItem;
@@ -11,6 +12,7 @@ interface SidebarMenuItemProps {
 export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
   const { navigateToMenuItem, isCurrentRoute, ROUTES } = useNavigation();
   const { selectedMenuItem } = useUI();
+  const { t } = useTranslation();
 
   // Route mapping for active state checking
   const ROUTE_MAP: Record<string, string> = {
@@ -97,7 +99,7 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
               : "text-white/85 group-hover:text-white"
           }
         `}>
-          {item.text}
+          {t(item.id)}
         </span>
       </div>
 

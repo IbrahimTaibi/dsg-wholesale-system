@@ -3,18 +3,20 @@ import { Box, Typography, Container, Paper, Fade } from "@mui/material";
 import { Package } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import OrdersTable from "../components/dashboard/OrdersTable";
+import { useTranslation } from "react-i18next";
 
 const Orders: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   if (user?.role !== "admin") {
     return (
       <Container maxWidth="md" sx={{ py: 8 }}>
         <Typography variant="h4" align="center" sx={{ mt: 8 }}>
-          Access Denied
+          {t("accessDenied")}
         </Typography>
         <Typography align="center" sx={{ color: "text.secondary", mb: 4 }}>
-          You don't have permission to access this page.
+          {t("accessDeniedDescription")}
         </Typography>
       </Container>
     );
@@ -35,7 +37,7 @@ const Orders: React.FC = () => {
                     fontWeight: 700,
                     color: "text.primary",
                   }}>
-                  Orders Management
+                  {t("ordersManagement")}
                 </Typography>
                 <Typography
                   variant="h6"
@@ -43,7 +45,7 @@ const Orders: React.FC = () => {
                     color: "text.secondary",
                     fontWeight: 400,
                   }}>
-                  View and manage all customer orders
+                  {t("viewAndManageOrders")}
                 </Typography>
               </Box>
             </Box>

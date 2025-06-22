@@ -5,10 +5,12 @@ import { useAuth } from "../../hooks/useAuth";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { MENU_ITEMS } from "../../config/constants";
 import { BRANDING } from "../../config/branding";
+import { useTranslation } from "react-i18next";
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useUI();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   // Filter menu items based on user role
   const filteredMenuItems = MENU_ITEMS.filter((item) => {
@@ -57,7 +59,7 @@ export const Sidebar: React.FC = () => {
                 {BRANDING.fullName}
               </h2>
               <p className="text-white/90 text-sm font-medium">
-                {BRANDING.tagline}
+                {t("brandingTagline")}
               </p>
               <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mt-4"></div>
             </div>

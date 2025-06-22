@@ -5,6 +5,7 @@ import { SearchBar } from "../components";
 import { ProductItem } from "../components/products/ProductItem";
 import { useProducts } from "../hooks";
 import { mapApiProductToProduct, Product } from "../types";
+import { useTranslation } from "react-i18next";
 
 export const Cakes: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +19,7 @@ export const Cakes: React.FC = () => {
     search: searchQuery || undefined,
     limit: 20,
   });
+  const { t } = useTranslation();
 
   // Map API products to frontend products
   const products = apiProducts.map(mapApiProductToProduct);
@@ -32,10 +34,11 @@ export const Cakes: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              Mini Cakes
+              {t("miniCakes")}
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
-              Sweet Delights - {pagination?.total || 0} Products Available
+              {t("sweetDelights")} - {pagination?.total || 0}{" "}
+              {t("productsAvailable")}
             </p>
           </div>
         </div>
@@ -49,11 +52,11 @@ export const Cakes: React.FC = () => {
             <div className="flex gap-3">
               <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                 <Filter className="h-4 w-4" />
-                Filter
+                {t("filter")}
               </button>
               <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                 <SortAsc className="h-4 w-4" />
-                Sort
+                {t("sort")}
               </button>
             </div>
           </div>
@@ -65,7 +68,7 @@ export const Cakes: React.FC = () => {
             <div className="flex items-center gap-3">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <span className="text-gray-600 dark:text-gray-300">
-                Loading products...
+                {t("loadingProducts")}
               </span>
             </div>
           </div>
@@ -75,13 +78,13 @@ export const Cakes: React.FC = () => {
         {error && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
             <div className="text-red-600 dark:text-red-400 mb-2">
-              <span className="font-medium">Error loading products:</span>{" "}
+              <span className="font-medium">{t("errorLoadingProducts")}</span>{" "}
               {error}
             </div>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-              Try Again
+              {t("tryAgain")}
             </button>
           </div>
         )}
@@ -93,12 +96,12 @@ export const Cakes: React.FC = () => {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
                 <div className="text-6xl mb-4">🧁</div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  No Products Found
+                  {t("noProductsFound")}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300">
                   {searchQuery
-                    ? `No mini cakes found matching "${searchQuery}"`
-                    : "No mini cakes available at the moment."}
+                    ? `${t("noMiniCakesFoundMatching")} "${searchQuery}"`
+                    : t("noMiniCakesAvailable")}
                 </p>
               </div>
             ) : (
@@ -115,7 +118,7 @@ export const Cakes: React.FC = () => {
         {!loading && !error && pagination && pagination.pages > 1 && (
           <div className="text-center mt-8">
             <button className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-              Load More Products
+              {t("loadMoreProducts")}
             </button>
           </div>
         )}
