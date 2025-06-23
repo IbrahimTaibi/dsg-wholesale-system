@@ -9,6 +9,7 @@ import { BRANDING } from "../../config/branding";
 import { CartIcon } from "../cart/CartIcon";
 import { CartDrawer } from "../cart/CartDrawer";
 import { useTranslation } from "react-i18next";
+import CountryFlag from "react-country-flag";
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -22,7 +23,7 @@ export const Header: React.FC = () => {
     if (headerRef.current) {
       setHeaderHeight(headerRef.current.offsetHeight);
     }
-  }, []);
+  }, [setHeaderHeight]);
 
   const handleLogin = () => {
     setShowAuthModal("login");
@@ -504,7 +505,23 @@ export const Header: React.FC = () => {
                 i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")
               }
               className="hidden sm:flex items-center px-3 py-2 rounded-lg text-white hover:bg-white/10">
-              {i18n.language.toUpperCase()}
+              {i18n.language === "en" ? (
+                <span role="img" aria-label="English">
+                  <CountryFlag
+                    countryCode="GB"
+                    svg
+                    style={{ width: "1.5em", height: "1.5em" }}
+                  />
+                </span>
+              ) : (
+                <span role="img" aria-label="Français">
+                  <CountryFlag
+                    countryCode="FR"
+                    svg
+                    style={{ width: "1.5em", height: "1.5em" }}
+                  />
+                </span>
+              )}
             </button>
           </div>
         </div>
