@@ -241,7 +241,10 @@ export const apiService = {
     limit?: number;
     sort?: string;
   }): Promise<{ products: Product[]; pagination: PaginationInfo }> {
-    const response = await api.get("/products", { params });
+    // Remove Authorization header for public product fetching
+    const headers = { ...api.defaults.headers.common };
+    delete headers["Authorization"];
+    const response = await api.get("/products", { params, headers });
     return response.data;
   },
 
