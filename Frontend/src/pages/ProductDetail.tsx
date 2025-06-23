@@ -30,9 +30,10 @@ import {
   Shield,
   RotateCcw,
 } from "lucide-react";
-import { Product, ProductVariant } from "../types";
+import { Product, ProductVariant, mapApiProductToProduct } from "../types";
 import { useCart } from "../contexts/CartContext";
 import { useTranslation } from "react-i18next";
+import { apiService } from "../config/api";
 
 export const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -59,25 +60,8 @@ export const ProductDetail: React.FC = () => {
   const fetchProduct = async (id: string) => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/products/${id}`,
-      );
-      if (!response.ok) {
-        throw new Error("Product not found");
-      }
-      const data = await response.json();
-      const productData = {
-        id: data._id,
-        name: data.name,
-        description: data.description || "",
-        price: data.price,
-        category: data.category,
-        stock: data.stock,
-        photo: data.photo,
-        unit: data.unit,
-        minOrderQuantity: data.minOrderQuantity,
-        variants: data.variants,
-      };
+      const apiProduct = await apiService.getProductById(id);
+      const productData = mapApiProductToProduct(apiProduct);
       setProduct(productData);
 
       // Set initial variant and image
