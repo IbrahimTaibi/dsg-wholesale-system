@@ -125,7 +125,7 @@ export interface User {
   id: string;
   name: string;
   phone: string;
-  avatar?: string;
+  photo?: string;
   role: "user" | "admin";
   storeName?: string;
   address?: {

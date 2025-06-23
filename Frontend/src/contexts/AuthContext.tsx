@@ -13,6 +13,7 @@ export interface AuthContextType {
   ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   loading: boolean;
+  refetchUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,33 +32,44 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchUser = async () => {
     const token = localStorage.getItem("token");
     if (token) {
       apiService.setAuthHeader(token);
-      apiService
-        .getCurrentUser()
-        .then((fetchedUser) => {
-          const userData: User = {
-            id: fetchedUser._id,
-            name: fetchedUser.name,
-            phone: fetchedUser.phone,
-            role: fetchedUser.role as "user" | "admin",
-            storeName: fetchedUser.storeName,
-            address: fetchedUser.address,
-            avatar: fetchedUser.photo,
-          };
-          setUser(userData);
-          localStorage.setItem("user", JSON.stringify(userData));
-          setIsAuthenticated(true);
-        })
-        .catch(() => logout())
-        .finally(() => setLoading(false));
+      try {
+        const fetchedUser = await apiService.getCurrentUser();
+        const userData: User = {
+          id: fetchedUser._id,
+          name: fetchedUser.name,
+          phone: fetchedUser.phone,
+          role: fetchedUser.role as "user" | "admin",
+          storeName: fetchedUser.storeName,
+          address: fetchedUser.address,
+          photo: fetchedUser.photo,
+        };
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        logout();
+      } finally {
+        setLoading(false);
+      }
     } else {
       setLoading(false);
       setIsAuthenticated(false);
     }
+  };
+
+  useEffect(() => {
+    fetchUser();
   }, []);
+
+  const refetchUser = () => {
+    setLoading(true);
+    fetchUser();
+  };
 
   const login = async (
     credentials: AuthFormData,
@@ -72,7 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         role: loggedInUser.role as "user" | "admin",
         storeName: loggedInUser.storeName,
         address: loggedInUser.address,
-        avatar: loggedInUser.photo,
+        photo: loggedInUser.photo,
       };
       localStorage.setItem("user", JSON.stringify(userData));
       apiService.setAuthHeader(token);
@@ -122,7 +134,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         role: signedUpUser.role as "user" | "admin",
         storeName: signedUpUser.storeName,
         address: signedUpUser.address,
-        avatar: signedUpUser.photo,
+        photo: signedUpUser.photo,
       };
       localStorage.setItem("user", JSON.stringify(newUserData));
       apiService.setAuthHeader(token);
@@ -159,7 +171,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, signup, logout, loading }}>
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        signup,
+        logout,
+        loading,
+        refetchUser,
+      }}>
       {children}
     </AuthContext.Provider>
   );

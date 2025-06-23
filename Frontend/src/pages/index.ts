@@ -9,7 +9,7 @@ export { WaterBeverages } from "./WaterBeverages";
 export { Groceries } from "./Groceries";
 export { Checkout } from "./Checkout";
 export { NotFound } from "./NotFound";
-export { default as Settings } from "./Settings";
+export { default as Profile } from "./Profile";
 export { default as MyOrders } from "./MyOrders";
 export { Orders } from "./Orders";
 export { default as Users } from "./Users";

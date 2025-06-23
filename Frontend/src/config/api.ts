@@ -416,22 +416,40 @@ export const apiService = {
   },
 
   async getCurrentUser(): Promise<User> {
-    const response = await api.get("/auth/profile");
+    const response = await api.get("/auth/me");
     return response.data;
   },
 
   async updateProfile(profileData: {
-    name: string;
-    phone: string;
-    storeName: string;
-    address: {
+    name?: string;
+    phone?: string;
+    storeName?: string;
+    address?: {
       street: string;
       city: string;
       state: string;
       zipCode: string;
     };
+    photo?: File;
   }): Promise<{ message: string; user: User }> {
-    const response = await api.put("/auth/profile", profileData);
+    const formData = new FormData();
+
+    if (profileData.name) formData.append("name", profileData.name);
+    if (profileData.phone) formData.append("phone", profileData.phone);
+    if (profileData.storeName)
+      formData.append("storeName", profileData.storeName);
+    if (profileData.address) {
+      formData.append("address", JSON.stringify(profileData.address));
+    }
+    if (profileData.photo) {
+      formData.append("photo", profileData.photo);
+    }
+
+    const response = await api.put("/auth/profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 

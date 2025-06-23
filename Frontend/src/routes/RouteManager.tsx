@@ -52,8 +52,8 @@ const {
   ),
 };
 
-const Settings = lazy(() =>
-  import("../pages").then((module) => ({ default: module.Settings })),
+const Profile = lazy(() =>
+  import("../pages").then((module) => ({ default: module.Profile })),
 );
 const MyOrders = lazy(() =>
   import("../pages").then((module) => ({ default: module.MyOrders })),
@@ -132,7 +132,7 @@ export const ROUTES = {
   CAKES: "/cakes",
   CHIPS: "/chips",
   GROCERIES: "/groceries",
-  SETTINGS: "/settings",
+  PROFILE: "/profile",
   ORDERS: "/orders",
 } as const;
 
@@ -163,12 +163,12 @@ export const RouteManager: React.FC = () => {
         }
       />
 
-      {/* Settings Route */}
+      {/* Profile Route */}
       <Route
-        path="/settings"
+        path="/profile"
         element={
           <ProtectedRoute>
-            <Settings />
+            <Profile />
           </ProtectedRoute>
         }
       />
