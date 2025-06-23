@@ -16,12 +16,14 @@ api.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Only redirect for authenticated routes, not for public product browsing
+      // Only redirect for authenticated routes, not for public product browsing or auth routes
       const url = error.config?.url || "";
       const isPublicRoute =
         url.includes("/products") && error.config?.method === "get";
+      const isAuthRoute =
+        url.includes("/auth/login") || url.includes("/auth/register");
 
-      if (!isPublicRoute) {
+      if (!isPublicRoute && !isAuthRoute) {
         // Handle unauthorized access for protected routes
         localStorage.removeItem("token");
         localStorage.removeItem("user");
