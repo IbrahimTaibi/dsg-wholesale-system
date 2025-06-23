@@ -16,6 +16,7 @@ const {
   NotFound,
   Checkout,
   Orders,
+  ProductDetail,
 } = {
   Home: lazy(() =>
     import("../pages").then((module) => ({ default: module.Home })),
@@ -49,6 +50,9 @@ const {
   ),
   Orders: lazy(() =>
     import("../pages").then((module) => ({ default: module.Orders })),
+  ),
+  ProductDetail: lazy(() =>
+    import("../pages").then((module) => ({ default: module.ProductDetail })),
   ),
 };
 
@@ -134,6 +138,7 @@ export const ROUTES = {
   GROCERIES: "/groceries",
   PROFILE: "/profile",
   ORDERS: "/orders",
+  PRODUCT_DETAIL: "/product/:id",
 } as const;
 
 export const RouteManager: React.FC = () => {
@@ -209,6 +214,16 @@ export const RouteManager: React.FC = () => {
       <Route path="/cakes" element={<Cakes />} />
       <Route path="/chips" element={<Chips />} />
       <Route path="/groceries" element={<Groceries />} />
+
+      {/* Product Detail Route */}
+      <Route
+        path="/product/:productId"
+        element={
+          <ProtectedRoute>
+            <ProductDetail />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Checkout Route */}
       <Route

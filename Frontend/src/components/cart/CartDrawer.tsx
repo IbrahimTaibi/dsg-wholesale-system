@@ -177,6 +177,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                         variant="subtitle1"
                         sx={{ fontWeight: 600, color: "#2c3e50", mb: 0.5 }}>
                         {item.product.name}
+                        {item.selectedVariant && (
+                          <Chip
+                            label={item.selectedVariant.name}
+                            size="small"
+                            sx={{
+                              ml: 1,
+                              backgroundColor: "#e3f2fd",
+                              color: "#1976d2",
+                              fontSize: "0.7rem",
+                              height: 20,
+                            }}
+                          />
+                        )}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -194,13 +207,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                         }}>
-                        {formatPrice(item.product.price)} per{" "}
-                        {item.product.unit}
+                        {formatPrice(
+                          item.selectedVariant
+                            ? item.selectedVariant.price
+                            : item.product.price,
+                        )}{" "}
+                        per {item.product.unit}
                       </Typography>
                     </Box>
                     <IconButton
                       size="small"
-                      onClick={() => removeFromCart(item.product.id)}
+                      onClick={() =>
+                        removeFromCart(
+                          item.product.id,
+                          item.selectedVariant?.name,
+                        )
+                      }
                       sx={{
                         color: "#e74c3c",
                         backgroundColor: "rgba(231, 76, 60, 0.1)",
@@ -226,6 +248,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                           updateCartItemQuantity(
                             item.product.id,
                             item.quantity - 1,
+                            item.selectedVariant?.name,
                           )
                         }
                         disabled={item.quantity <= 1}
@@ -245,7 +268,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                         value={item.quantity}
                         onChange={(e) => {
                           const value = parseInt(e.target.value) || 0;
-                          updateCartItemQuantity(item.product.id, value);
+                          updateCartItemQuantity(
+                            item.product.id,
+                            value,
+                            item.selectedVariant?.name,
+                          );
                         }}
                         sx={{
                           width: 70,
@@ -265,6 +292,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                           updateCartItemQuantity(
                             item.product.id,
                             item.quantity + 1,
+                            item.selectedVariant?.name,
                           )
                         }
                         sx={{
@@ -279,7 +307,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
                     <Typography
                       variant="subtitle1"
                       sx={{ fontWeight: 700, color: "#2c3e50" }}>
-                      {formatPrice(item.product.price * item.quantity)}
+                      {formatPrice(
+                        (item.selectedVariant
+                          ? item.selectedVariant.price
+                          : item.product.price) * item.quantity,
+                      )}
                     </Typography>
                   </Box>
                 </Box>

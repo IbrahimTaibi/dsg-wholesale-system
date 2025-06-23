@@ -295,16 +295,98 @@ const descriptions = [
   "Excellent for daily use.",
 ];
 
-const sampleProducts = Array.from({ length: 60 }, (_, i) => ({
-  name:
-    productNames[i % productNames.length] +
-    (i >= productNames.length ? ` (${i + 1})` : ""),
-  category: categories[i % categories.length],
-  photo: productPhotos[i],
-  price: (Math.random() * 10 + 1).toFixed(2),
-  stock: Math.floor(Math.random() * 200 + 10),
-  description: descriptions[i % descriptions.length],
-}));
+const sampleProducts = Array.from({ length: 60 }, (_, i) => {
+  const baseProduct = {
+    name:
+      productNames[i % productNames.length] +
+      (i >= productNames.length ? ` (${i + 1})` : ""),
+    category: categories[i % categories.length],
+    photo: productPhotos[i],
+    price: (Math.random() * 10 + 1).toFixed(2),
+    stock: Math.floor(Math.random() * 200 + 10),
+    description: descriptions[i % descriptions.length],
+  };
+
+  // Add variants to specific product types
+  if (i % categories.length === 1) {
+    // Chips category
+    baseProduct.variants = [
+      {
+        name: "Original",
+        price: parseFloat(baseProduct.price),
+        stock: Math.floor(Math.random() * 100 + 20),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+      {
+        name: "Spicy",
+        price: (parseFloat(baseProduct.price) + 0.5).toFixed(2),
+        stock: Math.floor(Math.random() * 80 + 15),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+      {
+        name: "Cheese",
+        price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
+        stock: Math.floor(Math.random() * 90 + 10),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+    ];
+  } else if (i % categories.length === 2) {
+    // Mini Cakes category
+    baseProduct.variants = [
+      {
+        name: "Chocolate",
+        price: parseFloat(baseProduct.price),
+        stock: Math.floor(Math.random() * 50 + 10),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+      {
+        name: "Vanilla",
+        price: (parseFloat(baseProduct.price) - 0.2).toFixed(2),
+        stock: Math.floor(Math.random() * 60 + 15),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+      {
+        name: "Strawberry",
+        price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
+        stock: Math.floor(Math.random() * 40 + 8),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+    ];
+  } else if (i % categories.length === 4) {
+    // Juices category
+    baseProduct.variants = [
+      {
+        name: "Orange",
+        price: parseFloat(baseProduct.price),
+        stock: Math.floor(Math.random() * 100 + 30),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+      {
+        name: "Apple",
+        price: (parseFloat(baseProduct.price) - 0.1).toFixed(2),
+        stock: Math.floor(Math.random() * 120 + 25),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+      {
+        name: "Grape",
+        price: (parseFloat(baseProduct.price) + 0.2).toFixed(2),
+        stock: Math.floor(Math.random() * 80 + 20),
+        photo: productPhotos[i],
+        isAvailable: true,
+      },
+    ];
+  }
+
+  return baseProduct;
+});
 
 // Connect to MongoDB
 const connectDB = async () => {

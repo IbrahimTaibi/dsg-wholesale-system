@@ -1,11 +1,19 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { Cart, CartItem, Product } from "../types";
+import { Cart, CartItem, Product, ProductVariant } from "../types";
 
 interface CartContextType {
   cart: Cart;
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateCartItemQuantity: (productId: string, quantity: number) => void;
+  addToCart: (
+    product: Product,
+    quantity?: number,
+    variant?: ProductVariant,
+  ) => void;
+  removeFromCart: (productId: string, variantName?: string) => void;
+  updateCartItemQuantity: (
+    productId: string,
+    quantity: number,
+    variantName?: string,
+  ) => void;
   clearCart: () => void;
 }
 
@@ -24,10 +32,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   });
 
   const calculateCartTotals = (items: CartItem[]) => {
-    const subtotal = items.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0,
-    );
+    const subtotal = items.reduce((sum, item) => {
+      const price = item.selectedVariant
+        ? item.selectedVariant.price
+        : item.product.price;
+      return sum + price * item.quantity;
+    }, 0);
     const tax = subtotal * 0.15; // 15% tax
     const shipping = subtotal > 1000 ? 0 : 50; // Free shipping over $1000
     const total = subtotal + tax + shipping;
@@ -35,45 +45,75 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     return { subtotal, tax, shipping, total, totalItems };
   };
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const getCartItemKey = (productId: string, variantName?: string) => {
+    return variantName ? `${productId}-${variantName}` : productId;
+  };
+
+  const addToCart = (
+    product: Product,
+    quantity: number = 1,
+    variant?: ProductVariant,
+  ) => {
     setCart((prevCart) => {
+      const itemKey = getCartItemKey(product.id, variant?.name);
       const existingItem = prevCart.items.find(
-        (item) => item.product.id === product.id,
+        (item) =>
+          getCartItemKey(item.product.id, item.selectedVariant?.name) ===
+          itemKey,
       );
       let newItems: CartItem[];
       if (existingItem) {
-        newItems = prevCart.items.map((item) =>
-          item.product.id === product.id
+        newItems = prevCart.items.map((item) => {
+          const currentKey = getCartItemKey(
+            item.product.id,
+            item.selectedVariant?.name,
+          );
+          return currentKey === itemKey
             ? { ...item, quantity: item.quantity + quantity }
-            : item,
-        );
+            : item;
+        });
       } else {
-        newItems = [...prevCart.items, { product, quantity }];
+        newItems = [
+          ...prevCart.items,
+          { product, quantity, selectedVariant: variant },
+        ];
       }
       const totals = calculateCartTotals(newItems);
       return { ...prevCart, items: newItems, ...totals };
     });
   };
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = (productId: string, variantName?: string) => {
     setCart((prevCart) => {
+      const itemKey = getCartItemKey(productId, variantName);
       const newItems = prevCart.items.filter(
-        (item) => item.product.id !== productId,
+        (item) =>
+          getCartItemKey(item.product.id, item.selectedVariant?.name) !==
+          itemKey,
       );
       const totals = calculateCartTotals(newItems);
       return { ...prevCart, items: newItems, ...totals };
     });
   };
 
-  const updateCartItemQuantity = (productId: string, quantity: number) => {
+  const updateCartItemQuantity = (
+    productId: string,
+    quantity: number,
+    variantName?: string,
+  ) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, variantName);
       return;
     }
     setCart((prevCart) => {
-      const newItems = prevCart.items.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item,
-      );
+      const itemKey = getCartItemKey(productId, variantName);
+      const newItems = prevCart.items.map((item) => {
+        const currentKey = getCartItemKey(
+          item.product.id,
+          item.selectedVariant?.name,
+        );
+        return currentKey === itemKey ? { ...item, quantity } : item;
+      });
       const totals = calculateCartTotals(newItems);
       return { ...prevCart, items: newItems, ...totals };
     });

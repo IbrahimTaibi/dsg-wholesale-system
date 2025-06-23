@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardMedia,
@@ -12,9 +13,13 @@ import {
   Chip,
   Fade,
   Zoom,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Plus, Minus, ShoppingCart, Check } from "lucide-react";
-import { Product } from "../../types";
+import { Product, ProductVariant } from "../../types";
 import { useCart } from "../../contexts/CartContext";
 
 interface ProductItemProps {
@@ -23,12 +28,23 @@ interface ProductItemProps {
 
 export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(product.minOrderQuantity || 1);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
+    product.variants && product.variants.length > 0
+      ? product.variants[0]
+      : null,
+  );
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  // Determine the current price and stock based on selected variant or base product
+  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
+  const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
+  const currentPhoto = selectedVariant?.photo || product.photo;
+
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    addToCart(product, quantity, selectedVariant || undefined);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -41,16 +57,27 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
     });
   };
 
+  const handleVariantChange = (variantName: string) => {
+    const variant = product.variants?.find((v) => v.name === variantName);
+    setSelectedVariant(variant || null);
+  };
+
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
     <Fade in timeout={500}>
       <Card
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={handleCardClick}
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "100%",
-          minHeight: "290px",
+          minHeight:
+            product.variants && product.variants.length > 0 ? "350px" : "290px",
           width: "100%",
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           transform: isHovered ? "translateY(-4px)" : "translateY(0)",
@@ -62,6 +89,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
           position: "relative",
           border: "1px solid",
           borderColor: "divider",
+          cursor: "pointer",
           "&::before": {
             content: '""',
             position: "absolute",
@@ -82,7 +110,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         <CardMedia
           component="img"
           height="110"
-          image={product.photo || "/placeholder.jpg"}
+          image={currentPhoto || "/placeholder.jpg"}
           alt={product.name}
           sx={{
             objectFit: "cover",
@@ -125,6 +153,35 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             }}>
             {product.description}
           </Typography>
+
+          {/* Variant Selector */}
+          {product.variants && product.variants.length > 0 && (
+            <FormControl fullWidth size="small" sx={{ mb: 1 }}>
+              <InputLabel sx={{ fontSize: "0.75rem" }}>Flavor</InputLabel>
+              <Select
+                value={selectedVariant?.name || ""}
+                onChange={(e) => handleVariantChange(e.target.value)}
+                label="Flavor"
+                onClick={(e) => e.stopPropagation()}
+                sx={{
+                  fontSize: "0.75rem",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgba(0, 0, 0, 0.23)",
+                  },
+                }}>
+                {product.variants.map((variant) => (
+                  <MenuItem
+                    key={variant.name}
+                    value={variant.name}
+                    sx={{ fontSize: "0.75rem" }}
+                    disabled={!variant.isAvailable}>
+                    {variant.name} - ${variant.price.toFixed(2)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+
           <Box
             sx={{
               display: "flex",
@@ -142,22 +199,22 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 WebkitTextFillColor: "transparent",
                 fontSize: "1.1rem",
               }}>
-              ${product.price.toFixed(2)}
+              ${currentPrice.toFixed(2)}
             </Typography>
             <Chip
-              label={`${product.stock} in stock`}
+              label={`${currentStock} in stock`}
               size="small"
               sx={{
                 backgroundColor:
-                  product.stock > 50
+                  currentStock > 50
                     ? "#e8f5e8"
-                    : product.stock > 20
+                    : currentStock > 20
                     ? "#fff3cd"
                     : "#f8d7da",
                 color:
-                  product.stock > 50
+                  currentStock > 50
                     ? "#2d5a2d"
-                    : product.stock > 20
+                    : currentStock > 20
                     ? "#856404"
                     : "#721c24",
                 fontWeight: 500,
@@ -197,7 +254,10 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             }}>
             <IconButton
               size="small"
-              onClick={() => handleQuantityChange(-1)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleQuantityChange(-1);
+              }}
               sx={{
                 backgroundColor: "action.hover",
                 width: 24,
@@ -211,14 +271,16 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             <TextField
               size="small"
               value={quantity}
-              onChange={(e) =>
+              onChange={(e) => {
+                e.stopPropagation();
                 setQuantity(
                   Math.max(
                     product.minOrderQuantity || 1,
                     Number(e.target.value),
                   ),
-                )
-              }
+                );
+              }}
+              onClick={(e) => e.stopPropagation()}
               sx={{
                 width: 50,
                 "& .MuiOutlinedInput-root": {
@@ -237,7 +299,10 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             />
             <IconButton
               size="small"
-              onClick={() => handleQuantityChange(1)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleQuantityChange(1);
+              }}
               sx={{
                 backgroundColor: "action.hover",
                 width: 24,
@@ -262,8 +327,13 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 startIcon={
                   isAdded ? <Check size={12} /> : <ShoppingCart size={12} />
                 }
-                onClick={handleAddToCart}
-                disabled={isAdded}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart();
+                }}
+                disabled={
+                  isAdded || !!(selectedVariant && !selectedVariant.isAvailable)
+                }
                 sx={{
                   width: "100%",
                   minWidth: "110px",

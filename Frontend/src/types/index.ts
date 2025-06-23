@@ -23,6 +23,15 @@ export interface ProductCardProps {
   count: string;
 }
 
+// Product variant type
+export interface ProductVariant {
+  name: string;
+  price: number;
+  stock: number;
+  photo?: string;
+  isAvailable: boolean;
+}
+
 // Product types - Updated to match API
 export interface Product {
   id: string;
@@ -35,6 +44,7 @@ export interface Product {
   image?: string; // Add image property for mock data
   unit?: string;
   minOrderQuantity?: number;
+  variants?: ProductVariant[]; // Product variants/flavors
 }
 
 // API Product type (from backend)
@@ -49,6 +59,7 @@ export interface ApiProduct {
   isAvailable: boolean;
   unit?: string;
   minOrderQuantity?: number;
+  variants?: ProductVariant[]; // Product variants/flavors
 }
 
 // Helper function to convert API product to frontend product
@@ -62,12 +73,14 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => ({
   photo: apiProduct.photo,
   unit: apiProduct.unit,
   minOrderQuantity: apiProduct.minOrderQuantity,
+  variants: apiProduct.variants,
 });
 
 // Cart types
 export interface CartItem {
   product: Product;
   quantity: number;
+  selectedVariant?: ProductVariant; // Selected variant/flavor
 }
 
 export interface Cart {

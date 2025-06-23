@@ -9,6 +9,7 @@ export { WaterBeverages } from "./WaterBeverages";
 export { Groceries } from "./Groceries";
 export { Checkout } from "./Checkout";
 export { NotFound } from "./NotFound";
+export { ProductDetail } from "./ProductDetail";
 export { default as Profile } from "./Profile";
 export { default as MyOrders } from "./MyOrders";
 export { Orders } from "./Orders";

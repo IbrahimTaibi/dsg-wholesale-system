@@ -40,6 +40,46 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Product variants/flavors
+    variants: {
+      type: [
+        {
+          name: {
+            type: String,
+            required: [true, "Variant name is required"],
+            trim: true,
+            maxlength: [50, "Variant name cannot exceed 50 characters"],
+          },
+          price: {
+            type: Number,
+            required: [true, "Variant price is required"],
+            min: [0, "Variant price cannot be negative"],
+          },
+          stock: {
+            type: Number,
+            required: [true, "Variant stock is required"],
+            min: [0, "Variant stock cannot be negative"],
+          },
+          photo: {
+            type: String,
+            required: false,
+          },
+          isAvailable: {
+            type: Boolean,
+            default: true,
+          },
+        },
+      ],
+      default: [],
+      validate: {
+        validator: function (variants) {
+          // Ensure variant names are unique within a product
+          const names = variants.map((v) => v.name);
+          return names.length === new Set(names).size;
+        },
+        message: "Variant names must be unique within a product",
+      },
+    },
   },
   {
     timestamps: true,
