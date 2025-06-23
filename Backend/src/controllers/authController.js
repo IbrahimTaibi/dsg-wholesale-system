@@ -270,6 +270,14 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
+// Get current authenticated user (for /me endpoint)
+const me = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "User not authenticated" });
+  }
+  res.json(req.user);
+};
+
 module.exports = {
   register,
   login,
@@ -277,4 +285,5 @@ module.exports = {
   updateProfile,
   changePassword,
   refreshToken,
+  me,
 };
