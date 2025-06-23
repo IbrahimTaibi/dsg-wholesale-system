@@ -1,3 +1,4 @@
+// Triggering redeploy for Vercel
 import React, { useRef, useLayoutEffect } from "react";
 import { Menu, LogIn, UserPlus, User, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
