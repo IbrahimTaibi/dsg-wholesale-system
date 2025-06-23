@@ -8,7 +8,15 @@ const { BCRYPT_ROUNDS } = require("../config/config");
 const register = async (req, res, next) => {
   console.log("Received registration request:", req.body);
   try {
-    const { phone, password, name, storeName, address } = req.body;
+    const { phone, password, name, storeName } = req.body;
+    let address;
+
+    // Since the address is stringified on the frontend, we must parse it here.
+    try {
+      address = JSON.parse(req.body.address);
+    } catch (e) {
+      return res.status(400).json({ error: "Address data is malformed." });
+    }
 
     // Validate required fields
     if (!phone || !password || !name || !storeName || !address) {
