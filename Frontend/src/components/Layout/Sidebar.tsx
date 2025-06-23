@@ -6,11 +6,13 @@ import { SidebarMenuItem } from "./SidebarMenuItem";
 import { MENU_ITEMS } from "../../config/constants";
 import { BRANDING } from "../../config/branding";
 import { useTranslation } from "react-i18next";
+import { ThemeToggle } from "../ui/ThemeToggle";
+import CountryFlag from "react-country-flag";
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useUI();
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Filter menu items based on user role
   const filteredMenuItems = MENU_ITEMS.filter((item) => {
@@ -38,7 +40,7 @@ export const Sidebar: React.FC = () => {
         bg-gradient-to-b from-orange-800 via-orange-900 to-red-800 dark:from-gray-800 dark:via-gray-850 dark:to-gray-900
         shadow-2xl border-r border-white/10
       `}>
-        <div className="pt-20 pb-4 h-full overflow-y-auto relative">
+        <div className="pt-20 pb-4 h-full overflow-y-auto relative flex flex-col">
           {/* Decorative gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-black/10 pointer-events-none" />
 
@@ -46,9 +48,9 @@ export const Sidebar: React.FC = () => {
           <div className="absolute top-4 right-4 z-10">
             <button
               onClick={closeSidebar}
-              className="p-2.5 rounded-xl text-white/80 hover:text-white hover:bg-white/15 transition-all duration-300 hover:rotate-90 transform border border-white/20 backdrop-blur-sm shadow-lg"
+              className="p-4 rounded-xl text-white/80 hover:text-white hover:bg-white/15 transition-all duration-300 hover:rotate-90 transform border border-white/20 backdrop-blur-sm shadow-lg text-lg"
               aria-label="Close sidebar">
-              <X size={20} strokeWidth={2.5} className="drop-shadow-sm" />
+              <X size={24} strokeWidth={2.5} className="drop-shadow-sm" />
             </button>
           </div>
 
@@ -66,11 +68,39 @@ export const Sidebar: React.FC = () => {
           </div>
 
           {/* Menu Items */}
-          <nav className="px-6 space-y-3 relative z-10">
+          <nav className="px-6 space-y-4 relative z-10 flex-1">
             {filteredMenuItems.map((item) => (
               <SidebarMenuItem key={item.id} item={item} />
             ))}
           </nav>
+
+          {/* Mobile-only: Language and Theme toggles at the bottom */}
+          <div className="flex items-center justify-center gap-6 mt-8 mb-2 sm:hidden z-20">
+            <button
+              onClick={() =>
+                i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")
+              }
+              className="flex items-center px-3 py-2 rounded-lg text-white hover:bg-white/10">
+              {i18n.language === "en" ? (
+                <span role="img" aria-label="English">
+                  <CountryFlag
+                    countryCode="GB"
+                    svg
+                    style={{ width: "2em", height: "2em" }}
+                  />
+                </span>
+              ) : (
+                <span role="img" aria-label="Français">
+                  <CountryFlag
+                    countryCode="FR"
+                    svg
+                    style={{ width: "2em", height: "2em" }}
+                  />
+                </span>
+              )}
+            </button>
+            <ThemeToggle />
+          </div>
 
           {/* Bottom decoration */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Container, Paper } from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import { StatsCard } from "../dashboard/StatsCard";
 import { ProductCard } from "../products/ProductCard";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../../config/constants";
@@ -42,20 +42,33 @@ export const MainContent: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", py: 12 }}>
-      <Container maxWidth="xl">
+    <Box
+      sx={{
+        bgcolor: "background.default",
+        minHeight: "100vh",
+        py: { xs: 4, sm: 8, md: 12 },
+      }}>
+      <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 4 } }}>
         {/* Welcome Section */}
-        <Box sx={{ textAlign: "center", mb: 8 }}>
+        <Box sx={{ textAlign: "center", mb: { xs: 4, sm: 8 } }}>
           <Typography
             variant="h3"
             component="h1"
-            sx={{ fontWeight: 700, mb: 2 }}>
+            sx={{
+              fontWeight: 700,
+              mb: 2,
+              fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+            }}>
             Welcome to {BRANDING.fullName}
           </Typography>
           <Typography
             variant="h6"
             color="text.secondary"
-            sx={{ maxWidth: "md", mx: "auto" }}>
+            sx={{
+              maxWidth: "md",
+              mx: "auto",
+              fontSize: { xs: "1rem", sm: "1.25rem" },
+            }}>
             {BRANDING.description}
           </Typography>
           <Box
@@ -75,9 +88,9 @@ export const MainContent: React.FC = () => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            gap: 4,
+            gap: { xs: 2, sm: 4 },
             justifyContent: "center",
-            mb: 8,
+            mb: { xs: 4, sm: 8 },
           }}>
           {productCards.map((card, index) => (
             <Box
@@ -85,9 +98,10 @@ export const MainContent: React.FC = () => {
               sx={{
                 width: {
                   xs: "100%",
-                  sm: "calc(50% - 16px)",
-                  md: "calc(25% - 24px)",
+                  sm: "calc(50% - 8px)",
+                  md: "calc(25% - 18px)",
                 },
+                mb: { xs: 2, sm: 0 },
               }}>
               <ProductCard
                 icon={card.icon}
@@ -101,31 +115,35 @@ export const MainContent: React.FC = () => {
         </Box>
 
         {/* Stats Section */}
-        <Paper sx={{ p: 4, borderRadius: 3 }}>
-          <Typography
-            variant="h4"
-            component="h2"
-            sx={{ textAlign: "center", fontWeight: 600, mb: 4 }}>
-            Why Choose DSG Wholesale?
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 4,
-              justifyContent: "center",
-            }}>
-            {stats.map((stat, index) => (
-              <Box
-                key={index}
-                sx={{
-                  width: { xs: "100%", md: "calc(33.333% - 24px)" },
-                }}>
-                <StatsCard {...stat} />
-              </Box>
-            ))}
-          </Box>
-        </Paper>
+        <Typography
+          variant="h4"
+          component="h2"
+          sx={{
+            textAlign: "center",
+            fontWeight: 600,
+            mb: { xs: 2, sm: 4 },
+            fontSize: { xs: "1.3rem", sm: "2rem" },
+          }}>
+          Why Choose DSG Wholesale?
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: { xs: 2, sm: 4 },
+            justifyContent: "center",
+          }}>
+          {stats.map((stat, index) => (
+            <Box
+              key={index}
+              sx={{
+                width: { xs: "100%", md: "calc(33.333% - 18px)" },
+                mb: { xs: 2, md: 0 },
+              }}>
+              <StatsCard {...stat} />
+            </Box>
+          ))}
+        </Box>
       </Container>
     </Box>
   );

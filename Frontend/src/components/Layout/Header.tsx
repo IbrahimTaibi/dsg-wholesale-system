@@ -451,18 +451,17 @@ export const Header: React.FC = () => {
     <header
       ref={headerRef}
       className="fixed top-0 left-0 right-0 z-30 transition-all duration-300 bg-gradient-to-r from-orange-700 to-red-700 dark:from-gray-800 dark:to-gray-700 shadow-lg border-b border-white/10">
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto px-2 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex items-center space-x-2 sm:space-x-4">
             <button
               onClick={toggleSidebar}
-              className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:rotate-90 transform"
+              className="p-3 sm:p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:rotate-90 transform focus:outline-none focus:ring-2 focus:ring-white"
               aria-label="Toggle menu">
-              <Menu size={24} />
+              <Menu size={28} className="sm:size-6" />
             </button>
-
             <div className="flex items-center">
-              <h1 className="text-white text-lg sm:text-2xl font-bold tracking-wider drop-shadow-lg truncate">
+              <h1 className="text-white text-xl sm:text-2xl font-bold tracking-wider drop-shadow-lg truncate">
                 {BRANDING.name}
               </h1>
             </div>
@@ -474,33 +473,36 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Right side - Auth and Theme toggle */}
-          <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
             <CartIcon onClick={() => setCartOpen(true)} />
             {isAuthenticated ? (
               <UserMenu />
             ) : (
-              <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="flex items-center space-x-2 sm:space-x-2">
                 <button
                   onClick={handleLogin}
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform"
+                  className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform text-base sm:text-sm"
                   aria-label="Login">
-                  <LogIn size={18} />
+                  <LogIn size={20} className="sm:size-5" />
                   <span className="hidden sm:inline text-sm font-medium">
                     {t("login")}
                   </span>
                 </button>
                 <button
                   onClick={handleSignup}
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm"
+                  className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm text-base sm:text-sm"
                   aria-label="Sign Up">
-                  <UserPlus size={18} />
+                  <UserPlus size={20} className="sm:size-5" />
                   <span className="hidden sm:inline text-sm font-medium">
                     {t("signup")}
                   </span>
                 </button>
               </div>
             )}
-            <ThemeToggle />
+            {/* Hide theme toggle and language flag on mobile, show only on sm+ */}
+            <span className="hidden sm:inline-flex">
+              <ThemeToggle />
+            </span>
             <button
               onClick={() =>
                 i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")
