@@ -222,5 +222,6 @@
   "phone": "Phone",
   "freshAndPure": "Fresh & Pure",
   "noWaterFoundMatching": "No water & beverage products found matching",
-  "noWaterAvailable": "No water & beverage products available at the moment."
+  "noWaterAvailable": "No water & beverage products available at the moment.",
+  "generalInformation": "General Information"
 }

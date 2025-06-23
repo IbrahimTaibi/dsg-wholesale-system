@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { apiService } from "../config/api";
-import { Lock, User as UserIcon, Camera } from "lucide-react";
+import { Lock, User as UserIcon, Camera, Settings } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ProfileFormData {
   name: string;
@@ -22,9 +23,10 @@ interface PasswordFormData {
 
 const Profile: React.FC = () => {
   const { user, refetchUser } = useAuth();
-  const [activeTab, setActiveTab] = useState<"photo" | "settings" | "password">(
-    "photo",
-  );
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<
+    "general" | "settings" | "password"
+  >("general");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -66,13 +68,24 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleSettingsSubmit = async (e: React.FormEvent) => {
+  const handleGeneralSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
     try {
-      await apiService.updateProfile({
+      const updateData: {
+        name: string;
+        phone: string;
+        storeName: string;
+        address: {
+          street: string;
+          city: string;
+          state: string;
+          zipCode: string;
+        };
+        photo?: File;
+      } = {
         name: profileForm.name,
         phone: profileForm.phone,
         storeName: profileForm.storeName,
@@ -82,10 +95,16 @@ const Profile: React.FC = () => {
           state: profileForm.address.state,
           zipCode: user?.address?.zipCode || "",
         },
-      });
+      };
+
+      if (photo) {
+        updateData.photo = photo;
+      }
+
+      await apiService.updateProfile(updateData);
       setMessage({
         type: "success",
-        text: "Profile settings updated successfully!",
+        text: "Profile information updated successfully!",
       });
       refetchUser();
     } catch (error: unknown) {
@@ -136,34 +155,6 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handlePhotoSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!photo) {
-      setMessage({ type: "error", text: "Please select a photo to upload." });
-      return;
-    }
-    setLoading(true);
-    setMessage(null);
-
-    try {
-      await apiService.updateProfile({ photo });
-      setMessage({
-        type: "success",
-        text: "Profile photo updated successfully!",
-      });
-      refetchUser();
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to update photo";
-      setMessage({
-        type: "error",
-        text: errorMessage,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -191,14 +182,14 @@ const Profile: React.FC = () => {
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="-mb-px flex space-x-8">
               <button
-                onClick={() => setActiveTab("photo")}
+                onClick={() => setActiveTab("general")}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "photo"
+                  activeTab === "general"
                     ? "border-blue-500 text-blue-600 dark:text-blue-400"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                 }`}>
-                <Camera className="inline-block w-4 h-4 mr-2" />
-                Photo
+                <UserIcon className="inline-block w-4 h-4 mr-2" />
+                {t("generalInformation")}
               </button>
               <button
                 onClick={() => setActiveTab("settings")}
@@ -207,7 +198,7 @@ const Profile: React.FC = () => {
                     ? "border-blue-500 text-blue-600 dark:text-blue-400"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                 }`}>
-                <UserIcon className="inline-block w-4 h-4 mr-2" />
+                <Settings className="inline-block w-4 h-4 mr-2" />
                 Settings
               </button>
               <button
@@ -224,130 +215,124 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
-        {activeTab === "photo" && (
+        {activeTab === "general" && (
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                Profile Photo
+                {t("generalInformation")}
               </h2>
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Update your profile picture.
+                Update your personal information, store details, and profile
+                picture.
               </p>
             </div>
-            <form onSubmit={handlePhotoSubmit} className="p-6 space-y-6">
-              <div className="flex items-center space-x-6">
-                <div className="relative">
-                  <img
-                    src={photoPreview || "/placeholder-avatar.svg"}
-                    alt="Profile Preview"
-                    className="w-24 h-24 rounded-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1.5 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <Camera size={16} />
-                  </button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    className="hidden"
-                  />
-                </div>
-                <div className="flex-grow">
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Click the camera to select a new photo.
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    PNG, JPG, GIF up to 10MB.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={loading || !photo}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {loading ? "Uploading..." : "Save Photo"}
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {activeTab === "settings" && (
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                Profile Information
-              </h2>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Update your personal information and store details
-              </p>
-            </div>
-            <form onSubmit={handleSettingsSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={profileForm.name}
-                    onChange={(e) =>
-                      setProfileForm({ ...profileForm, name: e.target.value })
-                    }
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={profileForm.phone}
-                    onChange={(e) =>
-                      setProfileForm({ ...profileForm, phone: e.target.value })
-                    }
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="storeName"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Store Name
-                  </label>
-                  <input
-                    type="text"
-                    id="storeName"
-                    value={profileForm.storeName}
-                    onChange={(e) =>
-                      setProfileForm({
-                        ...profileForm,
-                        storeName: e.target.value,
-                      })
-                    }
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                    required
-                  />
+            <form onSubmit={handleGeneralSubmit} className="p-6 space-y-6">
+              {/* Profile Photo Section */}
+              <div className="border-b border-gray-200 dark:border-gray-700 pb-6">
+                <h3 className="text-md font-medium text-gray-900 dark:text-white mb-4">
+                  Profile Photo
+                </h3>
+                <div className="flex items-center space-x-6">
+                  <div className="relative">
+                    <img
+                      src={photoPreview || "/placeholder-avatar.svg"}
+                      alt="Profile Preview"
+                      className="w-24 h-24 rounded-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1.5 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <Camera size={16} />
+                    </button>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                  </div>
+                  <div className="flex-grow">
+                    <p className="text-gray-700 dark:text-gray-300">
+                      Click the camera to select a new photo.
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      PNG, JPG, GIF up to 10MB.
+                    </p>
+                  </div>
                 </div>
               </div>
 
+              {/* Personal Information Section */}
+              <div>
+                <h3 className="text-md font-medium text-gray-900 dark:text-white mb-4">
+                  Personal Information
+                </h3>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      value={profileForm.name}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, name: e.target.value })
+                      }
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      value={profileForm.phone}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          phone: e.target.value,
+                        })
+                      }
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="storeName"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Store Name
+                    </label>
+                    <input
+                      type="text"
+                      id="storeName"
+                      value={profileForm.storeName}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          storeName: e.target.value,
+                        })
+                      }
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Address Information Section */}
               <div>
                 <h3 className="text-md font-medium text-gray-900 dark:text-white mb-4">
                   Address Information
@@ -424,6 +409,7 @@ const Profile: React.FC = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex justify-end">
                 <button
                   type="submit"
@@ -433,6 +419,25 @@ const Profile: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {activeTab === "settings" && (
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                Account Settings
+              </h2>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                Manage your account preferences and settings
+              </p>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-600 dark:text-gray-400">
+                Additional account settings will be available here in the
+                future.
+              </p>
+            </div>
           </div>
         )}
 
