@@ -68,8 +68,8 @@ export const SortFilter: React.FC<SortFilterProps> = ({
           onClick={() => setShowSortMenu(!showSortMenu)}
           className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
-              <SortAsc className="h-4 w-4 text-white" />
+            <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <SortAsc className="h-4 w-4 text-gray-600 dark:text-gray-300" />
             </div>
             <div className="text-left">
               <p className="text-sm text-gray-500 dark:text-gray-400">
