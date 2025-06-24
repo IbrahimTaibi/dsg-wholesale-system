@@ -97,9 +97,9 @@ export const UserHome: React.FC = () => {
               ml: { md: 4 },
             }}>
             <img
-              src="/assets/react.svg"
-              alt="Welcome Banner"
-              style={{ height: 100, opacity: 0.8 }}
+              src="/assets/dsg.svg"
+              alt="DSG Banner"
+              style={{ height: 100, opacity: 0.9 }}
             />
           </Box>
         </Box>
