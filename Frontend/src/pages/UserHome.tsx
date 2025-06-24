@@ -147,6 +147,7 @@ export const UserHome: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: theme.palette.primary.main,
               }}>
               <TrendingUpOutlined />
             </Box>
@@ -174,6 +175,7 @@ export const UserHome: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: theme.palette.info.main,
               }}>
               <WaterDropOutlined />
             </Box>
@@ -201,6 +203,7 @@ export const UserHome: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: theme.palette.warning.main,
               }}>
               <LunchDiningOutlined />
             </Box>
@@ -228,6 +231,7 @@ export const UserHome: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: theme.palette.secondary.main,
               }}>
               <CookieOutlined />
             </Box>
@@ -255,6 +259,7 @@ export const UserHome: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
+                color: theme.palette.error.main,
               }}>
               <LocalFireDepartmentOutlined />
             </Box>
