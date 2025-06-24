@@ -1,6 +1,12 @@
 import React from "react";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import LocalDrinkOutlinedIcon from "@mui/icons-material/LocalDrinkOutlined";
+import LocalBarOutlinedIcon from "@mui/icons-material/LocalBarOutlined";
+import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import { useNavigation } from "../../hooks";
-import { ICON_MAP } from "../../config/constants";
 import { MenuItem } from "../../types";
 import { useUI } from "../../contexts/UIContext";
 import { useTranslation } from "react-i18next";
@@ -31,7 +37,17 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
     navigateToMenuItem(item.id);
   };
 
-  const IconComponent = ICON_MAP[item.icon as keyof typeof ICON_MAP];
+  const iconMap: Record<string, React.ElementType> = {
+    dashboard: DashboardOutlinedIcon,
+    orders: ShoppingCartOutlinedIcon,
+    users: PeopleAltOutlinedIcon,
+    water: LocalDrinkOutlinedIcon,
+    juices: LocalBarOutlinedIcon,
+    cakes: CakeOutlinedIcon,
+    chips: LocalMallOutlinedIcon,
+    groceries: LocalMallOutlinedIcon,
+  };
+  const IconComponent = iconMap[item.icon] || DashboardOutlinedIcon;
   const isActive =
     selectedMenuItem === item.id || isCurrentRoute(ROUTE_MAP[item.id] || "");
 

@@ -1,6 +1,11 @@
 // Triggering redeploy for Vercel
 import React, { useRef, useLayoutEffect } from "react";
-import { Menu, LogIn, UserPlus, User, LogOut, Settings } from "lucide-react";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useNavigate } from "react-router-dom";
 import { useUI } from "../../contexts/UIContext";
 import { useAuth } from "../../hooks/useAuth";
@@ -57,7 +62,7 @@ export const Header: React.FC = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User size={16} />
+              <AccountCircleOutlinedIcon />
             )}
           </div>
           <span className="hidden sm:inline text-sm font-medium">
@@ -129,10 +134,7 @@ export const Header: React.FC = () => {
                 onClick={handleProfile}
                 className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all duration-200 group">
                 <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 transition-colors duration-200">
-                  <Settings
-                    size={20}
-                    className="text-orange-600 dark:text-orange-400"
-                  />
+                  <SettingsOutlinedIcon />
                 </div>
                 <span className="font-medium text-base">{t("profile")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -238,10 +240,7 @@ export const Header: React.FC = () => {
                 }}
                 className="flex items-center w-full px-6 py-4 text-base text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group">
                 <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors duration-200">
-                  <LogOut
-                    size={20}
-                    className="text-red-600 dark:text-red-400"
-                  />
+                  <LogoutOutlinedIcon />
                 </div>
                 <span className="font-medium text-base">{t("signOut")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -312,10 +311,7 @@ export const Header: React.FC = () => {
                 onClick={handleProfile}
                 className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all duration-200 group">
                 <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 transition-colors duration-200">
-                  <Settings
-                    size={20}
-                    className="text-orange-600 dark:text-orange-400"
-                  />
+                  <SettingsOutlinedIcon />
                 </div>
                 <span className="font-medium text-base">{t("profile")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -421,10 +417,7 @@ export const Header: React.FC = () => {
                 }}
                 className="flex items-center w-full px-6 py-4 text-base text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group">
                 <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors duration-200">
-                  <LogOut
-                    size={20}
-                    className="text-red-600 dark:text-red-400"
-                  />
+                  <LogoutOutlinedIcon />
                 </div>
                 <span className="font-medium text-base">{t("signOut")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -460,7 +453,7 @@ export const Header: React.FC = () => {
               onClick={toggleSidebar}
               className="p-3 sm:p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:rotate-90 transform focus:outline-none focus:ring-2 focus:ring-white"
               aria-label="Toggle menu">
-              <Menu size={28} className="sm:size-6" />
+              <MenuOutlinedIcon className="sm:size-6" />
             </button>
             <div className="flex items-center">
               <h1 className="text-white text-xl sm:text-2xl font-bold tracking-wider drop-shadow-lg truncate">
@@ -485,7 +478,7 @@ export const Header: React.FC = () => {
                   onClick={handleLogin}
                   className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform text-base sm:text-sm"
                   aria-label="Login">
-                  <LogIn size={20} className="sm:size-5" />
+                  <LoginOutlinedIcon className="sm:size-5" />
                   <span className="hidden sm:inline text-sm font-medium">
                     {t("login")}
                   </span>
@@ -494,7 +487,7 @@ export const Header: React.FC = () => {
                   onClick={handleSignup}
                   className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm text-base sm:text-sm"
                   aria-label="Sign Up">
-                  <UserPlus size={20} className="sm:size-5" />
+                  <PersonAddOutlinedIcon className="sm:size-5" />
                   <span className="hidden sm:inline text-sm font-medium">
                     {t("signup")}
                   </span>
