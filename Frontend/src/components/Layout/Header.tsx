@@ -43,7 +43,7 @@ export const Header: React.FC = () => {
     setShowAuthModal("signup");
   };
 
-  // UserMenu: Handles user dropdown and sidebar for profile, dashboard, orders, and logout
+  // UserMenu: Handles user sidebar for profile, dashboard, orders, and logout
   const UserMenu = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
@@ -73,15 +73,15 @@ export const Header: React.FC = () => {
           </span>
         </button>
 
-        {/* Mobile Right Sidebar */}
+        {/* Sidebar (drawer) for all screen sizes */}
         <div
-          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200/50 dark:border-gray-700/50 transform transition-transform duration-300 ease-in-out z-50 sm:hidden ${
+          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl border-l border-gray-200/50 dark:border-gray-700/50 transform transition-transform duration-300 ease-in-out z-50 ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}>
-          {/* Backdrop for mobile */}
+          {/* Backdrop for all screens */}
           {isMenuOpen && (
             <div
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm sm:hidden"
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
               onClick={() => setIsMenuOpen(false)}
             />
           )}
@@ -155,100 +155,15 @@ export const Header: React.FC = () => {
                   </svg>
                 </div>
               </button>
-
-              {user?.role === "admin" ? (
-                <button
-                  onClick={() => {
-                    navigate("/dashboard");
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
-                    <svg
-                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h18v18H3V3zm3 3v12h12V6H6zm3 3h6v6H9V9z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="font-medium text-base">
-                    {t("dashboard")}
-                  </span>
-                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <svg
-                      className="w-5 h-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    navigate("/orders");
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
-                    <svg
-                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                      />
-                    </svg>
-                  </div>
-                  <span className="font-medium text-base">{t("myOrders")}</span>
-                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <svg
-                      className="w-5 h-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              )}
-
-              <div className="mx-6 my-3 border-t border-gray-100 dark:border-gray-700"></div>
-
               <button
                 onClick={() => {
-                  logout();
+                  navigate("/orders");
                   setIsMenuOpen(false);
                 }}
-                className="flex items-center w-full px-6 py-4 text-base text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group">
-                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors duration-200">
-                  <LogoutOutlinedIcon />
-                </div>
-                <span className="font-medium text-base">{t("signOut")}</span>
-                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
                   <svg
-                    className="w-5 h-5 text-red-400"
+                    className="w-5 h-5 text-blue-600 dark:text-blue-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -256,67 +171,11 @@ export const Header: React.FC = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 5l7 7-7 7"
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                     />
                   </svg>
                 </div>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop Dropdown */}
-        <div
-          className={`absolute top-full right-0 mt-2 w-80 transition-all duration-300 ease-out transform origin-top-right z-50 hidden sm:block ${
-            isMenuOpen
-              ? "opacity-100 scale-100 translate-y-0"
-              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
-          }`}>
-          {/* Backdrop */}
-          {isMenuOpen && (
-            <div
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
-              onClick={() => setIsMenuOpen(false)}
-            />
-          )}
-
-          {/* Dropdown Menu */}
-          <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 relative z-50 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-50/50 to-transparent dark:from-gray-800/50 dark:to-transparent" />
-            {/* User Info Section */}
-            <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 relative z-10">
-              <div className="flex items-center space-x-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-semibold text-lg overflow-hidden">
-                  {user?.photo ? (
-                    <img
-                      src={user.photo}
-                      alt={user.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    user?.name?.charAt(0)?.toUpperCase() || "U"
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 dark:text-white truncate text-lg">
-                    {user?.name}
-                  </p>
-                  <p className="text-base text-gray-500 dark:text-gray-400 truncate">
-                    {user?.phone}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Menu Items */}
-            <div className="py-3 relative z-10">
-              <button
-                onClick={handleProfile}
-                className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all duration-200 group">
-                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 transition-colors duration-200">
-                  <SettingsOutlinedIcon />
-                </div>
-                <span className="font-medium text-base">{t("profile")}</span>
+                <span className="font-medium text-base">{t("myOrders")}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <svg
                     className="w-5 h-5 text-gray-400"
@@ -332,8 +191,7 @@ export const Header: React.FC = () => {
                   </svg>
                 </div>
               </button>
-
-              {user?.role === "admin" ? (
+              {user?.role === "admin" && (
                 <button
                   onClick={() => {
                     navigate("/dashboard");
@@ -372,47 +230,8 @@ export const Header: React.FC = () => {
                     </svg>
                   </div>
                 </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    navigate("/orders");
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center w-full px-6 py-4 text-base text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 group">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
-                    <svg
-                      className="w-5 h-5 text-blue-600 dark:text-blue-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                      />
-                    </svg>
-                  </div>
-                  <span className="font-medium text-base">{t("myOrders")}</span>
-                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <svg
-                      className="w-5 h-5 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                </button>
               )}
-
               <div className="mx-6 my-3 border-t border-gray-100 dark:border-gray-700"></div>
-
               <button
                 onClick={() => {
                   logout();
@@ -544,12 +363,6 @@ export const Header: React.FC = () => {
                 </div>
               )}
             </div>
-            <button
-              className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
-              aria-label="Profile"
-              onClick={() => navigate("/profile")}>
-              <AccountCircleOutlinedIcon />
-            </button>
           </div>
         </div>
 
