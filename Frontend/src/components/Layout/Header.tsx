@@ -1,8 +1,6 @@
 // Triggering redeploy for Vercel
 import React, { useRef, useLayoutEffect } from "react";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -37,10 +35,6 @@ export const Header: React.FC = () => {
 
   const handleLogin = () => {
     setShowAuthModal("login");
-  };
-
-  const handleSignup = () => {
-    setShowAuthModal("signup");
   };
 
   // UserMenu: Handles user sidebar for profile, dashboard, orders, and logout
@@ -298,30 +292,21 @@ export const Header: React.FC = () => {
               onClick={() => setShowMobileSearch((v) => !v)}>
               <SearchIcon />
             </button>
-            {/* Desktop: Cart, Auth, UserMenu */}
-            <span className="hidden sm:flex items-center space-x-2">
+            {/* Cart icon (desktop only) */}
+            <span className="hidden sm:flex items-center">
               <CartIcon onClick={() => setCartOpen(true)} />
-              {isAuthenticated ? (
-                <UserMenu />
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={handleLogin}
-                    className="flex items-center space-x-1 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform text-sm"
-                    aria-label="Login">
-                    <LoginOutlinedIcon className="size-5" />
-                    <span className="text-sm font-medium">{t("login")}</span>
-                  </button>
-                  <button
-                    onClick={handleSignup}
-                    className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm text-sm"
-                    aria-label="Sign Up">
-                    <PersonAddOutlinedIcon className="size-5" />
-                    <span className="text-sm font-medium">{t("signup")}</span>
-                  </button>
-                </div>
-              )}
             </span>
+            {/* Profile icon (always visible) */}
+            {isAuthenticated ? (
+              <UserMenu />
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
+                aria-label="Profile">
+                <AccountCircleOutlinedIcon />
+              </button>
+            )}
             {/* Hide theme toggle and language flag on mobile, show only on sm+ */}
             <span className="hidden sm:inline-flex">
               <ThemeToggle />
