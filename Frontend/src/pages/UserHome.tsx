@@ -20,6 +20,7 @@ import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
 import { Link } from "react-router-dom";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
 import { useTheme } from "@mui/material/styles";
+import AnimatedDSG from "../components/AnimatedDSG";
 
 const categoryRoutes: { [key: string]: string } = {
   waterAndBeverages: "/water",
@@ -96,11 +97,7 @@ export const UserHome: React.FC = () => {
               display: { xs: "none", md: "block" },
               ml: { md: 4 },
             }}>
-            <img
-              src="/assets/dsg.svg"
-              alt="DSG Banner"
-              style={{ height: 100, opacity: 0.9 }}
-            />
+            <AnimatedDSG />
           </Box>
         </Box>
         {/* End Welcoming Banner */}
