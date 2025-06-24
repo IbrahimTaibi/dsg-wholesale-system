@@ -64,7 +64,7 @@ export const WaterBeverages: React.FC = () => {
         </div>
 
         {/* Enhanced Search and Filters Section */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 mb-8">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 mb-8 relative z-40">
           <div className="space-y-6">
             {/* Search Bar */}
             <div className="flex-1">
