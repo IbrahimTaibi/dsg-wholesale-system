@@ -544,6 +544,12 @@ export const Header: React.FC = () => {
                 </div>
               )}
             </div>
+            <button
+              className="p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
+              aria-label="Profile"
+              onClick={() => navigate("/profile")}>
+              <AccountCircleOutlinedIcon />
+            </button>
           </div>
         </div>
 
