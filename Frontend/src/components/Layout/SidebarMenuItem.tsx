@@ -75,12 +75,7 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
         {/* Icon container with enhanced styling */}
         <div
           className={`
-          p-2 rounded-lg transition-all duration-300 relative
-          ${
-            isActive
-              ? "bg-white/15 shadow-md border border-white/20"
-              : "bg-white/5 group-hover:bg-white/10 border border-white/5 group-hover:border-white/10"
-          }
+          transition-all duration-300 relative flex items-center justify-center
         `}>
           <IconComponent
             size={18}
