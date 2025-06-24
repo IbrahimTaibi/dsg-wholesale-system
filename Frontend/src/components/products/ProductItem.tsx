@@ -45,7 +45,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const handleAddToCart = () => {
     addToCart(product, quantity, selectedVariant || undefined);
     setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000);
+    setTimeout(() => setIsAdded(false), 1000);
   };
 
   const handleQuantityChange = (amount: number) => {
