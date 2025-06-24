@@ -12,7 +12,6 @@ import {
   TextField,
   Chip,
   Fade,
-  Zoom,
   Select,
   MenuItem,
   FormControl,
@@ -320,63 +319,40 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               display: "flex",
               justifyContent: "flex-end",
             }}>
-            <Zoom in={!isAdded} timeout={200} style={{ width: "100%" }}>
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={
-                  isAdded ? <Check size={12} /> : <ShoppingCart size={12} />
-                }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart();
-                }}
-                disabled={
-                  isAdded || !!(selectedVariant && !selectedVariant.isAvailable)
-                }
-                sx={{
-                  width: "100%",
-                  minWidth: "110px",
-                  background: isAdded
-                    ? "linear-gradient(45deg, #4caf50, #66bb6a)"
-                    : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
-                  borderRadius: 1,
-                  px: 1.5,
-                  py: 0.5,
-                  fontWeight: 600,
-                  textTransform: "none",
-                  fontSize: "0.7rem",
-                  transition:
-                    "transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
-                  transform: isAdded ? "scale(1.08)" : "scale(1)",
-                  boxShadow: isAdded
-                    ? "0 0 0 4px rgba(76, 175, 80, 0.25)"
-                    : "none",
-                }}>
-                {isAdded ? "Added" : "Add to Cart"}
-              </Button>
-            </Zoom>
-            <Zoom
-              in={isAdded}
-              timeout={200}
-              style={{ position: "absolute", width: "100%" }}>
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={<Check size={12} />}
-                disabled
-                sx={{
-                  width: "100%",
-                  minWidth: "110px",
-                  background: "linear-gradient(45deg, #4caf50, #66bb6a)",
-                  color: "white",
-                  py: 0.8,
-                  px: 1,
-                  fontSize: "0.7rem",
-                }}>
-                Added
-              </Button>
-            </Zoom>
+            <Button
+              size="small"
+              variant="contained"
+              startIcon={
+                isAdded ? <Check size={12} /> : <ShoppingCart size={12} />
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart();
+              }}
+              disabled={
+                isAdded || !!(selectedVariant && !selectedVariant.isAvailable)
+              }
+              sx={{
+                width: "100%",
+                minWidth: "110px",
+                background: isAdded
+                  ? "linear-gradient(45deg, #4caf50, #66bb6a)"
+                  : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
+                borderRadius: 1,
+                px: 1.5,
+                py: 0.5,
+                fontWeight: 600,
+                textTransform: "none",
+                fontSize: "0.7rem",
+                transition:
+                  "transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+                transform: isAdded ? "scale(1.08)" : "scale(1)",
+                boxShadow: isAdded
+                  ? "0 0 0 4px rgba(76, 175, 80, 0.25)"
+                  : "none",
+              }}>
+              {isAdded ? "Added" : "Add to Cart"}
+            </Button>
           </Box>
         </CardActions>
       </Card>
