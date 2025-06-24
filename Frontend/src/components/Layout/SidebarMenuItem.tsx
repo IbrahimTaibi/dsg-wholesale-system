@@ -9,6 +9,7 @@ interface SidebarMenuItemProps {
   item: MenuItem;
 }
 
+// SidebarMenuItem: Renders a single item in the sidebar navigation
 export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
   const { navigateToMenuItem, isCurrentRoute, ROUTES } = useNavigation();
   const { selectedMenuItem } = useUI();
@@ -34,6 +35,7 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
   const isActive =
     selectedMenuItem === item.id || isCurrentRoute(ROUTE_MAP[item.id] || "");
 
+  // isActive: Determines if this menu item is currently selected or matches the route
   return (
     <button
       onClick={handleClick}

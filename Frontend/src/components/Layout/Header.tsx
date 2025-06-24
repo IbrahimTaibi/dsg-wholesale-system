@@ -12,6 +12,7 @@ import { CartDrawer } from "../cart/CartDrawer";
 import { useTranslation } from "react-i18next";
 import CountryFlag from "react-country-flag";
 
+// Header component for the main app navigation and user controls
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const { setShowAuthModal, toggleSidebar, setHeaderHeight } = useUI();
@@ -34,6 +35,7 @@ export const Header: React.FC = () => {
     setShowAuthModal("signup");
   };
 
+  // UserMenu: Handles user dropdown and sidebar for profile, dashboard, orders, and logout
   const UserMenu = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
