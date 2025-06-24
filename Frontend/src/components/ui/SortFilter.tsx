@@ -68,7 +68,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
           onClick={() => setShowSortMenu(!showSortMenu)}
           className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
               <SortAsc className="h-4 w-4 text-white" />
             </div>
             <div className="text-left">
@@ -96,7 +96,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
                 onClick={() => handleSortChange(option.value)}
                 className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
                   currentSort === option.value
-                    ? "bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 text-blue-600 dark:text-blue-400"
+                    ? "bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 text-blue-600 dark:text-blue-400"
                     : "text-gray-700 dark:text-gray-300"
                 }`}>
                 <span className="text-lg">{option.icon}</span>
@@ -227,7 +227,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
               <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={handleFilterApply}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200">
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-medium rounded-lg hover:from-orange-600 hover:to-amber-600 transition-all duration-200">
                   Apply Filters
                 </button>
                 <button
