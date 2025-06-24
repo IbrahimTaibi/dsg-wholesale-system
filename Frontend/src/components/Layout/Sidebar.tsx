@@ -7,12 +7,13 @@ import { MENU_ITEMS } from "../../config/constants";
 import { BRANDING } from "../../config/branding";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "../ui/ThemeToggle";
-import CountryFlag from "react-country-flag";
+import PublicIcon from "@mui/icons-material/Public";
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useUI();
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
+  const [langMenuOpen, setLangMenuOpen] = React.useState(false);
 
   // Filter menu items based on user role
   const filteredMenuItems = MENU_ITEMS.filter((item) => {
@@ -76,29 +77,43 @@ export const Sidebar: React.FC = () => {
 
           {/* Mobile-only: Language and Theme toggles at the bottom */}
           <div className="flex items-center justify-center gap-6 mt-8 mb-2 sm:hidden z-20">
-            <button
-              onClick={() =>
-                i18n.changeLanguage(i18n.language === "en" ? "fr" : "en")
-              }
-              className="flex items-center px-3 py-2 rounded-lg text-white hover:bg-white/10">
-              {i18n.language === "en" ? (
-                <span role="img" aria-label="English">
-                  <CountryFlag
-                    countryCode="GB"
-                    svg
-                    style={{ width: "2em", height: "2em" }}
-                  />
-                </span>
-              ) : (
-                <span role="img" aria-label="Français">
-                  <CountryFlag
-                    countryCode="FR"
-                    svg
-                    style={{ width: "2em", height: "2em" }}
-                  />
-                </span>
+            {/* Language switcher: globe icon with dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setLangMenuOpen((v) => !v)}
+                className="flex items-center px-3 py-2 rounded-lg text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
+                aria-label="Change language">
+                <PublicIcon />
+              </button>
+              {langMenuOpen && (
+                <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 animate-fade-in">
+                  <button
+                    onClick={() => {
+                      i18n.changeLanguage("en");
+                      setLangMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 rounded-t-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                      i18n.language === "en"
+                        ? "font-bold text-blue-600 dark:text-blue-400"
+                        : "text-gray-800 dark:text-gray-200"
+                    }`}>
+                    English
+                  </button>
+                  <button
+                    onClick={() => {
+                      i18n.changeLanguage("fr");
+                      setLangMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 rounded-b-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                      i18n.language === "fr"
+                        ? "font-bold text-blue-600 dark:text-blue-400"
+                        : "text-gray-800 dark:text-gray-200"
+                    }`}>
+                    Français
+                  </button>
+                </div>
               )}
-            </button>
+            </div>
             <ThemeToggle />
           </div>
 
