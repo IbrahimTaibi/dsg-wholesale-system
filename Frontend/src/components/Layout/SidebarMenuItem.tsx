@@ -1,11 +1,12 @@
 import React from "react";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import LocalDrinkOutlinedIcon from "@mui/icons-material/LocalDrinkOutlined";
-import LocalBarOutlinedIcon from "@mui/icons-material/LocalBarOutlined";
-import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
-import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import OpacityOutlinedIcon from "@mui/icons-material/OpacityOutlined";
+import LocalCafeOutlinedIcon from "@mui/icons-material/LocalCafeOutlined";
+import BakeryDiningOutlinedIcon from "@mui/icons-material/BakeryDiningOutlined";
+import EmojiFoodBeverageOutlinedIcon from "@mui/icons-material/EmojiFoodBeverageOutlined";
+import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import { useNavigation } from "../../hooks";
 import { MenuItem } from "../../types";
 import { useUI } from "../../contexts/UIContext";
@@ -39,13 +40,13 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
 
   const iconMap: Record<string, React.ElementType> = {
     dashboard: DashboardOutlinedIcon,
-    orders: ShoppingCartOutlinedIcon,
-    users: PeopleAltOutlinedIcon,
-    water: LocalDrinkOutlinedIcon,
-    juices: LocalBarOutlinedIcon,
-    cakes: CakeOutlinedIcon,
-    chips: LocalMallOutlinedIcon,
-    groceries: LocalMallOutlinedIcon,
+    orders: ReceiptLongOutlinedIcon,
+    users: GroupOutlinedIcon,
+    water: OpacityOutlinedIcon,
+    juices: LocalCafeOutlinedIcon,
+    cakes: BakeryDiningOutlinedIcon,
+    chips: EmojiFoodBeverageOutlinedIcon,
+    groceries: StorefrontOutlinedIcon,
   };
   const IconComponent = iconMap[item.icon] || DashboardOutlinedIcon;
   const isActive =
