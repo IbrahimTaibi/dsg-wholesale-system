@@ -12,7 +12,11 @@ import {
 import { useProducts } from "../hooks";
 import { mapApiProductToProduct, Product } from "../types";
 import { ProductItem } from "../components/products/ProductItem";
-import { Droplets, Beef, Cookie, Flame, TrendingUp } from "lucide-react";
+import WaterDropOutlined from "@mui/icons-material/WaterDropOutlined";
+import LunchDiningOutlined from "@mui/icons-material/LunchDiningOutlined";
+import CookieOutlined from "@mui/icons-material/CookieOutlined";
+import LocalFireDepartmentOutlined from "@mui/icons-material/LocalFireDepartmentOutlined";
+import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
 import { Link } from "react-router-dom";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
 
@@ -129,7 +133,7 @@ export const UserHome: React.FC = () => {
                 mr: 2,
                 color: "primary.contrastText",
               }}>
-              <TrendingUp size={24} />
+              <TrendingUpOutlined />
             </Box>
             <Typography
               variant="h4"
@@ -159,7 +163,7 @@ export const UserHome: React.FC = () => {
                 mr: 2,
                 color: "info.contrastText",
               }}>
-              <Droplets size={24} />
+              <WaterDropOutlined />
             </Box>
             <Typography
               variant="h4"
@@ -189,7 +193,7 @@ export const UserHome: React.FC = () => {
                 mr: 2,
                 color: "warning.contrastText",
               }}>
-              <Beef size={24} />
+              <LunchDiningOutlined />
             </Box>
             <Typography
               variant="h4"
@@ -219,7 +223,7 @@ export const UserHome: React.FC = () => {
                 mr: 2,
                 color: "secondary.contrastText",
               }}>
-              <Cookie size={24} />
+              <CookieOutlined />
             </Box>
             <Typography
               variant="h4"
@@ -249,7 +253,7 @@ export const UserHome: React.FC = () => {
                 mr: 2,
                 color: "error.contrastText",
               }}>
-              <Flame size={24} />
+              <LocalFireDepartmentOutlined />
             </Box>
             <Typography
               variant="h4"
