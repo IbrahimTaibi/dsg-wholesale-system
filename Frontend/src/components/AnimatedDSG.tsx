@@ -2,48 +2,56 @@ import React from "react";
 
 const AnimatedDSG: React.FC = () => (
   <svg
-    width="140"
-    height="120"
-    viewBox="0 0 140 120"
-    fill="none"
+    viewBox="0 0 180 80"
+    width="100%"
+    height="auto"
+    style={{ maxWidth: 220, minWidth: 120, display: "block" }}
     xmlns="http://www.w3.org/2000/svg">
     <style>{`
+      .dsg-group {
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
       .dsg-letter {
         font-family: 'Segoe UI', Arial, sans-serif;
-        font-weight: bold;
-        font-size: 48px;
-        letter-spacing: 6px;
+        font-weight: 900;
+        font-size: 64px;
         fill: #fff;
-        filter: drop-shadow(0 2px 8px #0006);
-      }
-      .d {
-        animation: wave 2s -0.2s infinite cubic-bezier(.4,0,.2,1);
-      }
-      .s {
-        animation: wave 2s 0.2s infinite cubic-bezier(.4,0,.2,1);
-      }
-      .g {
-        animation: wave 2s 0.6s infinite cubic-bezier(.4,0,.2,1);
-      }
-      @keyframes wave {
-        0%   { transform: translateY(0); }
-        20%  { transform: translateY(-16px) scale(1.1); }
-        40%  { transform: translateY(0) scale(1); }
-        60%  { transform: translateY(10px) scale(0.95); }
-        80%  { transform: translateY(0) scale(1); }
-        100% { transform: translateY(0); }
+        filter: drop-shadow(0 2px 12px #0005);
+        paint-order: stroke fill;
+        stroke: #fff;
+        stroke-width: 1.5px;
       }
     `}</style>
-    <rect width="140" height="120" rx="28" fill="#222" />
-    <text x="22" y="80" className="dsg-letter d">
-      D
-    </text>
-    <text x="60" y="80" className="dsg-letter s">
-      S
-    </text>
-    <text x="98" y="80" className="dsg-letter g">
-      G
-    </text>
+    <g className="dsg-group">
+      {/* D */}
+      <text
+        x="18"
+        y="62"
+        className="dsg-letter"
+        style={{ letterSpacing: "-8px" }}>
+        D
+      </text>
+      {/* S overlaps/interlocks with D */}
+      <text
+        x="60"
+        y="62"
+        className="dsg-letter"
+        style={{ letterSpacing: "-10px" }}>
+        S
+      </text>
+      {/* G overlaps/interlocks with S */}
+      <text
+        x="102"
+        y="62"
+        className="dsg-letter"
+        style={{ letterSpacing: "-8px" }}>
+        G
+      </text>
+    </g>
   </svg>
 );
 
