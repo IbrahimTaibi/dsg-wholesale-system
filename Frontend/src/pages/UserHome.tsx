@@ -19,6 +19,7 @@ import LocalFireDepartmentOutlined from "@mui/icons-material/LocalFireDepartment
 import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
 import { Link } from "react-router-dom";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
+import { useTheme } from "@mui/material/styles";
 
 const categoryRoutes: { [key: string]: string } = {
   waterAndBeverages: "/water",
@@ -29,6 +30,14 @@ const categoryRoutes: { [key: string]: string } = {
 };
 
 export const UserHome: React.FC = () => {
+  const theme = useTheme();
+  const colorMap: Record<string, keyof typeof theme.palette> = {
+    blue: "primary",
+    green: "success",
+    pink: "secondary",
+    yellow: "warning",
+    purple: "info",
+  };
   // Fetch different product categories with correct backend names
   // Updated for proper product display
   const { products: waterProducts } = useProducts({
@@ -82,6 +91,7 @@ export const UserHome: React.FC = () => {
               const IconComponent =
                 ICON_MAP[config.icon as keyof typeof ICON_MAP];
               const route = categoryRoutes[title];
+              const paletteColor = theme.palette[colorMap[config.color]];
               return (
                 <Card
                   key={title}
@@ -101,7 +111,16 @@ export const UserHome: React.FC = () => {
                     sx={{ height: "100%" }}>
                     <CardContent
                       sx={{ textAlign: "center", p: { xs: 2, sm: 3 } }}>
-                      <Box className="flex items-center justify-center w-14 h-14 mx-auto mb-2 text-primary">
+                      <Box
+                        className="flex items-center justify-center w-14 h-14 mx-auto mb-2"
+                        sx={{
+                          color:
+                            typeof paletteColor === "object" &&
+                            paletteColor &&
+                            "main" in paletteColor
+                              ? (paletteColor as { main: string }).main
+                              : "#1976d2",
+                        }}>
                         {IconComponent && <IconComponent size={28} />}
                       </Box>
                       <Typography variant="h6" sx={{ fontWeight: 600 }}>
