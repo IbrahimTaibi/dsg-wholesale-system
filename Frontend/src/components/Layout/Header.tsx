@@ -16,6 +16,7 @@ import { CartIcon } from "../cart/CartIcon";
 import { CartDrawer } from "../cart/CartDrawer";
 import { useTranslation } from "react-i18next";
 import CountryFlag from "react-country-flag";
+import SearchIcon from "@mui/icons-material/Search";
 
 // Header component for the main app navigation and user controls
 export const Header: React.FC = () => {
@@ -25,6 +26,7 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const headerRef = useRef<HTMLElement>(null);
   const { i18n, t } = useTranslation();
+  const [showMobileSearch, setShowMobileSearch] = React.useState(false);
 
   useLayoutEffect(() => {
     if (headerRef.current) {
@@ -469,31 +471,37 @@ export const Header: React.FC = () => {
 
           {/* Right side - Auth and Theme toggle */}
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <CartIcon onClick={() => setCartOpen(true)} />
-            {isAuthenticated ? (
-              <UserMenu />
-            ) : (
-              <div className="flex items-center space-x-2 sm:space-x-2">
-                <button
-                  onClick={handleLogin}
-                  className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform text-base sm:text-sm"
-                  aria-label="Login">
-                  <LoginOutlinedIcon className="sm:size-5" />
-                  <span className="hidden sm:inline text-sm font-medium">
-                    {t("login")}
-                  </span>
-                </button>
-                <button
-                  onClick={handleSignup}
-                  className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm text-base sm:text-sm"
-                  aria-label="Sign Up">
-                  <PersonAddOutlinedIcon className="sm:size-5" />
-                  <span className="hidden sm:inline text-sm font-medium">
-                    {t("signup")}
-                  </span>
-                </button>
-              </div>
-            )}
+            {/* Mobile: Search icon button */}
+            <button
+              className="sm:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
+              aria-label="Search"
+              onClick={() => setShowMobileSearch((v) => !v)}>
+              <SearchIcon />
+            </button>
+            {/* Desktop: Cart, Auth, UserMenu */}
+            <span className="hidden sm:flex items-center space-x-2">
+              <CartIcon onClick={() => setCartOpen(true)} />
+              {isAuthenticated ? (
+                <UserMenu />
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={handleLogin}
+                    className="flex items-center space-x-1 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 transform text-sm"
+                    aria-label="Login">
+                    <LoginOutlinedIcon className="size-5" />
+                    <span className="text-sm font-medium">{t("login")}</span>
+                  </button>
+                  <button
+                    onClick={handleSignup}
+                    className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-all duration-300 hover:scale-105 transform backdrop-blur-sm text-sm"
+                    aria-label="Sign Up">
+                    <PersonAddOutlinedIcon className="size-5" />
+                    <span className="text-sm font-medium">{t("signup")}</span>
+                  </button>
+                </div>
+              )}
+            </span>
             {/* Hide theme toggle and language flag on mobile, show only on sm+ */}
             <span className="hidden sm:inline-flex">
               <ThemeToggle />
@@ -524,10 +532,12 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Search Bar (shown below header on small screens) */}
-        <div className="sm:hidden px-2 pb-3">
-          <SearchBar />
-        </div>
+        {/* Mobile Search Bar (collapsible, shown below header on small screens) */}
+        {showMobileSearch && (
+          <div className="sm:hidden px-2 pb-3 animate-fade-in">
+            <SearchBar />
+          </div>
+        )}
 
         <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       </div>
