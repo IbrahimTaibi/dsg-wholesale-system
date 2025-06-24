@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { SortAsc, ChevronDown, X, SlidersHorizontal } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 interface SortFilterProps {
   onSortChange: (sort: string) => void;
@@ -32,7 +31,6 @@ export const SortFilter: React.FC<SortFilterProps> = ({
   currentSort = "createdAt",
   currentFilters = {},
 }) => {
-  const { t } = useTranslation();
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [localFilters, setLocalFilters] =
@@ -113,21 +111,35 @@ export const SortFilter: React.FC<SortFilterProps> = ({
       </div>
 
       {/* Enhanced Filter Button */}
-      <div className="relative">
+      <div className="relative flex-1">
         <button
           onClick={() => setShowFilterMenu(!showFilterMenu)}
-          className={`flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md ${
+          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md ${
             hasActiveFilters
               ? "bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600"
               : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
           }`}>
-          <div className="p-2 rounded-lg bg-white/20">
-            <SlidersHorizontal className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-white/20">
+              <SlidersHorizontal className="h-4 w-4" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm text-gray-500 dark:text-gray-400">Filter</p>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {hasActiveFilters ? "Active filters" : "All filters"}
+              </p>
+            </div>
           </div>
-          <span className="font-medium">{t("filter")}</span>
-          {hasActiveFilters && (
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-          )}
+          <div className="flex items-center gap-2">
+            {hasActiveFilters && (
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            )}
+            <ChevronDown
+              className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+                showFilterMenu ? "rotate-180" : ""
+              }`}
+            />
+          </div>
         </button>
 
         {/* Enhanced Filter Dropdown */}
