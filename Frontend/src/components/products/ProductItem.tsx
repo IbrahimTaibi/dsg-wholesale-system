@@ -346,11 +346,12 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                   fontWeight: 600,
                   textTransform: "none",
                   fontSize: "0.7rem",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                  },
+                  transition:
+                    "transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+                  transform: isAdded ? "scale(1.08)" : "scale(1)",
+                  boxShadow: isAdded
+                    ? "0 0 0 4px rgba(76, 175, 80, 0.25)"
+                    : "none",
                 }}>
                 {isAdded ? "Added" : "Add to Cart"}
               </Button>
