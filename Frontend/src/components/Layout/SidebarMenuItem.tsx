@@ -1,12 +1,12 @@
 import React from "react";
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import OpacityOutlinedIcon from "@mui/icons-material/OpacityOutlined";
-import LocalCafeOutlinedIcon from "@mui/icons-material/LocalCafeOutlined";
-import BakeryDiningOutlinedIcon from "@mui/icons-material/BakeryDiningOutlined";
-import EmojiFoodBeverageOutlinedIcon from "@mui/icons-material/EmojiFoodBeverageOutlined";
-import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
+import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
+import WaterDropOutlinedIcon from "@mui/icons-material/WaterDropOutlined";
+import EmojiNatureOutlinedIcon from "@mui/icons-material/EmojiNatureOutlined";
+import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
+import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
+import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import { useNavigation } from "../../hooks";
 import { MenuItem } from "../../types";
 import { useUI } from "../../contexts/UIContext";
@@ -39,16 +39,16 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
   };
 
   const iconMap: Record<string, React.ElementType> = {
-    dashboard: DashboardOutlinedIcon,
-    orders: ReceiptLongOutlinedIcon,
-    users: GroupOutlinedIcon,
-    water: OpacityOutlinedIcon,
-    juices: LocalCafeOutlinedIcon,
-    cakes: BakeryDiningOutlinedIcon,
-    chips: EmojiFoodBeverageOutlinedIcon,
-    groceries: StorefrontOutlinedIcon,
+    dashboard: SpaceDashboardOutlinedIcon,
+    orders: AssignmentOutlinedIcon,
+    users: SupervisorAccountOutlinedIcon,
+    water: WaterDropOutlinedIcon,
+    juices: EmojiNatureOutlinedIcon,
+    cakes: CakeOutlinedIcon,
+    chips: FastfoodOutlinedIcon,
+    groceries: ShoppingBasketOutlinedIcon,
   };
-  const IconComponent = iconMap[item.icon] || DashboardOutlinedIcon;
+  const IconComponent = iconMap[item.icon] || SpaceDashboardOutlinedIcon;
   const isActive =
     selectedMenuItem === item.id || isCurrentRoute(ROUTE_MAP[item.id] || "");
 
