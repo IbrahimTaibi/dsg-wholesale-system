@@ -1,6 +1,6 @@
 import React from "react";
 
-// DSG Logo Component - Static SVG for clean display
+// DSG Logo Component - Static SVG for clean display - Deployment trigger
 const AnimatedDSG: React.FC = () => (
   <svg
     viewBox="0 0 180 80"
