@@ -23,10 +23,10 @@ interface CustomThemeProviderProps {
 export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({
   children,
 }) => {
-  // Initialize theme from localStorage or default to light
+  // Initialize theme from localStorage or default to dark
   const [mode, setMode] = useState<"light" | "dark">(() => {
     const savedMode = localStorage.getItem("theme-mode");
-    return (savedMode as "light" | "dark") || "light";
+    return (savedMode as "light" | "dark") || "dark";
   });
 
   // Sync with Tailwind's dark mode

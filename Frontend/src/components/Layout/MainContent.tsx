@@ -1,9 +1,8 @@
 import React from "react";
-import { Box, Typography, Container } from "@mui/material";
+import { Box, Typography, Container, Button } from "@mui/material";
 import { StatsCard } from "../dashboard/StatsCard";
 import { ProductCard } from "../products/ProductCard";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../../config/constants";
-import { BRANDING } from "../../config/branding";
 import { ShoppingCart, Smile, Headset } from "lucide-react";
 
 export const MainContent: React.FC = () => {
@@ -50,35 +49,72 @@ export const MainContent: React.FC = () => {
       }}>
       <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 4 } }}>
         {/* Welcome Section */}
-        <Box sx={{ textAlign: "center", mb: { xs: 4, sm: 8 } }}>
+        <Box
+          sx={{
+            textAlign: "center",
+            mb: { xs: 4, sm: 8 },
+            py: { xs: 6, sm: 10 },
+            px: { xs: 2, sm: 4 },
+            borderRadius: 4,
+            background: "linear-gradient(120deg, #1a202c 60%, #ff9800 100%)",
+            color: "white",
+            boxShadow: 6,
+            position: "relative",
+            overflow: "hidden",
+          }}>
           <Typography
-            variant="h3"
+            variant="h2"
             component="h1"
             sx={{
-              fontWeight: 700,
+              fontWeight: 800,
               mb: 2,
-              fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+              fontSize: { xs: "2.2rem", sm: "3rem", md: "3.5rem" },
+              letterSpacing: 1,
+              textShadow: "0 4px 24px rgba(0,0,0,0.25)",
             }}>
-            Welcome to {BRANDING.fullName}
+            DSG Wholesale
           </Typography>
           <Typography
-            variant="h6"
-            color="text.secondary"
+            variant="h5"
             sx={{
-              maxWidth: "md",
+              mb: 4,
+              opacity: 0.92,
+              maxWidth: 600,
               mx: "auto",
-              fontSize: { xs: "1rem", sm: "1.25rem" },
+              fontWeight: 400,
+              fontSize: { xs: "1.1rem", sm: "1.3rem" },
             }}>
-            {BRANDING.description}
+            Your premium supplier for water, juice, mini cakes, chips &
+            groceries.
           </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              bgcolor: "#ff9800",
+              color: "#212B36",
+              px: 5,
+              py: 1.5,
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              borderRadius: 3,
+              boxShadow: "0 2px 16px 0 #ff980055",
+              "&:hover": { bgcolor: "#ffa726" },
+            }}
+            onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })}>
+            Start Shopping
+          </Button>
           <Box
             sx={{
-              width: 80,
-              height: 4,
-              bgcolor: "primary.main",
-              mx: "auto",
-              mt: 4,
-              borderRadius: 2,
+              position: "absolute",
+              right: -60,
+              bottom: -60,
+              width: 180,
+              height: 180,
+              background:
+                "radial-gradient(circle, #ff9800 0%, transparent 70%)",
+              opacity: 0.25,
+              zIndex: 0,
             }}
           />
         </Box>
