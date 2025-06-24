@@ -6,7 +6,6 @@ import WaterDropOutlinedIcon from "@mui/icons-material/WaterDropOutlined";
 import EmojiNatureOutlinedIcon from "@mui/icons-material/EmojiNatureOutlined";
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
 import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
-import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import { useNavigation } from "../../hooks";
 import { MenuItem } from "../../types";
 import { useUI } from "../../contexts/UIContext";
@@ -39,14 +38,14 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item }) => {
   };
 
   const iconMap: Record<string, React.ElementType> = {
-    dashboard: SpaceDashboardOutlinedIcon,
-    orders: AssignmentOutlinedIcon,
-    users: SupervisorAccountOutlinedIcon,
-    water: WaterDropOutlinedIcon,
-    juices: EmojiNatureOutlinedIcon,
-    cakes: CakeOutlinedIcon,
-    chips: FastfoodOutlinedIcon,
-    groceries: ShoppingBasketOutlinedIcon,
+    Home: SpaceDashboardOutlinedIcon,
+    Grid3x3: SpaceDashboardOutlinedIcon,
+    ShoppingCart: AssignmentOutlinedIcon,
+    Users: SupervisorAccountOutlinedIcon,
+    Droplets: WaterDropOutlinedIcon,
+    Package2: EmojiNatureOutlinedIcon,
+    Cookie: CakeOutlinedIcon,
+    Package: FastfoodOutlinedIcon,
   };
   const IconComponent = iconMap[item.icon] || SpaceDashboardOutlinedIcon;
   const isActive =
