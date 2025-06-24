@@ -101,8 +101,7 @@ export const UserHome: React.FC = () => {
                     sx={{ height: "100%" }}>
                     <CardContent
                       sx={{ textAlign: "center", p: { xs: 2, sm: 3 } }}>
-                      <Box
-                        className={`flex items-center justify-center w-14 h-14 rounded-full mx-auto mb-2 text-white bg-gradient-to-br ${config.gradient}`}>
+                      <Box className="flex items-center justify-center w-14 h-14 mx-auto mb-2 text-primary">
                         {IconComponent && <IconComponent size={28} />}
                       </Box>
                       <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -125,13 +124,10 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: "50%",
-                bgcolor: "primary.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
-                color: "primary.contrastText",
               }}>
               <TrendingUpOutlined />
             </Box>
@@ -155,13 +151,10 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: "50%",
-                bgcolor: "info.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
-                color: "info.contrastText",
               }}>
               <WaterDropOutlined />
             </Box>
@@ -185,13 +178,10 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: "50%",
-                bgcolor: "warning.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
-                color: "warning.contrastText",
               }}>
               <LunchDiningOutlined />
             </Box>
@@ -215,13 +205,10 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: "50%",
-                bgcolor: "secondary.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
-                color: "secondary.contrastText",
               }}>
               <CookieOutlined />
             </Box>
@@ -245,13 +232,10 @@ export const UserHome: React.FC = () => {
               sx={{
                 width: 40,
                 height: 40,
-                borderRadius: "50%",
-                bgcolor: "error.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 mr: 2,
-                color: "error.contrastText",
               }}>
               <LocalFireDepartmentOutlined />
             </Box>
