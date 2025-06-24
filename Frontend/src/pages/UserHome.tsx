@@ -26,6 +26,7 @@ const categoryRoutes: { [key: string]: string } = {
 
 export const UserHome: React.FC = () => {
   // Fetch different product categories with correct backend names
+  // Updated for proper product display
   const { products: waterProducts } = useProducts({
     category: "Water & Beverages",
     limit: 6,
