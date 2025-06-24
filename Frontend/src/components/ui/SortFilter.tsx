@@ -91,7 +91,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
 
         {/* Enhanced Sort Dropdown */}
         {showSortMenu && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-10 overflow-hidden">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
             {sortOptions.map((option) => (
               <button
                 key={option.value}
@@ -132,7 +132,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
 
         {/* Enhanced Filter Dropdown */}
         {showFilterMenu && (
-          <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-10 p-6">
+          <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 p-6">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
