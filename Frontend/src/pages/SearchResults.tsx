@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Loader2, Search } from "lucide-react";
-import { ProductItem } from "../components/products/ProductItem";
+import ProductDisplayCard from "../components/products/ProductDisplayCard";
 import { useProducts } from "../hooks";
 import { mapApiProductToProduct, Product } from "../types";
 import { useUI } from "../contexts/UIContext";
@@ -192,7 +192,7 @@ export const SearchResults: React.FC = () => {
                     <div
                       key={product.id}
                       onClick={() => handleProductClick(product)}>
-                      <ProductItem product={product} />
+                      <ProductDisplayCard product={product} />
                     </div>
                   ))}
                 </div>

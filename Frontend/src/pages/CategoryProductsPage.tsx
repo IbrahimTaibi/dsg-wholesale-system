@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useParams, Link } from "react-router-dom";
-import { apiService, Category, Product } from "../config/api";
+import { apiService, Category } from "../config/api";
+import { Product } from "../types";
+import { mapApiProductToProduct } from "../types";
 import * as Mui from "@mui/material";
 import ProductDisplayCard from "../components/products/ProductDisplayCard";
 import { ArrowBack, Home, Category as CategoryIcon } from "@mui/icons-material";
@@ -33,7 +35,7 @@ const CategoryProductsPage: React.FC = () => {
         setBreadcrumbs(crumbs);
         // Fetch products filtered by category
         const res = await apiService.getProducts({ categoryId: id });
-        setProducts(res.products);
+        setProducts(res.products.map(mapApiProductToProduct));
       } catch {
         setError("Failed to load category or products");
       } finally {
@@ -347,7 +349,7 @@ const CategoryProductsPage: React.FC = () => {
                   }}>
                   {products.map((product) => (
                     <Mui.Box
-                      key={product._id}
+                      key={product.id}
                       sx={{
                         height: "100%",
                         transition: "transform 0.2s ease-in-out",
