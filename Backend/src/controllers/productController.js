@@ -33,15 +33,11 @@ const getAllProducts = async (req, res, next) => {
 
     // Optimize search queries
     if (search) {
-      // Use text search if available, otherwise use regex
-      if (search.length > 2) {
-        query.$text = { $search: search };
-      } else {
-        query.$or = [
-          { name: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-        ];
-      }
+      // Use regex search for all cases - more reliable than text search
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
     }
 
     // Optimize pagination
@@ -90,11 +86,6 @@ const getAllProducts = async (req, res, next) => {
         .exec(),
       Product.countDocuments(query).exec(),
     ]);
-
-    // Add text score for search results if using text search
-    if (search && search.length > 2) {
-      products.sort((a, b) => (b.score || 0) - (a.score || 0));
-    }
 
     res.json({
       products: products,
@@ -373,14 +364,11 @@ const getAllProductsAdmin = async (req, res, next) => {
 
     // Optimize search queries
     if (search) {
-      if (search.length > 2) {
-        query.$text = { $search: search };
-      } else {
-        query.$or = [
-          { name: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-        ];
-      }
+      // Use regex search for all cases - more reliable than text search
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
     }
 
     // Optimize pagination
@@ -430,11 +418,6 @@ const getAllProductsAdmin = async (req, res, next) => {
         .exec(),
       Product.countDocuments(query).exec(),
     ]);
-
-    // Add text score for search results if using text search
-    if (search && search.length > 2) {
-      products.sort((a, b) => (b.score || 0) - (a.score || 0));
-    }
 
     res.json({
       products: products,
