@@ -272,6 +272,11 @@ const StocksManagementPage: React.FC = () => {
         photo: selectedPhoto || undefined,
         sizes: formData.sizes,
       };
+
+      console.log("Sending payload:", payload);
+      console.log("Sizes array:", formData.sizes);
+      console.log("Sizes type:", typeof formData.sizes);
+
       if (editingProduct) {
         const result = await apiService.updateProduct(
           editingProduct._id,

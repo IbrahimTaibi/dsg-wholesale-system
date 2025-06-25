@@ -160,15 +160,27 @@ const createProduct = async (req, res, next) => {
     }
 
     // Validate sizes and flavors if provided
-    if (
-      sizes &&
-      (!Array.isArray(sizes) || new Set(sizes).size !== sizes.length)
-    ) {
-      throw new CustomError(
-        400,
-        "Sizes must be an array of unique strings",
-        "INVALID_SIZES",
-      );
+    if (sizes) {
+      console.log("Received sizes:", sizes, "Type:", typeof sizes);
+      if (!Array.isArray(sizes)) {
+        throw new CustomError(
+          400,
+          `Sizes must be an array, received: ${typeof sizes}`,
+          "INVALID_SIZES",
+        );
+      }
+      if (new Set(sizes).size !== sizes.length) {
+        const duplicates = sizes.filter(
+          (item, index) => sizes.indexOf(item) !== index,
+        );
+        throw new CustomError(
+          400,
+          `Sizes must be unique. Duplicate values found: ${duplicates.join(
+            ", ",
+          )}`,
+          "INVALID_SIZES",
+        );
+      }
     }
     if (
       flavors &&
