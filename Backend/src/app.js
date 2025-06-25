@@ -87,6 +87,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://dsg-wholesale-system-4sci.vercel.app",
   "https://dsg-wholesale-system-4sci-50mwoq048-ibrahimtaibis-projects.vercel.app",
+  "https://dsg-wholesale-system.vercel.app",
 ];
 
 app.use(

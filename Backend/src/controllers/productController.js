@@ -132,7 +132,7 @@ const createProduct = async (req, res, next) => {
   try {
     const {
       name,
-      category,
+      categoryId,
       price,
       stock,
       description,
@@ -142,10 +142,10 @@ const createProduct = async (req, res, next) => {
     } = req.body;
 
     // Validate required fields
-    if (!name || !category || !price || stock === undefined) {
+    if (!name || !categoryId || !price || stock === undefined) {
       throw new CustomError(
         400,
-        "Name, category, price, and stock are required",
+        "Name, categoryId, price, and stock are required",
         "MISSING_FIELDS",
       );
     }
@@ -190,7 +190,7 @@ const createProduct = async (req, res, next) => {
 
     const productData = {
       name,
-      category,
+      categoryId,
       price: parseFloat(price),
       stock: parseInt(stock),
       description: description || "",
@@ -231,7 +231,7 @@ const updateProduct = async (req, res, next) => {
   try {
     const {
       name,
-      category,
+      categoryId,
       price,
       stock,
       description,
@@ -251,7 +251,7 @@ const updateProduct = async (req, res, next) => {
 
     // Only update fields that are provided
     if (name !== undefined) updateData.name = name;
-    if (category !== undefined) updateData.category = category;
+    if (categoryId !== undefined) updateData.categoryId = categoryId;
     if (price !== undefined) {
       if (isNaN(parseFloat(price))) {
         throw new CustomError(
