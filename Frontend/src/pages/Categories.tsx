@@ -75,7 +75,7 @@ const CategoriesPage: React.FC = () => {
       setVariants(category.variants);
     } else {
       setEditingCategory(null);
-      setParentCategory("");
+      setParentCategory(MAIN_CATEGORIES[0]);
       setCategoryName("");
       setVariants([]);
     }
