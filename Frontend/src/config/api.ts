@@ -224,6 +224,7 @@ export interface AnalyticsData {
 
 export interface Category {
   _id: string;
+  parentCategory: string;
   name: string;
   variants: string[];
 }
@@ -625,6 +626,7 @@ export const apiService = {
   },
 
   async createCategory(data: {
+    parentCategory: string;
     name: string;
     variants: string[];
   }): Promise<Category> {
@@ -634,7 +636,7 @@ export const apiService = {
 
   async updateCategory(
     id: string,
-    data: { name: string; variants: string[] },
+    data: { parentCategory: string; name: string; variants: string[] },
   ): Promise<Category> {
     const response = await api.put(`/categories/${id}`, data);
     return response.data.category || response.data;

@@ -17,9 +17,22 @@ import {
   Tooltip,
   CircularProgress,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Edit, Delete, Plus, X } from "lucide-react";
 import { apiService, Category } from "../config/api";
+
+const MAIN_CATEGORIES = [
+  "Groceries",
+  "Water",
+  "Mini Cakes",
+  "Chocolate",
+  "Chips",
+  "Juice",
+];
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -32,6 +45,7 @@ const CategoriesPage: React.FC = () => {
   const [variants, setVariants] = useState<string[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [parentCategory, setParentCategory] = useState("");
 
   // Fetch categories from backend
   const fetchCategories = async () => {
@@ -56,10 +70,12 @@ const CategoriesPage: React.FC = () => {
     setActionError(null);
     if (category) {
       setEditingCategory(category);
+      setParentCategory(category.parentCategory || "");
       setCategoryName(category.name);
       setVariants(category.variants);
     } else {
       setEditingCategory(null);
+      setParentCategory("");
       setCategoryName("");
       setVariants([]);
     }
@@ -77,13 +93,14 @@ const CategoriesPage: React.FC = () => {
 
   // Add or update category via API
   const handleSaveCategory = async () => {
-    if (!categoryName.trim() || variants.length === 0) return;
+    if (!parentCategory || !categoryName.trim() || variants.length === 0)
+      return;
     setActionLoading(true);
     setActionError(null);
     try {
       if (editingCategory) {
-        // Update
         const updated = await apiService.updateCategory(editingCategory._id, {
+          parentCategory,
           name: categoryName.trim(),
           variants,
         });
@@ -91,8 +108,8 @@ const CategoriesPage: React.FC = () => {
           prev.map((cat) => (cat._id === updated._id ? updated : cat)),
         );
       } else {
-        // Create
         const created = await apiService.createCategory({
+          parentCategory,
           name: categoryName.trim(),
           variants,
         });
@@ -178,11 +195,16 @@ const CategoriesPage: React.FC = () => {
               <ListItemText
                 primary={cat.name}
                 secondary={
-                  <Box
-                    sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-                    {cat.variants.map((variant) => (
-                      <Chip key={variant} label={variant} size="small" />
-                    ))}
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Main Category: {cat.parentCategory}
+                    </Typography>
+                    <Box
+                      sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+                      {cat.variants.map((variant) => (
+                        <Chip key={variant} label={variant} size="small" />
+                      ))}
+                    </Box>
                   </Box>
                 }
               />
@@ -215,6 +237,19 @@ const CategoriesPage: React.FC = () => {
           {editingCategory ? "Edit Category" : "Add Category"}
         </DialogTitle>
         <DialogContent>
+          <FormControl fullWidth required sx={{ mb: 2 }}>
+            <InputLabel>Main Category</InputLabel>
+            <Select
+              value={parentCategory}
+              onChange={(e) => setParentCategory(e.target.value)}
+              label="Main Category">
+              {MAIN_CATEGORIES.map((main) => (
+                <MenuItem key={main} value={main}>
+                  {main}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             label="Category Name"
             value={categoryName}
@@ -272,7 +307,10 @@ const CategoriesPage: React.FC = () => {
             onClick={handleSaveCategory}
             variant="contained"
             disabled={
-              !categoryName.trim() || variants.length === 0 || actionLoading
+              !parentCategory ||
+              !categoryName.trim() ||
+              variants.length === 0 ||
+              actionLoading
             }>
             {actionLoading
               ? "Saving..."

@@ -90,6 +90,15 @@ interface ProductFormData {
   sizes: string[];
 }
 
+const MAIN_CATEGORIES = [
+  "Groceries",
+  "Water",
+  "Mini Cakes",
+  "Chocolate",
+  "Chips",
+  "Juice",
+];
+
 const StocksManagementPage: React.FC = () => {
   const { user: currentUser } = useAuth();
   const { t } = useTranslation();
@@ -116,8 +125,10 @@ const StocksManagementPage: React.FC = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
-  const [selectedFlavor, setSelectedFlavor] = useState<string>("");
+  const [selectedMainCategory, setSelectedMainCategory] = useState<string>("");
+  const [selectedSubcategoryId, setSelectedSubcategoryId] =
+    useState<string>("");
+  const [selectedVariant, setSelectedVariant] = useState<string>("");
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
@@ -216,8 +227,9 @@ const StocksManagementPage: React.FC = () => {
         description: product.description || "",
         sizes: product.sizes || [],
       });
-      setSelectedCategoryId(product.categoryId || "");
-      setSelectedFlavor(product.flavors?.[0] || "");
+      setSelectedMainCategory("");
+      setSelectedSubcategoryId("");
+      setSelectedVariant("");
     } else {
       setEditingProduct(null);
       setFormData({
@@ -229,15 +241,12 @@ const StocksManagementPage: React.FC = () => {
         description: "",
         sizes: [],
       });
-      setSelectedCategoryId("");
-      setSelectedFlavor("");
+      setSelectedMainCategory("");
+      setSelectedSubcategoryId("");
+      setSelectedVariant("");
     }
     setOpenDialog(true);
   };
-
-  useEffect(() => {
-    setSelectedFlavor("");
-  }, [selectedCategoryId]);
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -258,13 +267,14 @@ const StocksManagementPage: React.FC = () => {
     try {
       const payload = {
         name: formData.name,
-        categoryId: selectedCategoryId,
+        mainCategory: selectedMainCategory,
+        subcategoryId: selectedSubcategoryId,
+        variant: selectedVariant,
         price: formData.price,
         stock: formData.stockQuantity,
         description: formData.description,
         photo: selectedPhoto || undefined,
         sizes: formData.sizes,
-        flavor: selectedFlavor,
       };
       if (editingProduct) {
         const result = await apiService.updateProduct(
@@ -751,37 +761,64 @@ const StocksManagementPage: React.FC = () => {
                   required
                 />
                 <FormControl fullWidth required sx={{ mb: 2 }}>
-                  <InputLabel>Category</InputLabel>
+                  <InputLabel>Main Category</InputLabel>
                   <Select
-                    value={selectedCategoryId}
-                    onChange={(e) => setSelectedCategoryId(e.target.value)}
-                    label="Category">
-                    {categories.map((cat) => (
-                      <MenuItem key={cat._id} value={cat._id}>
-                        {cat.name}
+                    value={selectedMainCategory}
+                    onChange={(e) => {
+                      setSelectedMainCategory(e.target.value);
+                      setSelectedSubcategoryId("");
+                      setSelectedVariant("");
+                    }}
+                    label="Main Category">
+                    {MAIN_CATEGORIES.map((main) => (
+                      <MenuItem key={main} value={main}>
+                        {main}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+                {selectedMainCategory && (
+                  <FormControl fullWidth required sx={{ mb: 2 }}>
+                    <InputLabel>Subcategory</InputLabel>
+                    <Select
+                      value={selectedSubcategoryId}
+                      onChange={(e) => {
+                        setSelectedSubcategoryId(e.target.value);
+                        setSelectedVariant("");
+                      }}
+                      label="Subcategory">
+                      {categories
+                        .filter(
+                          (cat) => cat.parentCategory === selectedMainCategory,
+                        )
+                        .map((cat) => (
+                          <MenuItem key={cat._id} value={cat._id}>
+                            {cat.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                )}
+                {selectedSubcategoryId && (
+                  <FormControl fullWidth required sx={{ mb: 2 }}>
+                    <InputLabel>Variant</InputLabel>
+                    <Select
+                      value={selectedVariant}
+                      onChange={(e) => setSelectedVariant(e.target.value)}
+                      label="Variant">
+                      {(
+                        categories.find(
+                          (cat) => cat._id === selectedSubcategoryId,
+                        )?.variants || []
+                      ).map((variant) => (
+                        <MenuItem key={variant} value={variant}>
+                          {variant}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
               </Box>
-              {selectedCategoryId && (
-                <FormControl fullWidth required sx={{ mb: 2 }}>
-                  <InputLabel>Flavor</InputLabel>
-                  <Select
-                    value={selectedFlavor}
-                    onChange={(e) => setSelectedFlavor(e.target.value)}
-                    label="Flavor">
-                    {(
-                      categories.find((cat) => cat._id === selectedCategoryId)
-                        ?.variants || []
-                    ).map((variant) => (
-                      <MenuItem key={variant} value={variant}>
-                        {variant}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
               <Box
                 sx={{
                   display: "flex",
