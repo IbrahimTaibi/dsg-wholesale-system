@@ -51,7 +51,7 @@ const CategoryProductsPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
+          bgcolor: "background.default",
         }}>
         <Mui.Card
           sx={{
@@ -82,7 +82,7 @@ const CategoryProductsPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #B72136 0%, #A71E34 100%)",
+          bgcolor: "background.default",
         }}>
         <Mui.Card
           sx={{
@@ -108,7 +108,7 @@ const CategoryProductsPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #B78103 0%, #A67C00 100%)",
+          bgcolor: "background.default",
         }}>
         <Mui.Card
           sx={{
@@ -130,7 +130,7 @@ const CategoryProductsPage: React.FC = () => {
     <Mui.Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
+        bgcolor: "background.default",
         py: 4,
       }}>
       <Mui.Container maxWidth="xl">
