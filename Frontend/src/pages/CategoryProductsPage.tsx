@@ -57,8 +57,7 @@ const CategoryProductsPage: React.FC = () => {
           sx={{
             p: 4,
             borderRadius: 3,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(10px)",
+            bgcolor: "background.paper",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
           }}>
           <Mui.Box sx={{ textAlign: "center" }}>
@@ -88,8 +87,7 @@ const CategoryProductsPage: React.FC = () => {
           sx={{
             p: 4,
             borderRadius: 3,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(10px)",
+            bgcolor: "background.paper",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
           }}>
           <Mui.Alert severity="error" sx={{ fontSize: "1.1rem" }}>
@@ -114,8 +112,7 @@ const CategoryProductsPage: React.FC = () => {
           sx={{
             p: 4,
             borderRadius: 3,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(10px)",
+            bgcolor: "background.paper",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
           }}>
           <Mui.Alert severity="warning" sx={{ fontSize: "1.1rem" }}>
@@ -139,8 +136,7 @@ const CategoryProductsPage: React.FC = () => {
           sx={{
             mb: 4,
             borderRadius: 3,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(10px)",
+            bgcolor: "background.paper",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
             overflow: "visible",
           }}>
@@ -272,8 +268,7 @@ const CategoryProductsPage: React.FC = () => {
         <Mui.Card
           sx={{
             borderRadius: 3,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(10px)",
+            bgcolor: "background.paper",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
           }}>
           <Mui.Box sx={{ p: 3 }}>
