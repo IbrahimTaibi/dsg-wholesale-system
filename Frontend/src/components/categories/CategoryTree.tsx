@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TreeView, TreeItem } from "@mui/lab";
+import { TreeView } from "@mui/x-tree-view/TreeView";
+import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useNavigate } from "react-router-dom";
 import { apiService, Category } from "../../config/api";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
