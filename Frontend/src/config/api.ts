@@ -222,6 +222,12 @@ export interface AnalyticsData {
   }>;
 }
 
+export interface Category {
+  _id: string;
+  name: string;
+  variants: string[];
+}
+
 // API Functions
 export const apiService = {
   // Auth Header Management
@@ -256,7 +262,8 @@ export const apiService = {
   // Product Management Methods (Admin)
   async createProduct(productData: {
     name: string;
-    category: string;
+    category?: string;
+    categoryId?: string;
     price: number;
     stock: number;
     description?: string;
@@ -269,7 +276,8 @@ export const apiService = {
 
     // Add text fields
     formData.append("name", productData.name);
-    formData.append("category", productData.category);
+    if (productData.categoryId !== undefined && productData.categoryId !== "")
+      formData.append("categoryId", productData.categoryId);
     formData.append("price", productData.price.toString());
     formData.append("stock", productData.stock.toString());
     if (productData.description) {
@@ -609,6 +617,11 @@ export const apiService = {
   async getUserById(userId: string): Promise<User> {
     const response = await api.get(`/users/${userId}`);
     return response.data;
+  },
+
+  async getAllCategories(): Promise<Category[]> {
+    const response = await api.get("/categories");
+    return response.data.categories || response.data;
   },
 };
 

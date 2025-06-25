@@ -32,7 +32,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
-import { apiService, Product } from "../config/api";
+import { apiService, Product, Category } from "../config/api";
 import { useTranslation } from "react-i18next";
 import {
   Package,
@@ -65,6 +65,7 @@ interface StockProduct {
   _id: string;
   name: string;
   category: string;
+  categoryId?: string;
   price: number;
   stockQuantity: number;
   minStockLevel: number;
@@ -80,7 +81,6 @@ interface StockProduct {
 
 interface ProductFormData {
   name: string;
-  category: string;
   price: number;
   stockQuantity: number;
   minStockLevel: number;
@@ -88,17 +88,7 @@ interface ProductFormData {
   description: string;
   photo?: File;
   sizes: string[];
-  flavors: string[];
 }
-
-const CATEGORIES = [
-  "Water & Beverages",
-  "Juices",
-  "Cakes",
-  "Chips",
-  "Groceries",
-  "Other",
-];
 
 const StocksManagementPage: React.FC = () => {
   const { user: currentUser } = useAuth();
@@ -125,17 +115,18 @@ const StocksManagementPage: React.FC = () => {
   }>({ open: false, message: "", severity: "success" });
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [selectedFlavor, setSelectedFlavor] = useState<string>("");
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
-    category: "",
     price: 0,
     stockQuantity: 0,
     minStockLevel: 10,
     maxStockLevel: 100,
     description: "",
     sizes: [],
-    flavors: [],
   });
 
   const fetchProducts = useCallback(async () => {
@@ -195,6 +186,13 @@ const StocksManagementPage: React.FC = () => {
     }
   }, [currentUser, fetchProducts]);
 
+  useEffect(() => {
+    apiService
+      .getAllCategories()
+      .then(setCategories)
+      .catch(() => setCategories([]));
+  }, []);
+
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -211,45 +209,47 @@ const StocksManagementPage: React.FC = () => {
       setEditingProduct(product);
       setFormData({
         name: product.name,
-        category: product.category,
         price: product.price,
         stockQuantity: product.stockQuantity,
         minStockLevel: product.minStockLevel,
         maxStockLevel: product.maxStockLevel,
         description: product.description || "",
         sizes: product.sizes || [],
-        flavors: product.flavors || [],
       });
+      setSelectedCategoryId(product.categoryId || "");
+      setSelectedFlavor(product.flavors?.[0] || "");
     } else {
       setEditingProduct(null);
       setFormData({
         name: "",
-        category: "",
         price: 0,
         stockQuantity: 0,
         minStockLevel: 10,
         maxStockLevel: 100,
         description: "",
         sizes: [],
-        flavors: [],
       });
+      setSelectedCategoryId("");
+      setSelectedFlavor("");
     }
     setOpenDialog(true);
   };
+
+  useEffect(() => {
+    setSelectedFlavor("");
+  }, [selectedCategoryId]);
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setEditingProduct(null);
     setFormData({
       name: "",
-      category: "",
       price: 0,
       stockQuantity: 0,
       minStockLevel: 10,
       maxStockLevel: 100,
       description: "",
       sizes: [],
-      flavors: [],
     });
   };
 
@@ -258,16 +258,15 @@ const StocksManagementPage: React.FC = () => {
     try {
       const payload = {
         name: formData.name,
-        category: formData.category,
+        categoryId: selectedCategoryId,
         price: formData.price,
         stock: formData.stockQuantity,
         description: formData.description,
         photo: selectedPhoto || undefined,
         sizes: formData.sizes,
-        flavors: formData.flavors,
+        flavor: selectedFlavor,
       };
       if (editingProduct) {
-        // Update existing product
         const result = await apiService.updateProduct(
           editingProduct._id,
           payload,
@@ -278,7 +277,6 @@ const StocksManagementPage: React.FC = () => {
           severity: "success",
         });
       } else {
-        // Create new product
         const result = await apiService.createProduct(payload);
         setSnackbar({
           open: true,
@@ -287,7 +285,7 @@ const StocksManagementPage: React.FC = () => {
         });
       }
       handleCloseDialog();
-      fetchProducts(); // Refresh the products list
+      fetchProducts();
     } catch (error) {
       console.error("Error saving product:", error);
       setSnackbar({
@@ -752,22 +750,38 @@ const StocksManagementPage: React.FC = () => {
                   fullWidth
                   required
                 />
-                <FormControl fullWidth required>
+                <FormControl fullWidth required sx={{ mb: 2 }}>
                   <InputLabel>Category</InputLabel>
                   <Select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
+                    value={selectedCategoryId}
+                    onChange={(e) => setSelectedCategoryId(e.target.value)}
                     label="Category">
-                    {(CATEGORIES || []).map((category) => (
-                      <MenuItem key={category} value={category}>
-                        {category}
+                    {categories.map((cat) => (
+                      <MenuItem key={cat._id} value={cat._id}>
+                        {cat.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Box>
+              {selectedCategoryId && (
+                <FormControl fullWidth required sx={{ mb: 2 }}>
+                  <InputLabel>Flavor</InputLabel>
+                  <Select
+                    value={selectedFlavor}
+                    onChange={(e) => setSelectedFlavor(e.target.value)}
+                    label="Flavor">
+                    {(
+                      categories.find((cat) => cat._id === selectedCategoryId)
+                        ?.variants || []
+                    ).map((variant) => (
+                      <MenuItem key={variant} value={variant}>
+                        {variant}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
               <Box
                 sx={{
                   display: "flex",
@@ -865,21 +879,6 @@ const StocksManagementPage: React.FC = () => {
                   }
                   fullWidth
                   placeholder="e.g. Small, Medium, Large"
-                />
-                <TextField
-                  label="Flavors (comma separated)"
-                  value={formData.flavors.join(", ")}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      flavors: e.target.value
-                        .split(",")
-                        .map((f) => f.trim())
-                        .filter(Boolean),
-                    })
-                  }
-                  fullWidth
-                  placeholder="e.g. Chocolate, Vanilla"
                 />
               </Box>
 
