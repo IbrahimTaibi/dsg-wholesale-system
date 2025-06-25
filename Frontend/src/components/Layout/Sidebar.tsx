@@ -1,5 +1,5 @@
 import React from "react";
-import { X } from "lucide-react";
+import { X, ChevronDown, ChevronRight } from "lucide-react";
 import { useUI } from "../../contexts/UIContext";
 import { useAuth } from "../../hooks/useAuth";
 import { useCategories } from "../../hooks/useCategories";
@@ -19,6 +19,10 @@ export const Sidebar: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { navigateToRoute } = useNavigation();
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
+  const [expandedCategories, setExpandedCategories] = React.useState<
+    Set<string>
+  >(new Set());
+  const [showAllCategories, setShowAllCategories] = React.useState(false);
 
   // Filter menu items based on user role
   const filteredMenuItems = MENU_ITEMS.filter((item) => {
@@ -28,8 +32,37 @@ export const Sidebar: React.FC = () => {
     return true; // Show all non-admin items
   });
 
+  // Get root categories (categories without parents)
+  const rootCategories = categories.filter((category) => !category.parent);
+
+  // Get subcategories for a given parent
+  const getSubcategories = (parentId: string) => {
+    return categories.filter((category) => category.parent === parentId);
+  };
+
+  // Categories to display (either first 3 or all)
+  const displayedCategories = showAllCategories
+    ? rootCategories
+    : rootCategories.slice(0, 3);
+
   const handleCategoryClick = (categoryId: string) => {
     navigateToRoute(`/categories/${categoryId}`);
+  };
+
+  const toggleCategoryExpansion = (categoryId: string) => {
+    setExpandedCategories((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleShowAllCategories = () => {
+    setShowAllCategories((prev) => !prev);
   };
 
   return (
@@ -84,7 +117,7 @@ export const Sidebar: React.FC = () => {
             ))}
 
             {/* Categories Section */}
-            {!categoriesLoading && categories.length > 0 && (
+            {!categoriesLoading && rootCategories.length > 0 && (
               <>
                 {/* Categories Header */}
                 <div className="pt-6 pb-2">
@@ -95,39 +128,152 @@ export const Sidebar: React.FC = () => {
                 </div>
 
                 {/* Category Items */}
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category._id}
-                      onClick={() => handleCategoryClick(category._id)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-left
-                        transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
-                        text-white/80 hover:text-white hover:bg-white/10 hover:transform hover:scale-100 
-                        border border-transparent hover:border-white/15"
-                      aria-label={`Navigate to ${category.name}`}>
-                      {/* Content */}
-                      <div className="relative z-10 flex items-center gap-3 w-full">
-                        {/* Icon container */}
-                        <div className="transition-all duration-300 relative flex items-center justify-center">
-                          <Package2
-                            size={18}
-                            strokeWidth={2}
-                            className="transition-all duration-300 drop-shadow-sm text-white/80 group-hover:text-white group-hover:scale-110"
-                          />
+                <div className="space-y-1 relative">
+                  {displayedCategories.map((category) => {
+                    const subcategories = getSubcategories(category._id);
+                    const isExpanded = expandedCategories.has(category._id);
+                    const hasSubcategories = subcategories.length > 0;
+
+                    return (
+                      <div key={category._id} className="space-y-1">
+                        {/* Main Category Button */}
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => handleCategoryClick(category._id)}
+                            className="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-left
+                              transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
+                              text-white/80 hover:text-white hover:bg-white/10 hover:transform hover:scale-100 
+                              border border-transparent hover:border-white/15"
+                            aria-label={`Navigate to ${category.name}`}>
+                            {/* Content */}
+                            <div className="relative z-10 flex items-center gap-3 w-full">
+                              {/* Icon container */}
+                              <div className="transition-all duration-300 relative flex items-center justify-center">
+                                <Package2
+                                  size={18}
+                                  strokeWidth={2}
+                                  className="transition-all duration-300 drop-shadow-sm text-white/80 group-hover:text-white group-hover:scale-110"
+                                />
+                              </div>
+
+                              <span className="font-medium text-sm transition-all duration-300 tracking-normal text-white/85 group-hover:text-white">
+                                {category.name}
+                              </span>
+                            </div>
+
+                            {/* Hover glow effect */}
+                            <div
+                              className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
+                              bg-gradient-to-r from-white/5 via-white/10 to-transparent opacity-0 group-hover:opacity-100"
+                            />
+                          </button>
+
+                          {/* Expand/Collapse Button */}
+                          {hasSubcategories && (
+                            <button
+                              onClick={() =>
+                                toggleCategoryExpansion(category._id)
+                              }
+                              className="p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
+                              aria-label={`${
+                                isExpanded ? "Collapse" : "Expand"
+                              } ${category.name}`}>
+                              {isExpanded ? (
+                                <ChevronDown size={16} strokeWidth={2} />
+                              ) : (
+                                <ChevronRight size={16} strokeWidth={2} />
+                              )}
+                            </button>
+                          )}
                         </div>
 
-                        <span className="font-medium text-sm transition-all duration-300 tracking-normal text-white/85 group-hover:text-white">
-                          {category.name}
-                        </span>
-                      </div>
+                        {/* Subcategories */}
+                        {hasSubcategories && isExpanded && (
+                          <div className="ml-6 space-y-1">
+                            {subcategories.map((subcategory) => (
+                              <button
+                                key={subcategory._id}
+                                onClick={() =>
+                                  handleCategoryClick(subcategory._id)
+                                }
+                                className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left
+                                  transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
+                                  text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-100 
+                                  border border-transparent hover:border-white/10"
+                                aria-label={`Navigate to ${subcategory.name}`}>
+                                {/* Content */}
+                                <div className="relative z-10 flex items-center gap-3 w-full">
+                                  {/* Icon container */}
+                                  <div className="transition-all duration-300 relative flex items-center justify-center">
+                                    <Package2
+                                      size={16}
+                                      strokeWidth={2}
+                                      className="transition-all duration-300 drop-shadow-sm text-white/70 group-hover:text-white group-hover:scale-110"
+                                    />
+                                  </div>
 
-                      {/* Hover glow effect */}
-                      <div
-                        className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
-                        bg-gradient-to-r from-white/5 via-white/10 to-transparent opacity-0 group-hover:opacity-100"
-                      />
-                    </button>
-                  ))}
+                                  <span className="font-medium text-xs transition-all duration-300 tracking-normal text-white/70 group-hover:text-white">
+                                    {subcategory.name}
+                                  </span>
+                                </div>
+
+                                {/* Hover glow effect */}
+                                <div
+                                  className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
+                                  bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100"
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {/* Show More/Less Button */}
+                  {rootCategories.length > 3 && (
+                    <div className="relative">
+                      {!showAllCategories && (
+                        <>
+                          {/* Fade out effect */}
+                          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-orange-800 via-orange-800/80 to-transparent pointer-events-none" />
+                          {/* Arrow indicator */}
+                          <div className="absolute bottom-2 right-4 text-white/40">
+                            <ChevronDown size={16} strokeWidth={2} />
+                          </div>
+                        </>
+                      )}
+
+                      <button
+                        onClick={toggleShowAllCategories}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-left
+                          transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
+                          text-white/60 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/15
+                          mt-2"
+                        aria-label={
+                          showAllCategories
+                            ? "Show less categories"
+                            : "Show more categories"
+                        }>
+                        <span className="text-xs font-medium">
+                          {showAllCategories ? t("showLess") : t("showMore")}
+                        </span>
+                        {showAllCategories ? (
+                          <ChevronDown
+                            size={14}
+                            strokeWidth={2}
+                            className="transition-transform duration-300"
+                          />
+                        ) : (
+                          <ChevronDown
+                            size={14}
+                            strokeWidth={2}
+                            className="transition-transform duration-300"
+                          />
+                        )}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </>
             )}
