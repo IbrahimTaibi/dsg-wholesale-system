@@ -47,9 +47,9 @@ export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
             className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer group">
             {/* Product Image */}
             <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
-              {product.image ? (
+              {product.photo ? (
                 <img
-                  src={product.image}
+                  src={product.photo}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />

@@ -183,7 +183,7 @@ export const Checkout: React.FC = () => {
                 <ListItem sx={{ px: 0, py: 2 }}>
                   <ListItemAvatar>
                     <Avatar
-                      src={item.product.image}
+                      src={item.product.photo}
                       sx={{ width: 60, height: 60 }}
                       variant="rounded"
                     />
