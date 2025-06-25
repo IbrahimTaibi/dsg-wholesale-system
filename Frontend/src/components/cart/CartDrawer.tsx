@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
+import { useAuth } from "../../hooks/useAuth";
+import { useUI } from "../../contexts/UIContext";
 import { useNavigate } from "react-router-dom";
 
 interface CartDrawerProps {
@@ -25,9 +27,16 @@ interface CartDrawerProps {
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ open, onClose }) => {
   const { cart, removeFromCart, updateCartItemQuantity } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { setShowAuthModal } = useUI();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal("login");
+      return;
+    }
+
     onClose();
     navigate("/checkout");
   };

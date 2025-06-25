@@ -50,6 +50,8 @@ import {
 } from "lucide-react";
 import { Product, ProductVariant, mapApiProductToProduct } from "../types";
 import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../hooks/useAuth";
+import { useUI } from "../contexts/UIContext";
 import { useTranslation } from "react-i18next";
 import { apiService } from "../config/api";
 
@@ -57,6 +59,8 @@ export const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { setShowAuthModal } = useUI();
   const { t } = useTranslation();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -115,6 +119,11 @@ export const ProductDetail: React.FC = () => {
   };
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal("login");
+      return;
+    }
+
     if (product) {
       addToCart(product, quantity, selectedVariant || undefined);
       setIsAdded(true);

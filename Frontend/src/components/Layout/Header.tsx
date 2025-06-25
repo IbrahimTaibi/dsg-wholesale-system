@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import SearchIcon from "@mui/icons-material/Search";
 import PublicIcon from "@mui/icons-material/Public";
 import { useDebounce } from "../../hooks";
+import { ShoppingCart } from "@mui/icons-material";
 
 // Header component for the main app navigation and user controls
 export const Header: React.FC = () => {
@@ -318,9 +319,30 @@ export const Header: React.FC = () => {
               onClick={() => setShowMobileSearch((v) => !v)}>
               <SearchIcon />
             </button>
+            {/* Mobile: Cart icon button */}
+            <button
+              className="sm:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-all duration-300"
+              aria-label="Cart"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setShowAuthModal("login");
+                } else {
+                  setCartOpen(true);
+                }
+              }}>
+              <ShoppingCart />
+            </button>
             {/* Cart icon (desktop only) */}
             <span className="hidden sm:flex items-center">
-              <CartIcon onClick={() => setCartOpen(true)} />
+              <CartIcon
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    setShowAuthModal("login");
+                  } else {
+                    setCartOpen(true);
+                  }
+                }}
+              />
             </span>
             {/* Profile icon (always visible) */}
             {isAuthenticated ? (

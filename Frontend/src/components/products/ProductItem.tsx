@@ -20,6 +20,8 @@ import {
 import { Plus, Minus, ShoppingCart, Check } from "lucide-react";
 import { Product, ProductVariant } from "../../types";
 import { useCart } from "../../contexts/CartContext";
+import { useAuth } from "../../hooks/useAuth";
+import { useUI } from "../../contexts/UIContext";
 
 interface ProductItemProps {
   product: Product;
@@ -27,6 +29,8 @@ interface ProductItemProps {
 
 export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { setShowAuthModal } = useUI();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(product.minOrderQuantity || 1);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
@@ -43,6 +47,11 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const currentPhoto = selectedVariant?.photo || product.photo;
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal("login");
+      return;
+    }
+
     addToCart(product, quantity, selectedVariant || undefined);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1000);

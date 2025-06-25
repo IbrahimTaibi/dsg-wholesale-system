@@ -228,15 +228,8 @@ export const RouteManager: React.FC = () => {
       <Route path="/chips" element={<Chips />} />
       <Route path="/groceries" element={<Groceries />} />
 
-      {/* Product Detail Route */}
-      <Route
-        path="/product/:productId"
-        element={
-          <ProtectedRoute>
-            <ProductDetail />
-          </ProtectedRoute>
-        }
-      />
+      {/* Product Detail Route - Make public for browsing */}
+      <Route path="/product/:productId" element={<ProductDetail />} />
 
       {/* Checkout Route */}
       <Route
@@ -268,15 +261,8 @@ export const RouteManager: React.FC = () => {
         }
       />
 
-      {/* Search Results Route */}
-      <Route
-        path="/search-results"
-        element={
-          <ProtectedRoute>
-            <SearchResults />
-          </ProtectedRoute>
-        }
-      />
+      {/* Search Results Route - Make public for browsing */}
+      <Route path="/search-results" element={<SearchResults />} />
 
       {/* Admin Categories Route */}
       <Route
@@ -288,15 +274,8 @@ export const RouteManager: React.FC = () => {
         }
       />
 
-      {/* Category Products Route */}
-      <Route
-        path="/categories/:id"
-        element={
-          <ProtectedRoute>
-            <CategoryProductsPage />
-          </ProtectedRoute>
-        }
-      />
+      {/* Category Products Route - Make public for browsing */}
+      <Route path="/categories/:id" element={<CategoryProductsPage />} />
 
       {/* Catch all route */}
       <Route path="*" element={<NotFound />} />
