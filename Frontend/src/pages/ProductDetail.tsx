@@ -19,7 +19,6 @@ import {
   Zoom,
   Alert,
   Skeleton,
-  Grid,
   Paper,
   List,
   ListItem,
@@ -180,9 +179,14 @@ export const ProductDetail: React.FC = () => {
             {t("back")}
           </Button>
 
-          <Grid container spacing={4}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 4,
+            }}>
             {/* Product Images */}
-            <Grid item xs={12} md={6}>
+            <Box sx={{ flex: { xs: "1", md: "1 1 50%" } }}>
               <Card
                 sx={{
                   borderRadius: 3,
@@ -238,10 +242,34 @@ export const ProductDetail: React.FC = () => {
                   ))}
                 </Box>
               )}
-            </Grid>
+
+              {/* Quick Product Info Cards */}
+              <Box sx={{ mt: 3 }}>
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Paper sx={{ p: 2, textAlign: "center", flex: 1 }}>
+                    <Package size={24} color="#2196f3" />
+                    <Typography variant="h6" sx={{ mt: 1, fontWeight: 600 }}>
+                      {currentStock}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      In Stock
+                    </Typography>
+                  </Paper>
+                  <Paper sx={{ p: 2, textAlign: "center", flex: 1 }}>
+                    <Tag size={24} color="#4caf50" />
+                    <Typography variant="h6" sx={{ mt: 1, fontWeight: 600 }}>
+                      ${currentPrice.toFixed(2)}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Unit Price
+                    </Typography>
+                  </Paper>
+                </Box>
+              </Box>
+            </Box>
 
             {/* Product Details */}
-            <Grid item xs={12} md={6}>
+            <Box sx={{ flex: { xs: "1", md: "1 1 50%" } }}>
               <Box
                 sx={{
                   height: "100%",
@@ -259,6 +287,7 @@ export const ProductDetail: React.FC = () => {
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
+                    fontSize: { xs: "1.75rem", md: "2.125rem" },
                   }}>
                   {product.name}
                 </Typography>
@@ -277,6 +306,7 @@ export const ProductDetail: React.FC = () => {
                     fontWeight: 700,
                     color: "primary.main",
                     mb: 2,
+                    fontSize: { xs: "1.5rem", md: "2.125rem" },
                   }}>
                   ${currentPrice.toFixed(2)}
                 </Typography>
@@ -468,227 +498,276 @@ export const ProductDetail: React.FC = () => {
                   <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                     Product Features
                   </Typography>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <div className="flex items-center gap-1">
-                      <Truck size={20} color="#4caf50" />
-                      <Typography variant="body2">Fast Delivery</Typography>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Shield size={20} color="#2196f3" />
-                      <Typography variant="body2">Secure Payment</Typography>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <RotateCcw size={20} color="#ff9800" />
-                      <Typography variant="body2">Easy Returns</Typography>
-                    </div>
-                  </div>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <Box sx={{ textAlign: "center", flex: 1, p: 1 }}>
+                      <Truck size={24} color="#4caf50" />
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
+                        Fast Delivery
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: "center", flex: 1, p: 1 }}>
+                      <Shield size={24} color="#2196f3" />
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
+                        Secure Payment
+                      </Typography>
+                    </Box>
+                    <Box sx={{ textAlign: "center", flex: 1, p: 1 }}>
+                      <RotateCcw size={24} color="#ff9800" />
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
+                        Easy Returns
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Quick Product Stats */}
+                <Box sx={{ mt: 3 }}>
+                  <Paper sx={{ p: 2 }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ mb: 1, fontWeight: 600 }}>
+                      Product Quick Info
+                    </Typography>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                      <Box sx={{ flex: "1 1 45%" }}>
+                        <Typography variant="caption" color="text.secondary">
+                          Product ID
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {product.id.slice(-8)}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ flex: "1 1 45%" }}>
+                        <Typography variant="caption" color="text.secondary">
+                          Unit
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {product.unit || "Piece"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ flex: "1 1 45%" }}>
+                        <Typography variant="caption" color="text.secondary">
+                          Min Order
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {product.minOrderQuantity || 1}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ flex: "1 1 45%" }}>
+                        <Typography variant="caption" color="text.secondary">
+                          Status
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {isVariantAvailable ? "Available" : "Out of Stock"}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
                 </Box>
               </Box>
-            </Grid>
+            </Box>
+          </Box>
 
-            {/* Additional Product Information */}
-            <Grid item xs={12}>
-              <Divider sx={{ my: 4 }} />
+          {/* Additional Product Information */}
+          <Box sx={{ mt: 6 }}>
+            <Divider sx={{ my: 4 }} />
 
-              <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
-                Product Details
-              </Typography>
+            <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+              Product Details
+            </Typography>
 
-              <Grid container spacing={3}>
-                {/* Product Specifications */}
-                <Grid item xs={12} md={6}>
-                  <Paper sx={{ p: 3, height: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", md: "row" },
+                gap: 3,
+              }}>
+              {/* Product Specifications */}
+              <Box sx={{ flex: { xs: "1", md: "1 1 50%" } }}>
+                <Paper sx={{ p: 3, height: "100%" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      mb: 2,
+                      fontWeight: 600,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}>
+                    <Info size={20} />
+                    Product Specifications
+                  </Typography>
+                  <List dense>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Package size={16} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Product ID"
+                        secondary={product.id}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Tag size={16} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Category"
+                        secondary={product.category}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Weight size={16} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Unit"
+                        secondary={product.unit || "Piece"}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Clock size={16} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Minimum Order"
+                        secondary={`${product.minOrderQuantity || 1} ${
+                          product.unit || "piece"
+                        }(s)`}
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+
+              {/* Stock Information */}
+              <Box sx={{ flex: { xs: "1", md: "1 1 50%" } }}>
+                <Paper sx={{ p: 3, height: "100%" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      mb: 2,
+                      fontWeight: 600,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}>
+                    <Package size={20} />
+                    Stock Information
+                  </Typography>
+                  <List dense>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Check size={16} color="#4caf50" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Current Stock"
+                        secondary={`${currentStock} units available`}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Star size={16} color="#ff9800" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Stock Status"
+                        secondary={
+                          currentStock > 50
+                            ? "In Stock"
+                            : currentStock > 20
+                            ? "Limited Stock"
+                            : "Low Stock"
+                        }
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <Calendar size={16} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Availability"
+                        secondary={
+                          isVariantAvailable ? "Available" : "Out of Stock"
+                        }
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Box>
+            </Box>
+
+            {/* Detailed Description */}
+            <Box sx={{ mt: 3 }}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                  Detailed Description
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{ lineHeight: 1.8, color: "text.secondary" }}>
+                  {product.description ||
+                    "No detailed description available for this product."}
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Product Features Accordion */}
+            <Box sx={{ mt: 3 }}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                  Product Features & Benefits
+                </Typography>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ChevronDown />}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      Quality & Standards
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Typography
-                      variant="h6"
-                      sx={{
-                        mb: 2,
-                        fontWeight: 600,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}>
-                      <Info size={20} />
-                      Product Specifications
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}>
+                      Our products meet the highest quality standards and are
+                      sourced from trusted suppliers. Each item undergoes
+                      rigorous quality control to ensure customer satisfaction.
                     </Typography>
-                    <List dense>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Package size={16} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Product ID"
-                          secondary={product.id}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Tag size={16} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Category"
-                          secondary={product.category}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Weight size={16} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Unit"
-                          secondary={product.unit || "Piece"}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Clock size={16} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Minimum Order"
-                          secondary={`${product.minOrderQuantity || 1} ${
-                            product.unit || "piece"
-                          }(s)`}
-                        />
-                      </ListItem>
-                    </List>
-                  </Paper>
-                </Grid>
-
-                {/* Stock Information */}
-                <Grid item xs={12} md={6}>
-                  <Paper sx={{ p: 3, height: "100%" }}>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ChevronDown />}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      Shipping & Delivery
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Typography
-                      variant="h6"
-                      sx={{
-                        mb: 2,
-                        fontWeight: 600,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}>
-                      <Package size={20} />
-                      Stock Information
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}>
+                      Fast and reliable shipping to your location. We offer
+                      competitive shipping rates and ensure your order arrives
+                      in perfect condition.
                     </Typography>
-                    <List dense>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Check size={16} color="#4caf50" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Current Stock"
-                          secondary={`${currentStock} units available`}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Star size={16} color="#ff9800" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Stock Status"
-                          secondary={
-                            currentStock > 50
-                              ? "In Stock"
-                              : currentStock > 20
-                              ? "Limited Stock"
-                              : "Low Stock"
-                          }
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Calendar size={16} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Availability"
-                          secondary={
-                            isVariantAvailable ? "Available" : "Out of Stock"
-                          }
-                        />
-                      </ListItem>
-                    </List>
-                  </Paper>
-                </Grid>
-
-                {/* Detailed Description */}
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 3 }}>
-                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                      Detailed Description
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ChevronDown />}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      Customer Support
                     </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
                     <Typography
-                      variant="body1"
-                      sx={{ lineHeight: 1.8, color: "text.secondary" }}>
-                      {product.description ||
-                        "No detailed description available for this product."}
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}>
+                      Our dedicated customer support team is available to help
+                      with any questions or concerns. We're committed to
+                      providing excellent service and support.
                     </Typography>
-                  </Paper>
-                </Grid>
-
-                {/* Product Features Accordion */}
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 3 }}>
-                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                      Product Features & Benefits
-                    </Typography>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ChevronDown />}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 600 }}>
-                          Quality & Standards
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "text.secondary" }}>
-                          Our products meet the highest quality standards and
-                          are sourced from trusted suppliers. Each item
-                          undergoes rigorous quality control to ensure customer
-                          satisfaction.
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ChevronDown />}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 600 }}>
-                          Shipping & Delivery
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "text.secondary" }}>
-                          Fast and reliable shipping to your location. We offer
-                          competitive shipping rates and ensure your order
-                          arrives in perfect condition.
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ChevronDown />}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 600 }}>
-                          Customer Support
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "text.secondary" }}>
-                          Our dedicated customer support team is available to
-                          help with any questions or concerns. We're committed
-                          to providing excellent service and support.
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+                  </AccordionDetails>
+                </Accordion>
+              </Paper>
+            </Box>
+          </Box>
         </Box>
       </Fade>
     </Container>
