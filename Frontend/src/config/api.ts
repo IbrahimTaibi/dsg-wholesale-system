@@ -261,6 +261,9 @@ export const apiService = {
     stock: number;
     description?: string;
     photo?: File;
+    sizes?: string[];
+    flavors?: string[];
+    variants?: import("../types").ProductVariant[];
   }): Promise<{ message: string; product: Product }> {
     const formData = new FormData();
 
@@ -271,6 +274,15 @@ export const apiService = {
     formData.append("stock", productData.stock.toString());
     if (productData.description) {
       formData.append("description", productData.description);
+    }
+    if (productData.sizes) {
+      formData.append("sizes", JSON.stringify(productData.sizes));
+    }
+    if (productData.flavors) {
+      formData.append("flavors", JSON.stringify(productData.flavors));
+    }
+    if (productData.variants) {
+      formData.append("variants", JSON.stringify(productData.variants));
     }
 
     // Add photo if provided
@@ -296,6 +308,9 @@ export const apiService = {
       description?: string;
       isAvailable?: boolean;
       photo?: File;
+      sizes?: string[];
+      flavors?: string[];
+      variants?: import("../types").ProductVariant[];
     },
   ): Promise<{ message: string; product: Product }> {
     const formData = new FormData();
@@ -311,6 +326,12 @@ export const apiService = {
       formData.append("description", productData.description);
     if (productData.isAvailable !== undefined)
       formData.append("isAvailable", productData.isAvailable.toString());
+    if (productData.sizes)
+      formData.append("sizes", JSON.stringify(productData.sizes));
+    if (productData.flavors)
+      formData.append("flavors", JSON.stringify(productData.flavors));
+    if (productData.variants)
+      formData.append("variants", JSON.stringify(productData.variants));
 
     // Add photo if provided
     if (productData.photo) {

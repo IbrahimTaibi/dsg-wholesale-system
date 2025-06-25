@@ -57,6 +57,8 @@ interface ExtendedProduct extends Product {
   maxStockLevel?: number;
   createdAt?: string;
   updatedAt?: string;
+  sizes?: string[];
+  flavors?: string[];
 }
 
 interface StockProduct {
@@ -72,6 +74,8 @@ interface StockProduct {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  sizes: string[];
+  flavors: string[];
 }
 
 interface ProductFormData {
@@ -83,6 +87,8 @@ interface ProductFormData {
   maxStockLevel: number;
   description: string;
   photo?: File;
+  sizes: string[];
+  flavors: string[];
 }
 
 const CATEGORIES = [
@@ -128,6 +134,8 @@ const StocksManagementPage: React.FC = () => {
     minStockLevel: 10,
     maxStockLevel: 100,
     description: "",
+    sizes: [],
+    flavors: [],
   });
 
   const fetchProducts = useCallback(async () => {
@@ -165,6 +173,8 @@ const StocksManagementPage: React.FC = () => {
             (product as ExtendedProduct).createdAt || new Date().toISOString(),
           updatedAt:
             (product as ExtendedProduct).updatedAt || new Date().toISOString(),
+          sizes: (product as ExtendedProduct).sizes || [],
+          flavors: (product as ExtendedProduct).flavors || [],
         }),
       );
       setProducts(stockProducts);
@@ -207,6 +217,8 @@ const StocksManagementPage: React.FC = () => {
         minStockLevel: product.minStockLevel,
         maxStockLevel: product.maxStockLevel,
         description: product.description || "",
+        sizes: product.sizes || [],
+        flavors: product.flavors || [],
       });
     } else {
       setEditingProduct(null);
@@ -218,6 +230,8 @@ const StocksManagementPage: React.FC = () => {
         minStockLevel: 10,
         maxStockLevel: 100,
         description: "",
+        sizes: [],
+        flavors: [],
       });
     }
     setOpenDialog(true);
@@ -234,22 +248,30 @@ const StocksManagementPage: React.FC = () => {
       minStockLevel: 10,
       maxStockLevel: 100,
       description: "",
+      sizes: [],
+      flavors: [],
     });
   };
 
   const handleSubmit = async () => {
     setActionLoading(true);
     try {
+      const payload = {
+        name: formData.name,
+        category: formData.category,
+        price: formData.price,
+        stock: formData.stockQuantity,
+        description: formData.description,
+        photo: selectedPhoto || undefined,
+        sizes: formData.sizes,
+        flavors: formData.flavors,
+      };
       if (editingProduct) {
         // Update existing product
-        const result = await apiService.updateProduct(editingProduct._id, {
-          name: formData.name,
-          category: formData.category,
-          price: formData.price,
-          stock: formData.stockQuantity,
-          description: formData.description,
-          photo: selectedPhoto || undefined,
-        });
+        const result = await apiService.updateProduct(
+          editingProduct._id,
+          payload,
+        );
         setSnackbar({
           open: true,
           message: result.message,
@@ -257,14 +279,7 @@ const StocksManagementPage: React.FC = () => {
         });
       } else {
         // Create new product
-        const result = await apiService.createProduct({
-          name: formData.name,
-          category: formData.category,
-          price: formData.price,
-          stock: formData.stockQuantity,
-          description: formData.description,
-          photo: selectedPhoto || undefined,
-        });
+        const result = await apiService.createProduct(payload);
         setSnackbar({
           open: true,
           message: result.message,
@@ -835,6 +850,38 @@ const StocksManagementPage: React.FC = () => {
                 multiline
                 rows={3}
               />
+              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <TextField
+                  label="Sizes (comma separated)"
+                  value={formData.sizes.join(", ")}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      sizes: e.target.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  fullWidth
+                  placeholder="e.g. Small, Medium, Large"
+                />
+                <TextField
+                  label="Flavors (comma separated)"
+                  value={formData.flavors.join(", ")}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      flavors: e.target.value
+                        .split(",")
+                        .map((f) => f.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  fullWidth
+                  placeholder="e.g. Chocolate, Vanilla"
+                />
+              </Box>
 
               {/* Photo Upload Section */}
               <Box>

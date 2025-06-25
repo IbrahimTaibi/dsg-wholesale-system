@@ -45,6 +45,8 @@ export interface Product {
   unit?: string;
   minOrderQuantity?: number;
   variants?: ProductVariant[]; // Product variants/flavors
+  sizes?: string[];
+  flavors?: string[];
 }
 
 // API Product type (from backend)
@@ -59,7 +61,9 @@ export interface ApiProduct {
   isAvailable: boolean;
   unit?: string;
   minOrderQuantity?: number;
-  variants?: ProductVariant[]; // Product variants/flavors
+  variants?: ProductVariant[];
+  sizes?: string[];
+  flavors?: string[];
 }
 
 // Helper function to convert API product to frontend product
@@ -74,6 +78,8 @@ export const mapApiProductToProduct = (apiProduct: ApiProduct): Product => ({
   unit: apiProduct.unit,
   minOrderQuantity: apiProduct.minOrderQuantity,
   variants: apiProduct.variants,
+  sizes: apiProduct.sizes,
+  flavors: apiProduct.flavors,
 });
 
 // Cart types

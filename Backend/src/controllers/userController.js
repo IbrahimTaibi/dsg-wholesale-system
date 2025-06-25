@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Order = require("../models/Order");
 const { BCRYPT_ROUNDS } = require("../config/config");
+const CustomError = require("../utils/CustomError");
 
 // Create new user (Admin only)
 const createUser = async (req, res, next) => {
@@ -13,9 +14,11 @@ const createUser = async (req, res, next) => {
     const existingUser = await User.findOne({ phone });
 
     if (existingUser) {
-      return res.status(400).json({
-        error: "User with this phone number already exists",
-      });
+      throw new CustomError(
+        400,
+        "User with this phone number already exists",
+        "USER_EXISTS",
+      );
     }
 
     // Hash password
@@ -44,12 +47,17 @@ const createUser = async (req, res, next) => {
     });
   } catch (error) {
     if (error.name === "ValidationError") {
-      return res.status(400).json({
-        error: "Validation error",
-        details: Object.values(error.errors).map((err) => err.message),
-      });
+      next(
+        new CustomError(
+          400,
+          "Validation error",
+          "VALIDATION_ERROR",
+          Object.values(error.errors).map((err) => err.message),
+        ),
+      );
+    } else {
+      next(error);
     }
-    next(error);
   }
 };
 
@@ -175,7 +183,7 @@ const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      throw new CustomError(404, "User not found", "USER_NOT_FOUND");
     }
 
     // Check if user has pending orders
@@ -185,14 +193,20 @@ const deleteUser = async (req, res, next) => {
     });
 
     if (pendingOrders > 0) {
-      return res.status(400).json({
-        error: `Cannot delete user with ${pendingOrders} pending order(s). Cancel orders first or mark them as delivered.`,
-      });
+      throw new CustomError(
+        400,
+        `Cannot delete user with ${pendingOrders} pending order(s). Cancel orders first or mark them as delivered.`,
+        "USER_HAS_PENDING_ORDERS",
+      );
     }
 
     // Prevent deletion of admin users (optional security measure)
     if (user.role === "admin") {
-      return res.status(400).json({ error: "Cannot delete admin users" });
+      throw new CustomError(
+        400,
+        "Cannot delete admin users",
+        "CANNOT_DELETE_ADMIN",
+      );
     }
 
     await User.findByIdAndDelete(req.params.id);
@@ -200,9 +214,10 @@ const deleteUser = async (req, res, next) => {
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     if (error.name === "CastError") {
-      return res.status(400).json({ error: "Invalid user ID" });
+      next(new CustomError(400, "Invalid user ID", "INVALID_USER_ID"));
+    } else {
+      next(error);
     }
-    next(error);
   }
 };
 

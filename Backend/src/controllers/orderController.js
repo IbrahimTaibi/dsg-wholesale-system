@@ -3,6 +3,7 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const CustomError = require("../utils/CustomError");
 
 // Validate cart items and calculate totals
 const validateCart = async (req, res, next) => {
@@ -10,10 +11,11 @@ const validateCart = async (req, res, next) => {
     const { items } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({
-        error: "Cart must contain at least one item",
-        code: "EMPTY_CART",
-      });
+      throw new CustomError(
+        400,
+        "Cart must contain at least one item",
+        "EMPTY_CART",
+      );
     }
 
     const validatedItems = [];
@@ -22,35 +24,41 @@ const validateCart = async (req, res, next) => {
 
     for (const item of items) {
       if (!item.productId || !item.quantity || item.quantity < 1) {
-        return res.status(400).json({
-          error: "Each item must have productId and quantity (minimum 1)",
-          code: "INVALID_ITEM",
-        });
+        throw new CustomError(
+          400,
+          "Each item must have productId and quantity (minimum 1)",
+          "INVALID_ITEM",
+        );
       }
 
       const product = await Product.findById(item.productId);
       if (!product) {
-        return res.status(400).json({
-          error: `Product ${item.productId} not found`,
-          code: "PRODUCT_NOT_FOUND",
-        });
+        throw new CustomError(
+          400,
+          `Product ${item.productId} not found`,
+          "PRODUCT_NOT_FOUND",
+        );
       }
 
       if (!product.isAvailable) {
-        return res.status(400).json({
-          error: `Product ${product.name} is not available`,
-          code: "PRODUCT_UNAVAILABLE",
-        });
+        throw new CustomError(
+          400,
+          `Product ${product.name} is not available`,
+          "PRODUCT_UNAVAILABLE",
+        );
       }
 
       if (product.stock < item.quantity) {
-        return res.status(400).json({
-          error: `Insufficient stock for ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`,
-          code: "INSUFFICIENT_STOCK",
-          productId: item.productId,
-          available: product.stock,
-          requested: item.quantity,
-        });
+        throw new CustomError(
+          400,
+          `Insufficient stock for ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`,
+          "INSUFFICIENT_STOCK",
+          {
+            productId: item.productId,
+            available: product.stock,
+            requested: item.quantity,
+          },
+        );
       }
 
       const itemTotal = product.price * item.quantity;
@@ -106,18 +114,20 @@ const processCheckout = async (req, res, next) => {
     // Validate input
     if (!items || !Array.isArray(items) || items.length === 0) {
       await session.abortTransaction();
-      return res.status(400).json({
-        error: "Order must contain at least one item",
-        code: "EMPTY_CART",
-      });
+      throw new CustomError(
+        400,
+        "Order must contain at least one item",
+        "EMPTY_CART",
+      );
     }
 
     if (!shippingAddress) {
       await session.abortTransaction();
-      return res.status(400).json({
-        error: "Shipping address is required",
-        code: "MISSING_ADDRESS",
-      });
+      throw new CustomError(
+        400,
+        "Shipping address is required",
+        "MISSING_ADDRESS",
+      );
     }
 
     // Validate shipping address fields
@@ -125,11 +135,12 @@ const processCheckout = async (req, res, next) => {
     for (const field of requiredFields) {
       if (!shippingAddress[field] || shippingAddress[field].trim() === "") {
         await session.abortTransaction();
-        return res.status(400).json({
-          error: `Shipping address ${field} is required`,
-          code: "MISSING_ADDRESS_FIELD",
-          field: field,
-        });
+        throw new CustomError(
+          400,
+          `Shipping address ${field} is required`,
+          "MISSING_ADDRESS_FIELD",
+          { field },
+        );
       }
     }
 
@@ -140,38 +151,44 @@ const processCheckout = async (req, res, next) => {
     for (const item of items) {
       if (!item.productId || !item.quantity || item.quantity < 1) {
         await session.abortTransaction();
-        return res.status(400).json({
-          error: "Each item must have productId and quantity (minimum 1)",
-          code: "INVALID_ITEM",
-        });
+        throw new CustomError(
+          400,
+          "Each item must have productId and quantity (minimum 1)",
+          "INVALID_ITEM",
+        );
       }
 
       const product = await Product.findById(item.productId).session(session);
       if (!product) {
         await session.abortTransaction();
-        return res.status(400).json({
-          error: `Product ${item.productId} not found`,
-          code: "PRODUCT_NOT_FOUND",
-        });
+        throw new CustomError(
+          400,
+          `Product ${item.productId} not found`,
+          "PRODUCT_NOT_FOUND",
+        );
       }
 
       if (!product.isAvailable) {
         await session.abortTransaction();
-        return res.status(400).json({
-          error: `Product ${product.name} is not available`,
-          code: "PRODUCT_UNAVAILABLE",
-        });
+        throw new CustomError(
+          400,
+          `Product ${product.name} is not available`,
+          "PRODUCT_UNAVAILABLE",
+        );
       }
 
       if (product.stock < item.quantity) {
         await session.abortTransaction();
-        return res.status(400).json({
-          error: `Insufficient stock for ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`,
-          code: "INSUFFICIENT_STOCK",
-          productId: item.productId,
-          available: product.stock,
-          requested: item.quantity,
-        });
+        throw new CustomError(
+          400,
+          `Insufficient stock for ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`,
+          "INSUFFICIENT_STOCK",
+          {
+            productId: item.productId,
+            available: product.stock,
+            requested: item.quantity,
+          },
+        );
       }
 
       const itemTotal = product.price * item.quantity;
@@ -458,17 +475,25 @@ const markOrderDelivered = async (req, res, next) => {
 
     if (!order) {
       await session.abortTransaction();
-      return res.status(404).json({ error: "Order not found" });
+      throw new CustomError(404, "Order not found", "ORDER_NOT_FOUND");
     }
 
     if (order.status === "delivered") {
       await session.abortTransaction();
-      return res.status(400).json({ error: "Order already delivered" });
+      throw new CustomError(
+        400,
+        "Order already delivered",
+        "ORDER_ALREADY_DELIVERED",
+      );
     }
 
     if (order.status === "cancelled") {
       await session.abortTransaction();
-      return res.status(400).json({ error: "Cannot deliver cancelled order" });
+      throw new CustomError(
+        400,
+        "Cannot deliver cancelled order",
+        "ORDER_CANCELLED",
+      );
     }
 
     // Check stock availability before delivery
@@ -478,9 +503,16 @@ const markOrderDelivered = async (req, res, next) => {
       );
       if (currentProduct.stock < item.quantity) {
         await session.abortTransaction();
-        return res.status(400).json({
-          error: `Insufficient stock for ${currentProduct.name}. Available: ${currentProduct.stock}, Required: ${item.quantity}`,
-        });
+        throw new CustomError(
+          400,
+          `Insufficient stock for ${currentProduct.name}. Available: ${currentProduct.stock}, Required: ${item.quantity}`,
+          "INSUFFICIENT_STOCK",
+          {
+            productId: item.product._id,
+            available: currentProduct.stock,
+            required: item.quantity,
+          },
+        );
       }
     }
 
@@ -517,7 +549,7 @@ const cancelOrder = async (req, res, next) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
-      return res.status(404).json({ error: "Order not found" });
+      throw new CustomError(404, "Order not found", "ORDER_NOT_FOUND");
     }
 
     // Users can only cancel their own orders, admins can cancel any
@@ -526,13 +558,15 @@ const cancelOrder = async (req, res, next) => {
       (req.user.role !== "admin" &&
         order.user.toString() !== req.user._id.toString())
     ) {
-      return res.status(403).json({ error: "Access denied" });
+      throw new CustomError(403, "Access denied", "ACCESS_DENIED");
     }
 
     if (order.status !== "pending") {
-      return res
-        .status(400)
-        .json({ error: "Only pending orders can be cancelled" });
+      throw new CustomError(
+        400,
+        "Only pending orders can be cancelled",
+        "CANNOT_CANCEL",
+      );
     }
 
     order.status = "cancelled";
@@ -544,9 +578,10 @@ const cancelOrder = async (req, res, next) => {
     });
   } catch (error) {
     if (error.name === "CastError") {
-      return res.status(400).json({ error: "Invalid order ID" });
+      next(new CustomError(400, "Invalid order ID", "INVALID_ORDER_ID"));
+    } else {
+      next(error);
     }
-    next(error);
   }
 };
 
@@ -563,10 +598,11 @@ const updateOrderStatus = async (req, res, next) => {
     ];
 
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({
-        error:
-          "Invalid status. Must be one of: pending, processing, shipped, delivered, cancelled",
-      });
+      throw new CustomError(
+        400,
+        "Invalid status. Must be one of: pending, processing, shipped, delivered, cancelled",
+        "INVALID_STATUS",
+      );
     }
 
     const order = await Order.findById(req.params.id)
@@ -574,7 +610,7 @@ const updateOrderStatus = async (req, res, next) => {
       .populate("items.product", "name category photo price");
 
     if (!order) {
-      return res.status(404).json({ error: "Order not found" });
+      throw new CustomError(404, "Order not found", "ORDER_NOT_FOUND");
     }
 
     // If changing to delivered, handle stock deduction
@@ -590,9 +626,16 @@ const updateOrderStatus = async (req, res, next) => {
           );
           if (product.stock < item.quantity) {
             await session.abortTransaction();
-            return res.status(400).json({
-              error: `Insufficient stock for ${product.name}. Available: ${product.stock}, Required: ${item.quantity}`,
-            });
+            throw new CustomError(
+              400,
+              `Insufficient stock for ${product.name}. Available: ${product.stock}, Required: ${item.quantity}`,
+              "INSUFFICIENT_STOCK",
+              {
+                productId: item.product._id,
+                available: product.stock,
+                required: item.quantity,
+              },
+            );
           }
         }
 
@@ -630,9 +673,10 @@ const updateOrderStatus = async (req, res, next) => {
     });
   } catch (error) {
     if (error.name === "CastError") {
-      return res.status(400).json({ error: "Invalid order ID" });
+      next(new CustomError(400, "Invalid order ID", "INVALID_ORDER_ID"));
+    } else {
+      next(error);
     }
-    next(error);
   }
 };
 

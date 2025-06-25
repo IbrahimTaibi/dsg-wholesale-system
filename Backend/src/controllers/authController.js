@@ -3,6 +3,9 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { generateToken } = require("../middleware/auth");
 const { BCRYPT_ROUNDS } = require("../config/config");
+const CustomError = require("../utils/CustomError");
+const fs = require("fs/promises");
+const path = require("path");
 
 // Register new user
 const register = async (req, res, next) => {
@@ -15,14 +18,20 @@ const register = async (req, res, next) => {
     try {
       address = JSON.parse(req.body.address);
     } catch (e) {
-      return res.status(400).json({ error: "Address data is malformed." });
+      throw new CustomError(
+        400,
+        "Address data is malformed.",
+        "ADDRESS_MALFORMED",
+      );
     }
 
     // Validate required fields
     if (!phone || !password || !name || !storeName || !address) {
-      return res.status(400).json({
-        error: "Phone, password, name, store name, and address are required",
-      });
+      throw new CustomError(
+        400,
+        "Phone, password, name, store name, and address are required",
+        "MISSING_FIELDS",
+      );
     }
 
     // Validate address structure
@@ -32,15 +41,21 @@ const register = async (req, res, next) => {
       !address.state ||
       !address.zipCode
     ) {
-      return res.status(400).json({
-        error: "Complete address (street, city, state, zipCode) is required",
-      });
+      throw new CustomError(
+        400,
+        "Complete address (street, city, state, zipCode) is required",
+        "INCOMPLETE_ADDRESS",
+      );
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ phone });
     if (existingUser) {
-      return res.status(400).json({ error: "Phone number already registered" });
+      throw new CustomError(
+        400,
+        "Phone number already registered",
+        "PHONE_EXISTS",
+      );
     }
 
     // Hash password

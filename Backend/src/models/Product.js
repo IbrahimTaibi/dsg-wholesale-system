@@ -80,6 +80,28 @@ const productSchema = new mongoose.Schema(
         message: "Variant names must be unique within a product",
       },
     },
+    // Product sizes (e.g., Small, Medium, Large)
+    sizes: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: function (sizes) {
+          return sizes.length === new Set(sizes).size;
+        },
+        message: "Sizes must be unique within a product",
+      },
+    },
+    // Product flavors (e.g., Chocolate, Vanilla)
+    flavors: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: function (flavors) {
+          return flavors.length === new Set(flavors).size;
+        },
+        message: "Flavors must be unique within a product",
+      },
+    },
   },
   {
     timestamps: true,

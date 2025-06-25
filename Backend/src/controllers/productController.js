@@ -1,5 +1,8 @@
 // src/controllers/productController.js
 const Product = require("../models/Product");
+const CustomError = require("../utils/CustomError");
+const fs = require("fs/promises");
+const path = require("path");
 
 // Get all products with optimized queries for M0 cluster
 const getAllProducts = async (req, res, next) => {
@@ -106,40 +109,83 @@ const getProductById = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      throw new CustomError(404, "Product not found", "PRODUCT_NOT_FOUND");
     }
 
     // Non-admin or unauthenticated users can only see available products
     if ((!req.user || req.user.role !== "admin") && !product.isAvailable) {
-      return res.status(404).json({ error: "Product not found" });
+      throw new CustomError(404, "Product not found", "PRODUCT_NOT_FOUND");
     }
 
     res.json(product);
   } catch (error) {
     if (error.name === "CastError") {
-      return res.status(400).json({ error: "Invalid product ID" });
+      next(new CustomError(400, "Invalid product ID", "INVALID_PRODUCT_ID"));
+    } else {
+      next(error);
     }
-    next(error);
   }
 };
 
 // Create new product (Admin only)
 const createProduct = async (req, res, next) => {
   try {
-    const { name, category, price, stock, description } = req.body;
+    const {
+      name,
+      category,
+      price,
+      stock,
+      description,
+      sizes,
+      flavors,
+      variants,
+    } = req.body;
 
     // Validate required fields
     if (!name || !category || !price || stock === undefined) {
-      return res.status(400).json({
-        error: "Name, category, price, and stock are required",
-      });
+      throw new CustomError(
+        400,
+        "Name, category, price, and stock are required",
+        "MISSING_FIELDS",
+      );
     }
 
     // Validate price and stock are numbers
     if (isNaN(parseFloat(price)) || isNaN(parseInt(stock))) {
-      return res.status(400).json({
-        error: "Price and stock must be valid numbers",
-      });
+      throw new CustomError(
+        400,
+        "Price and stock must be valid numbers",
+        "INVALID_TYPE",
+      );
+    }
+
+    // Validate sizes and flavors if provided
+    if (
+      sizes &&
+      (!Array.isArray(sizes) || new Set(sizes).size !== sizes.length)
+    ) {
+      throw new CustomError(
+        400,
+        "Sizes must be an array of unique strings",
+        "INVALID_SIZES",
+      );
+    }
+    if (
+      flavors &&
+      (!Array.isArray(flavors) || new Set(flavors).size !== flavors.length)
+    ) {
+      throw new CustomError(
+        400,
+        "Flavors must be an array of unique strings",
+        "INVALID_FLAVORS",
+      );
+    }
+    if (variants && !Array.isArray(variants)) {
+      throw new CustomError(
+        400,
+        "Variants must be an array",
+        "INVALID_VARIANTS",
+      );
     }
 
     const productData = {
@@ -150,6 +196,10 @@ const createProduct = async (req, res, next) => {
       description: description || "",
       isAvailable: true,
     };
+
+    if (sizes) productData.sizes = sizes;
+    if (flavors) productData.flavors = flavors;
+    if (variants) productData.variants = variants;
 
     // Add photo if uploaded
     if (req.file) {
@@ -179,16 +229,22 @@ const createProduct = async (req, res, next) => {
 // Update product (Admin only)
 const updateProduct = async (req, res, next) => {
   try {
-    const { name, category, price, stock, description, isAvailable } = req.body;
+    const {
+      name,
+      category,
+      price,
+      stock,
+      description,
+      isAvailable,
+      sizes,
+      flavors,
+      variants,
+    } = req.body;
 
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      throw new CustomError(404, "Product not found", "PRODUCT_NOT_FOUND");
     }
-
-    // If a new file is uploaded, the old one is implicitly handled by Cloudinary logic if needed,
-    // or you might implement deletion of the old image here.
-    // For now, we are just removing the fs.unlink part.
 
     // Prepare update data
     const updateData = {};
@@ -198,19 +254,57 @@ const updateProduct = async (req, res, next) => {
     if (category !== undefined) updateData.category = category;
     if (price !== undefined) {
       if (isNaN(parseFloat(price))) {
-        return res.status(400).json({ error: "Price must be a valid number" });
+        throw new CustomError(
+          400,
+          "Price must be a valid number",
+          "INVALID_TYPE",
+        );
       }
       updateData.price = parseFloat(price);
     }
     if (stock !== undefined) {
       if (isNaN(parseInt(stock))) {
-        return res.status(400).json({ error: "Stock must be a valid number" });
+        throw new CustomError(
+          400,
+          "Stock must be a valid number",
+          "INVALID_TYPE",
+        );
       }
       updateData.stock = parseInt(stock);
     }
     if (description !== undefined) updateData.description = description;
     if (isAvailable !== undefined) {
       updateData.isAvailable = isAvailable === "true" || isAvailable === true;
+    }
+    if (sizes !== undefined) {
+      if (!Array.isArray(sizes) || new Set(sizes).size !== sizes.length) {
+        throw new CustomError(
+          400,
+          "Sizes must be an array of unique strings",
+          "INVALID_SIZES",
+        );
+      }
+      updateData.sizes = sizes;
+    }
+    if (flavors !== undefined) {
+      if (!Array.isArray(flavors) || new Set(flavors).size !== flavors.length) {
+        throw new CustomError(
+          400,
+          "Flavors must be an array of unique strings",
+          "INVALID_FLAVORS",
+        );
+      }
+      updateData.flavors = flavors;
+    }
+    if (variants !== undefined) {
+      if (!Array.isArray(variants)) {
+        throw new CustomError(
+          400,
+          "Variants must be an array",
+          "INVALID_VARIANTS",
+        );
+      }
+      updateData.variants = variants;
     }
 
     // Update photo if new one is uploaded
