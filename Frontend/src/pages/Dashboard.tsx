@@ -27,6 +27,7 @@ import { RevenueChart } from "../components/dashboard/RevenueChart";
 import { CategoryChart } from "../components/dashboard/CategoryChart";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import CategoryTree from "../components/categories/CategoryTree";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -212,6 +213,10 @@ const Dashboard: React.FC = () => {
                 </Button>
               </Box>
             </Paper>
+
+            <Box sx={{ mb: 4 }}>
+              <CategoryTree />
+            </Box>
 
             {loading ? (
               <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>

@@ -17,6 +17,10 @@ import {
   Tooltip,
   CircularProgress,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Edit, Delete, Plus, X } from "lucide-react";
 import { apiService, Category } from "../config/api";
@@ -224,6 +228,24 @@ const CategoriesPage: React.FC = () => {
           {editingCategory ? "Edit Category" : "Add Category"}
         </DialogTitle>
         <DialogContent>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Parent Category</InputLabel>
+            <Select
+              value={parent || ""}
+              onChange={(e) => setParent(e.target.value || null)}
+              label="Parent Category">
+              <MenuItem value="">None (Root Category)</MenuItem>
+              {categories
+                .filter(
+                  (cat) => !editingCategory || cat._id !== editingCategory._id,
+                )
+                .map((cat) => (
+                  <MenuItem key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
           <TextField
             label="Category Name"
             value={categoryName}
