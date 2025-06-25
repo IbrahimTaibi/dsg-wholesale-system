@@ -130,7 +130,10 @@ const getProductById = async (req, res, next) => {
 // Create new product (Admin only)
 const createProduct = async (req, res, next) => {
   try {
-    const {
+    console.log("Received request body:", req.body);
+    console.log("Request headers:", req.headers);
+
+    let {
       name,
       categoryId,
       price,
@@ -140,6 +143,45 @@ const createProduct = async (req, res, next) => {
       flavors,
       variants,
     } = req.body;
+
+    // Parse JSON strings for arrays that come from FormData
+    if (sizes && typeof sizes === "string") {
+      try {
+        sizes = JSON.parse(sizes);
+      } catch (e) {
+        console.error("Error parsing sizes JSON:", e);
+        sizes = [];
+      }
+    }
+
+    if (flavors && typeof flavors === "string") {
+      try {
+        flavors = JSON.parse(flavors);
+      } catch (e) {
+        console.error("Error parsing flavors JSON:", e);
+        flavors = [];
+      }
+    }
+
+    if (variants && typeof variants === "string") {
+      try {
+        variants = JSON.parse(variants);
+      } catch (e) {
+        console.error("Error parsing variants JSON:", e);
+        variants = [];
+      }
+    }
+
+    console.log("Extracted fields:", {
+      name,
+      categoryId,
+      price,
+      stock,
+      description,
+      sizes,
+      flavors,
+      variants,
+    });
 
     // Validate required fields
     if (!name || !categoryId || !price || stock === undefined) {
@@ -169,7 +211,8 @@ const createProduct = async (req, res, next) => {
           "INVALID_SIZES",
         );
       }
-      if (new Set(sizes).size !== sizes.length) {
+      // Only validate uniqueness if array is not empty
+      if (sizes.length > 0 && new Set(sizes).size !== sizes.length) {
         const duplicates = sizes.filter(
           (item, index) => sizes.indexOf(item) !== index,
         );
@@ -209,14 +252,16 @@ const createProduct = async (req, res, next) => {
       isAvailable: true,
     };
 
-    if (sizes) productData.sizes = sizes;
-    if (flavors) productData.flavors = flavors;
-    if (variants) productData.variants = variants;
+    if (sizes && sizes.length > 0) productData.sizes = sizes;
+    if (flavors && flavors.length > 0) productData.flavors = flavors;
+    if (variants && variants.length > 0) productData.variants = variants;
 
     // Add photo if uploaded
     if (req.file) {
       productData.photo = req.file.path;
     }
+
+    console.log("Final product data:", productData);
 
     const product = new Product(productData);
     await product.save();
@@ -226,6 +271,7 @@ const createProduct = async (req, res, next) => {
       product,
     });
   } catch (error) {
+    console.error("Error in createProduct:", error);
     // Delete uploaded file if product creation fails
     if (req.file) {
       try {
@@ -241,7 +287,7 @@ const createProduct = async (req, res, next) => {
 // Update product (Admin only)
 const updateProduct = async (req, res, next) => {
   try {
-    const {
+    let {
       name,
       categoryId,
       price,
@@ -252,6 +298,34 @@ const updateProduct = async (req, res, next) => {
       flavors,
       variants,
     } = req.body;
+
+    // Parse JSON strings for arrays that come from FormData
+    if (sizes && typeof sizes === "string") {
+      try {
+        sizes = JSON.parse(sizes);
+      } catch (e) {
+        console.error("Error parsing sizes JSON:", e);
+        sizes = [];
+      }
+    }
+
+    if (flavors && typeof flavors === "string") {
+      try {
+        flavors = JSON.parse(flavors);
+      } catch (e) {
+        console.error("Error parsing flavors JSON:", e);
+        flavors = [];
+      }
+    }
+
+    if (variants && typeof variants === "string") {
+      try {
+        variants = JSON.parse(variants);
+      } catch (e) {
+        console.error("Error parsing variants JSON:", e);
+        variants = [];
+      }
+    }
 
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -319,7 +393,7 @@ const updateProduct = async (req, res, next) => {
       updateData.variants = variants;
     }
 
-    // Update photo if new one is uploaded
+    // Add photo if uploaded
     if (req.file) {
       updateData.photo = req.file.path;
     }
@@ -327,7 +401,7 @@ const updateProduct = async (req, res, next) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true, runValidators: true },
+      { new: true },
     );
 
     res.json({
@@ -335,6 +409,14 @@ const updateProduct = async (req, res, next) => {
       product: updatedProduct,
     });
   } catch (error) {
+    // Delete uploaded file if update fails
+    if (req.file) {
+      try {
+        await fs.unlink(path.join("uploads", req.file.filename));
+      } catch (unlinkError) {
+        console.error("Error deleting uploaded file:", unlinkError);
+      }
+    }
     next(error);
   }
 };
