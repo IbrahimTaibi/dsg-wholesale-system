@@ -268,9 +268,7 @@ const StocksManagementPage: React.FC = () => {
     try {
       const payload = {
         name: formData.name,
-        mainCategory: selectedMainCategory,
-        subcategoryId: selectedSubcategoryId,
-        variant: selectedVariant,
+        categoryId: selectedSubcategoryId || undefined,
         price: formData.price,
         stock: formData.stockQuantity,
         description: formData.description,
@@ -760,6 +758,8 @@ const StocksManagementPage: React.FC = () => {
                   }
                   fullWidth
                   required
+                  error={!formData.name}
+                  helperText={!formData.name ? "Product name is required" : ""}
                 />
                 <FormControl fullWidth required sx={{ mb: 2 }}>
                   <InputLabel>Main Category</InputLabel>
@@ -770,7 +770,8 @@ const StocksManagementPage: React.FC = () => {
                       setSelectedSubcategoryId("");
                       setSelectedVariant("");
                     }}
-                    label="Main Category">
+                    label="Main Category"
+                    error={!selectedMainCategory}>
                     {MAIN_CATEGORIES.map((main) => (
                       <MenuItem key={main} value={main}>
                         {main}
@@ -787,7 +788,8 @@ const StocksManagementPage: React.FC = () => {
                         setSelectedSubcategoryId(e.target.value);
                         setSelectedVariant("");
                       }}
-                      label="Subcategory">
+                      label="Subcategory"
+                      error={!selectedSubcategoryId}>
                       {categories
                         .filter(
                           (cat) => cat.parentCategory === selectedMainCategory,
@@ -801,7 +803,7 @@ const StocksManagementPage: React.FC = () => {
                   </FormControl>
                 )}
                 {selectedSubcategoryId && (
-                  <FormControl fullWidth required sx={{ mb: 2 }}>
+                  <FormControl fullWidth sx={{ mb: 2 }}>
                     <InputLabel>Variant</InputLabel>
                     <Select
                       value={selectedVariant}
@@ -840,6 +842,10 @@ const StocksManagementPage: React.FC = () => {
                   fullWidth
                   required
                   inputProps={{ min: 0, step: 0.01 }}
+                  error={formData.price <= 0}
+                  helperText={
+                    formData.price <= 0 ? "Price must be greater than 0" : ""
+                  }
                 />
                 <TextField
                   label="Stock Quantity"
@@ -854,6 +860,12 @@ const StocksManagementPage: React.FC = () => {
                   fullWidth
                   required
                   inputProps={{ min: 0 }}
+                  error={formData.stockQuantity < 0}
+                  helperText={
+                    formData.stockQuantity < 0
+                      ? "Stock quantity cannot be negative"
+                      : ""
+                  }
                 />
                 <TextField
                   label="Min Stock Level"
@@ -979,7 +991,14 @@ const StocksManagementPage: React.FC = () => {
             <Button
               onClick={handleSubmit}
               variant="contained"
-              disabled={actionLoading}>
+              disabled={
+                actionLoading ||
+                !formData.name ||
+                !selectedMainCategory ||
+                !selectedSubcategoryId ||
+                formData.price <= 0 ||
+                formData.stockQuantity < 0
+              }>
               {actionLoading
                 ? "Saving..."
                 : editingProduct
