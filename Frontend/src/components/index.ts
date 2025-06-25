@@ -20,6 +20,7 @@ export { SidebarMenuItem } from "./Layout/SidebarMenuItem";
 // Products
 export { ProductCard } from "./products/ProductCard";
 export { ProductItem } from "./products/ProductItem";
+export { ProductPageLayout } from "./ProductPageLayout";
 
 // UI
 export { SearchBar } from "./ui/SearchBar";
