@@ -35,7 +35,25 @@ const CategoryTree: React.FC = () => {
   const tree = buildCategoryTree(categories);
 
   const renderTree = (nodes: CategoryNode) => (
-    <TreeItem key={nodes._id} itemId={nodes._id} label={nodes.name}>
+    <TreeItem
+      key={nodes._id}
+      itemId={nodes._id}
+      label={
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={(e) => {
+            // Prevent navigation if the click is on the expand/collapse icon
+            if (
+              (e.target as HTMLElement).closest(".MuiTreeItem-iconContainer")
+            ) {
+              return;
+            }
+            e.stopPropagation();
+            navigate(`/categories/${nodes._id}`);
+          }}>
+          {nodes.name}
+        </span>
+      }>
       {nodes.children.map((node) => renderTree(node))}
     </TreeItem>
   );
@@ -43,12 +61,7 @@ const CategoryTree: React.FC = () => {
   if (loading) return <div>Loading categories...</div>;
 
   return (
-    <SimpleTreeView
-      onItemClick={(_event: React.MouseEvent, id: string) =>
-        navigate(`/categories/${id}`)
-      }>
-      {tree.map((node) => renderTree(node))}
-    </SimpleTreeView>
+    <SimpleTreeView>{tree.map((node) => renderTree(node))}</SimpleTreeView>
   );
 };
 
