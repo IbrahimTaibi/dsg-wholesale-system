@@ -21,6 +21,7 @@ export const useNavigation = () => {
     cakes: ROUTES.CAKES,
     chips: ROUTES.CHIPS,
     groceries: ROUTES.GROCERIES,
+    categories: "/categories",
   };
 
   const navigateToMenuItem = (itemId: string) => {

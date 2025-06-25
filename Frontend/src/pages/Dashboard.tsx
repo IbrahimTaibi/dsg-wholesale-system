@@ -18,6 +18,7 @@ import {
   DollarSign,
   RefreshCw,
   ArrowRight,
+  Grid3x3,
 } from "lucide-react";
 import { apiService, DashboardOverview } from "../config/api";
 import { useAuth } from "../hooks/useAuth";
@@ -65,6 +66,10 @@ const Dashboard: React.FC = () => {
 
   const handleViewStocks = () => {
     navigate("/admin-stocks");
+  };
+
+  const handleViewCategories = () => {
+    navigate("/categories");
   };
 
   useEffect(() => {
@@ -188,6 +193,22 @@ const Dashboard: React.FC = () => {
                     },
                   }}>
                   {t("manageStocks")}
+                </Button>
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<Grid3x3 size={20} />}
+                  onClick={handleViewCategories}
+                  sx={{
+                    background:
+                      "linear-gradient(45deg, #ab47bc 30%, #ce93d8 90%)",
+                    color: "white",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(45deg, #8e24aa 30%, #ab47bc 90%)",
+                    },
+                  }}>
+                  Manage Categories
                 </Button>
               </Box>
             </Paper>
