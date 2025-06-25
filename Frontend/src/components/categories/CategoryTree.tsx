@@ -1,12 +1,8 @@
 // This is a trigger comment for deployment pipeline
 import React, { useEffect, useState } from "react";
-// @ts-expect-error MUI X TreeView v8: missing type declarations for TreeView
-import TreeView from "@mui/x-tree-view/TreeView";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
 import { useNavigate } from "react-router-dom";
 import { apiService, Category } from "../../config/api";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 interface CategoryNode extends Category {
   children: CategoryNode[];
@@ -47,14 +43,12 @@ const CategoryTree: React.FC = () => {
   if (loading) return <div>Loading categories...</div>;
 
   return (
-    <TreeView
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
+    <SimpleTreeView
       onItemClick={(_event: React.MouseEvent, id: string) =>
         navigate(`/categories/${id}`)
       }>
       {tree.map((node) => renderTree(node))}
-    </TreeView>
+    </SimpleTreeView>
   );
 };
 
