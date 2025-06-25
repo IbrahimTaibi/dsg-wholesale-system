@@ -51,7 +51,7 @@ const CategoryProductsPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
         }}>
         <Mui.Card
           sx={{
@@ -82,7 +82,7 @@ const CategoryProductsPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)",
+          background: "linear-gradient(135deg, #B72136 0%, #A71E34 100%)",
         }}>
         <Mui.Card
           sx={{
@@ -108,7 +108,7 @@ const CategoryProductsPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+          background: "linear-gradient(135deg, #B78103 0%, #A67C00 100%)",
         }}>
         <Mui.Card
           sx={{
@@ -130,7 +130,7 @@ const CategoryProductsPage: React.FC = () => {
     <Mui.Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        background: "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
         py: 4,
       }}>
       <Mui.Container maxWidth="xl">
@@ -217,12 +217,12 @@ const CategoryProductsPage: React.FC = () => {
                   height: 80,
                   borderRadius: 3,
                   background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   mr: 3,
-                  boxShadow: "0 4px 20px rgba(102, 126, 234, 0.3)",
+                  boxShadow: "0 4px 20px rgba(230, 81, 0, 0.3)",
                 }}>
                 <CategoryIcon sx={{ fontSize: 40, color: "white" }} />
               </Mui.Box>
@@ -232,7 +232,7 @@ const CategoryProductsPage: React.FC = () => {
                   sx={{
                     fontWeight: 700,
                     background:
-                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -255,7 +255,7 @@ const CategoryProductsPage: React.FC = () => {
                         size="small"
                         sx={{
                           background:
-                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                            "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
                           color: "white",
                           fontWeight: 500,
                         }}
@@ -289,13 +289,13 @@ const CategoryProductsPage: React.FC = () => {
                     height: 120,
                     borderRadius: "50%",
                     background:
-                      "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                      "linear-gradient(135deg, #B78103 0%, #A67C00 100%)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     mx: "auto",
                     mb: 3,
-                    boxShadow: "0 8px 32px rgba(240, 147, 251, 0.3)",
+                    boxShadow: "0 8px 32px rgba(183, 129, 3, 0.3)",
                   }}>
                   <Mui.Icon sx={{ fontSize: 60, color: "white" }}>
                     inventory_2
@@ -319,18 +319,18 @@ const CategoryProductsPage: React.FC = () => {
                   startIcon={<ArrowBack />}
                   sx={{
                     background:
-                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
                     borderRadius: 2,
                     px: 4,
                     py: 1.5,
                     textTransform: "none",
                     fontSize: "1.1rem",
                     fontWeight: 600,
-                    boxShadow: "0 4px 20px rgba(102, 126, 234, 0.3)",
+                    boxShadow: "0 4px 20px rgba(230, 81, 0, 0.3)",
                     "&:hover": {
                       background:
-                        "linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)",
-                      boxShadow: "0 6px 25px rgba(102, 126, 234, 0.4)",
+                        "linear-gradient(135deg, #D84315 0%, #C62828 100%)",
+                      boxShadow: "0 6px 25px rgba(230, 81, 0, 0.4)",
                     },
                   }}>
                   Back to Categories
