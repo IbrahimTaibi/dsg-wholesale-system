@@ -3,12 +3,14 @@ const Product = require("../models/Product");
 const CustomError = require("../utils/CustomError");
 const fs = require("fs/promises");
 const path = require("path");
+const mongoose = require("mongoose");
 
 // Get all products with optimized queries for M0 cluster
 const getAllProducts = async (req, res, next) => {
   try {
     const {
       category,
+      categoryId,
       available,
       search,
       page = 1,
@@ -19,7 +21,10 @@ const getAllProducts = async (req, res, next) => {
     // Build query with optimized patterns
     let query = {};
 
-    if (category) {
+    // Support both category (string) and categoryId (ObjectId) filtering
+    if (categoryId) {
+      query.categoryId = categoryId;
+    } else if (category) {
       query.category = category;
     }
 
@@ -52,12 +57,18 @@ const getAllProducts = async (req, res, next) => {
     const projection = {
       name: 1,
       category: 1,
+      categoryId: 1,
       photo: 1,
       price: 1,
       stock: 1,
       description: 1,
       isAvailable: 1,
       createdAt: 1,
+      unit: 1,
+      minOrderQuantity: 1,
+      variants: 1,
+      sizes: 1,
+      flavors: 1,
     };
 
     // Optimize sorting
@@ -449,7 +460,14 @@ const getProductsByCategory = async (req, res, next) => {
     const { category } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    let query = { category };
+    let query = {};
+
+    // Check if the category parameter is a valid ObjectId
+    if (mongoose.Types.ObjectId.isValid(category)) {
+      query.categoryId = category;
+    } else {
+      query.category = category;
+    }
 
     // Non-admin users can only see available products
     if (!req.user || req.user.role !== "admin") {

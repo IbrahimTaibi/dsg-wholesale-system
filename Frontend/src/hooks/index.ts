@@ -1,6 +1,8 @@
 // src/hooks/index.ts
 
-export { useNavigation } from "./useNavigation";
-export { useProducts } from "./useProducts";
-export { default as useDebounce } from "./useDebounce";
-export { useSearchSuggestions } from "./useSearchSuggestions";
+export * from "./useAuth";
+export * from "./useDebounce";
+export * from "./useNavigation";
+export * from "./useProducts";
+export * from "./useSearchSuggestions";
+export * from "./useCategories";

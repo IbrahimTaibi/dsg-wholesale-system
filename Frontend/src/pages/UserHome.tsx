@@ -32,7 +32,7 @@ export const UserHome: React.FC = () => {
         await Promise.all(
           cats.map(async (cat) => {
             const res = await apiService.getProducts({
-              category: cat.name,
+              categoryId: cat._id,
               limit: 6,
             });
             productsByCategory[cat._id] = res.products.map(

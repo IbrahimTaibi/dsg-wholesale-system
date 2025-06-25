@@ -3,6 +3,7 @@ import { apiService, Product } from "../config/api";
 
 interface UseProductsOptions {
   category?: string;
+  categoryId?: string;
   search?: string;
   page?: number;
   limit?: number;
@@ -20,7 +21,7 @@ interface ApiProductsResponse {
 }
 
 export const useProducts = (options: UseProductsOptions = {}) => {
-  const { category, search, page, limit, sort } = options;
+  const { category, categoryId, search, page, limit, sort } = options;
 
   const {
     data,
@@ -28,7 +29,7 @@ export const useProducts = (options: UseProductsOptions = {}) => {
     error,
     refetch,
   } = useQuery<ApiProductsResponse, Error>({
-    queryKey: ["products", { category, search, page, limit, sort }],
+    queryKey: ["products", { category, categoryId, search, page, limit, sort }],
     queryFn: async () => {
       console.log("Fetching products with options:", options);
       const result = await apiService.getProducts(options);

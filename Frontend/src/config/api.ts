@@ -243,6 +243,7 @@ export const apiService = {
   // Products
   async getProducts(params?: {
     category?: string;
+    categoryId?: string;
     search?: string;
     page?: number;
     limit?: number;

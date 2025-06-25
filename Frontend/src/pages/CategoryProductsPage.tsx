@@ -31,7 +31,7 @@ const CategoryProductsPage: React.FC = () => {
         }
         setBreadcrumbs(crumbs);
         // Fetch products filtered by category
-        const res = await apiService.getProducts({ category: id });
+        const res = await apiService.getProducts({ categoryId: id });
         setProducts(res.products);
       } catch {
         setError("Failed to load category or products");

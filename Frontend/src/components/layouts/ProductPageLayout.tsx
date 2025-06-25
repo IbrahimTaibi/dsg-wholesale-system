@@ -8,7 +8,8 @@ import { useTranslation } from "react-i18next";
 import { FilterOptions } from "../ui/SortFilter";
 
 interface ProductPageLayoutProps {
-  category: string;
+  category?: string;
+  categoryId?: string;
   icon: LucideIcon;
   title: string;
   subtitle: string;
@@ -30,6 +31,7 @@ interface ProductPageLayoutProps {
 
 export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
   category,
+  categoryId,
   icon: Icon,
   title,
   subtitle,
@@ -52,6 +54,7 @@ export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
     pagination,
   } = useProducts({
     category,
+    categoryId,
     search: searchQuery || undefined,
     limit: 20,
     sort: sortBy,
@@ -146,7 +149,7 @@ export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
                 <div className="text-8xl mb-6">{emoji}</div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   {searchQuery
-                    ? `No ${category.toLowerCase()} found`
+                    ? `No ${category?.toLowerCase() || "product"} found`
                     : emptyMessage}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
@@ -162,7 +165,7 @@ export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {filteredProducts.length}
                     </span>{" "}
-                    {category.toLowerCase()}
+                    {category?.toLowerCase() || "product"}
                   </p>
                   {pagination && pagination.pages > 1 && (
                     <p className="text-gray-600 dark:text-gray-300">

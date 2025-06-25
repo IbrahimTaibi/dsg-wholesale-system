@@ -158,7 +158,7 @@ const sampleUsers = Array.from({ length: 30 }, (_, i) => {
 
 // Generate 60 unique products with unique Unsplash photos
 const productNames = [
-  // Water
+  // Water & Beverages (12 products)
   "Premium Spring Water 500ml",
   "Mineral Water 1L",
   "Sparkling Water 330ml",
@@ -167,7 +167,12 @@ const productNames = [
   "Coconut Water 330ml",
   "Electrolyte Water 500ml",
   "Glacier Water 1.5L",
-  // Chips
+  "Natural Spring Water 1L",
+  "Mineral Sparkling Water 500ml",
+  "Purified Drinking Water 2L",
+  "Enhanced Water with Vitamins 750ml",
+
+  // Chips (12 products)
   "Classic Potato Chips",
   "BBQ Flavored Chips",
   "Sour Cream & Onion Chips",
@@ -178,7 +183,10 @@ const productNames = [
   "Sea Salt Chips",
   "Sweet Chili Chips",
   "Lime Chips",
-  // Mini Cakes
+  "Ranch Flavored Chips",
+  "Spicy Nacho Chips",
+
+  // Mini Cakes (12 products)
   "Chocolate Mini Cakes",
   "Vanilla Mini Cakes",
   "Red Velvet Mini Cakes",
@@ -187,18 +195,12 @@ const productNames = [
   "Strawberry Mini Cakes",
   "Coffee Mini Cakes",
   "Coconut Mini Cakes",
-  // Biscuits
-  "Butter Cookies",
-  "Chocolate Chip Cookies",
-  "Oatmeal Raisin Cookies",
-  "Shortbread Cookies",
-  "Peanut Butter Cookies",
-  "Sugar Cookies",
-  "Gingerbread Cookies",
-  "Macadamia Nut Cookies",
-  "Almond Biscuits",
-  "Hazelnut Biscuits",
-  // Juices
+  "Blueberry Mini Cakes",
+  "Banana Mini Cakes",
+  "Pineapple Mini Cakes",
+  "Orange Mini Cakes",
+
+  // Juices (12 products)
   "Orange Juice 1L",
   "Apple Juice 1L",
   "Grape Juice 1L",
@@ -209,7 +211,10 @@ const productNames = [
   "Lemonade 1L",
   "Peach Juice 1L",
   "Watermelon Juice 1L",
-  // Groceries
+  "Pomegranate Juice 1L",
+  "Mixed Berry Juice 1L",
+
+  // Groceries (12 products)
   "Organic Bananas 1kg",
   "Fresh Apples 1kg",
   "Ripe Tomatoes 500g",
@@ -220,8 +225,11 @@ const productNames = [
   "Fresh Garlic 250g",
   "Broccoli 500g",
   "Spinach 250g",
+  "Fresh Cucumbers 500g",
+  "Bell Peppers 500g",
 ];
 const categories = [
+  // Water & Beverages (12 products)
   "Water & Beverages",
   "Water & Beverages",
   "Water & Beverages",
@@ -230,6 +238,12 @@ const categories = [
   "Water & Beverages",
   "Water & Beverages",
   "Water & Beverages",
+  "Water & Beverages",
+  "Water & Beverages",
+  "Water & Beverages",
+  "Water & Beverages",
+
+  // Chips (12 products)
   "Chips",
   "Chips",
   "Chips",
@@ -240,24 +254,24 @@ const categories = [
   "Chips",
   "Chips",
   "Chips",
-  "Cakes",
-  "Cakes",
-  "Cakes",
-  "Cakes",
-  "Cakes",
-  "Cakes",
-  "Cakes",
-  "Cakes",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
-  "Groceries",
+  "Chips",
+  "Chips",
+
+  // Mini Cakes (12 products)
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+  "Mini Cakes",
+
+  // Juices (12 products)
   "Juices",
   "Juices",
   "Juices",
@@ -268,6 +282,12 @@ const categories = [
   "Juices",
   "Juices",
   "Juices",
+  "Juices",
+  "Juices",
+
+  // Groceries (12 products)
+  "Groceries",
+  "Groceries",
   "Groceries",
   "Groceries",
   "Groceries",
@@ -281,7 +301,7 @@ const categories = [
 ];
 const productPhotos = Array.from(
   { length: 60 },
-  (_, i) => `https://picsum.photos/400/400?random=${i}`,
+  (_, i) => `https://picsum.photos/400/400?random=${i + 100}`,
 );
 const descriptions = [
   "High quality and fresh.",
@@ -294,12 +314,65 @@ const descriptions = [
   "A must-have item.",
   "Popular choice for families.",
   "Excellent for daily use.",
+  "Fresh and nutritious.",
+  "Premium quality product.",
+  "Delicious and healthy.",
+  "Perfect for snacking.",
+  "Great value for money.",
+  "Fresh from the farm.",
+  "Organic and natural.",
+  "Rich in vitamins.",
+  "Perfect for hydration.",
+  "Refreshing and pure.",
+  "Made with care.",
+  "Premium ingredients.",
+  "Healthy choice.",
+  "Natural goodness.",
+  "Fresh and crisp.",
+  "Delicious flavor.",
+  "Perfect size.",
+  "Great for sharing.",
+  "Premium taste.",
+  "Fresh daily.",
+  "Quality guaranteed.",
+  "Natural sweetness.",
+  "Perfect balance.",
+  "Rich flavor.",
+  "Fresh ingredients.",
+  "Premium quality.",
+  "Delicious taste.",
+  "Healthy option.",
+  "Perfect portion.",
+  "Great texture.",
+  "Fresh and clean.",
+  "Premium selection.",
+  "Natural ingredients.",
+  "Perfect for everyone.",
+  "Great taste.",
+  "Fresh and pure.",
+  "Premium product.",
+  "Delicious and fresh.",
+  "Perfect choice.",
+  "Great quality.",
+  "Fresh daily.",
+  "Premium taste.",
+  "Natural goodness.",
+  "Perfect size.",
+  "Great value.",
+  "Fresh ingredients.",
+  "Premium quality.",
+  "Delicious flavor.",
+  "Perfect for any time.",
+  "Great selection.",
+  "Fresh and healthy.",
 ];
 
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect(
+      "mongodb+srv://darkmageon:Canibalixftw..1@cluster0.tuv6l9p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    );
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error("Database connection error:", error.message);
@@ -452,19 +525,37 @@ const seedProducts = async (categoryMap) => {
         console.warn("No categoryId for", categoryName);
         return null; // skip this product
       }
+
       const baseProduct = {
-        name:
-          productNames[i % productNames.length] +
-          (i >= productNames.length ? ` (${i + 1})` : ""),
+        name: productNames[i],
         categoryId, // Use ObjectId
         photo: productPhotos[i],
-        price: (Math.random() * 10 + 1).toFixed(2),
+        price: (Math.random() * 15 + 1).toFixed(2),
         stock: Math.floor(Math.random() * 200 + 10),
         description: descriptions[i % descriptions.length],
+        isAvailable: true,
       };
-      // ... (variants logic unchanged)
-      if (i % categories.length === 1) {
-        // Chips category
+
+      // Add unit and minOrderQuantity based on category
+      if (categoryName === "Water & Beverages") {
+        baseProduct.unit = "bottle";
+        baseProduct.minOrderQuantity = 6;
+      } else if (categoryName === "Chips") {
+        baseProduct.unit = "bag";
+        baseProduct.minOrderQuantity = 10;
+      } else if (categoryName === "Mini Cakes") {
+        baseProduct.unit = "piece";
+        baseProduct.minOrderQuantity = 1;
+      } else if (categoryName === "Juices") {
+        baseProduct.unit = "bottle";
+        baseProduct.minOrderQuantity = 6;
+      } else if (categoryName === "Groceries") {
+        baseProduct.unit = "kg";
+        baseProduct.minOrderQuantity = 1;
+      }
+
+      // Add variants based on category
+      if (categoryName === "Chips") {
         baseProduct.variants = [
           {
             name: "Original",
@@ -488,33 +579,31 @@ const seedProducts = async (categoryMap) => {
             isAvailable: true,
           },
         ];
-      }
-      // Mini Cakes category
-      baseProduct.variants = [
-        {
-          name: "Chocolate",
-          price: parseFloat(baseProduct.price),
-          stock: Math.floor(Math.random() * 50 + 10),
-          photo: productPhotos[i],
-          isAvailable: true,
-        },
-        {
-          name: "Vanilla",
-          price: (parseFloat(baseProduct.price) - 0.2).toFixed(2),
-          stock: Math.floor(Math.random() * 60 + 15),
-          photo: productPhotos[i],
-          isAvailable: true,
-        },
-        {
-          name: "Strawberry",
-          price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
-          stock: Math.floor(Math.random() * 40 + 8),
-          photo: productPhotos[i],
-          isAvailable: true,
-        },
-      ];
-      if (i % categories.length === 4) {
-        // Juices category
+      } else if (categoryName === "Mini Cakes") {
+        baseProduct.variants = [
+          {
+            name: "Chocolate",
+            price: parseFloat(baseProduct.price),
+            stock: Math.floor(Math.random() * 50 + 10),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "Vanilla",
+            price: (parseFloat(baseProduct.price) - 0.2).toFixed(2),
+            stock: Math.floor(Math.random() * 60 + 15),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "Strawberry",
+            price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
+            stock: Math.floor(Math.random() * 40 + 8),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+        ];
+      } else if (categoryName === "Juices") {
         baseProduct.variants = [
           {
             name: "Orange",
@@ -538,7 +627,32 @@ const seedProducts = async (categoryMap) => {
             isAvailable: true,
           },
         ];
+      } else if (categoryName === "Water & Beverages") {
+        baseProduct.variants = [
+          {
+            name: "500ml",
+            price: parseFloat(baseProduct.price),
+            stock: Math.floor(Math.random() * 150 + 50),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "1L",
+            price: (parseFloat(baseProduct.price) + 0.5).toFixed(2),
+            stock: Math.floor(Math.random() * 120 + 40),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "1.5L",
+            price: (parseFloat(baseProduct.price) + 1.0).toFixed(2),
+            stock: Math.floor(Math.random() * 100 + 30),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+        ];
       }
+
       return baseProduct;
     });
 
