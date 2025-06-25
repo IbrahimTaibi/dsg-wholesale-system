@@ -16,11 +16,6 @@ export const useNavigation = () => {
     orders: ROUTES.ADMIN_ORDERS,
     users: ROUTES.ADMIN_USERS,
     userHome: ROUTES.USER_HOME,
-    water: ROUTES.WATER,
-    juices: ROUTES.JUICES,
-    cakes: ROUTES.CAKES,
-    chips: ROUTES.CHIPS,
-    groceries: ROUTES.GROCERIES,
     categories: "/categories",
   };
 

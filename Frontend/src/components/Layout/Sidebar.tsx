@@ -2,17 +2,22 @@ import React from "react";
 import { X } from "lucide-react";
 import { useUI } from "../../contexts/UIContext";
 import { useAuth } from "../../hooks/useAuth";
+import { useCategories } from "../../hooks/useCategories";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { MENU_ITEMS } from "../../config/constants";
 import { BRANDING } from "../../config/branding";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import PublicIcon from "@mui/icons-material/Public";
+import { useNavigation } from "../../hooks/useNavigation";
+import { Package2 } from "lucide-react";
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useUI();
   const { user } = useAuth();
+  const { categories, loading: categoriesLoading } = useCategories();
   const { t, i18n } = useTranslation();
+  const { navigateToRoute } = useNavigation();
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
 
   // Filter menu items based on user role
@@ -22,6 +27,10 @@ export const Sidebar: React.FC = () => {
     }
     return true; // Show all non-admin items
   });
+
+  const handleCategoryClick = (categoryId: string) => {
+    navigateToRoute(`/categories/${categoryId}`);
+  };
 
   return (
     <>
@@ -73,6 +82,72 @@ export const Sidebar: React.FC = () => {
             {filteredMenuItems.map((item) => (
               <SidebarMenuItem key={item.id} item={item} />
             ))}
+
+            {/* Categories Section */}
+            {!categoriesLoading && categories.length > 0 && (
+              <>
+                {/* Categories Header */}
+                <div className="pt-6 pb-2">
+                  <h3 className="text-white/70 text-xs font-semibold uppercase tracking-wider px-4">
+                    {t("categories")}
+                  </h3>
+                  <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mt-2"></div>
+                </div>
+
+                {/* Category Items */}
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category._id}
+                      onClick={() => handleCategoryClick(category._id)}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-left
+                        transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
+                        text-white/80 hover:text-white hover:bg-white/10 hover:transform hover:scale-100 
+                        border border-transparent hover:border-white/15"
+                      aria-label={`Navigate to ${category.name}`}>
+                      {/* Content */}
+                      <div className="relative z-10 flex items-center gap-3 w-full">
+                        {/* Icon container */}
+                        <div className="transition-all duration-300 relative flex items-center justify-center">
+                          <Package2
+                            size={18}
+                            strokeWidth={2}
+                            className="transition-all duration-300 drop-shadow-sm text-white/80 group-hover:text-white group-hover:scale-110"
+                          />
+                        </div>
+
+                        <span className="font-medium text-sm transition-all duration-300 tracking-normal text-white/85 group-hover:text-white">
+                          {category.name}
+                        </span>
+                      </div>
+
+                      {/* Hover glow effect */}
+                      <div
+                        className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
+                        bg-gradient-to-r from-white/5 via-white/10 to-transparent opacity-0 group-hover:opacity-100"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Loading state for categories */}
+            {categoriesLoading && (
+              <div className="pt-6 pb-2">
+                <h3 className="text-white/70 text-xs font-semibold uppercase tracking-wider px-4">
+                  {t("categories")}
+                </h3>
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mt-2"></div>
+                <div className="space-y-2 mt-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="px-4 py-2.5">
+                      <div className="h-4 bg-white/10 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </nav>
 
           {/* Mobile-only: Language and Theme toggles at the bottom */}

@@ -15,31 +15,6 @@ export const MENU_ITEMS: MenuItem[] = [
   { id: "userHome", text: "Home", icon: "Home", category: "main" },
   { id: "dashboard", text: "Dashboard", icon: "Grid3x3", category: "admin" },
   {
-    id: "water",
-    text: "Water & Beverages",
-    icon: "Droplets",
-    category: "products",
-  },
-  {
-    id: "juices",
-    text: "Premium Juices",
-    icon: "Package2",
-    category: "products",
-  },
-  { id: "cakes", text: "Mini Cakes", icon: "Cookie", category: "products" },
-  {
-    id: "chips",
-    text: "Chips & Snacks",
-    icon: "Package2",
-    category: "products",
-  },
-  {
-    id: "groceries",
-    text: "Groceries",
-    icon: "ShoppingCart",
-    category: "products",
-  },
-  {
     id: "categories",
     text: "Categories",
     icon: "Grid3x3",
