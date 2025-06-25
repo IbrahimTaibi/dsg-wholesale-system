@@ -296,99 +296,6 @@ const descriptions = [
   "Excellent for daily use.",
 ];
 
-const sampleProducts = Array.from({ length: 60 }, (_, i) => {
-  const baseProduct = {
-    name:
-      productNames[i % productNames.length] +
-      (i >= productNames.length ? ` (${i + 1})` : ""),
-    category: categories[i % categories.length],
-    photo: productPhotos[i],
-    price: (Math.random() * 10 + 1).toFixed(2),
-    stock: Math.floor(Math.random() * 200 + 10),
-    description: descriptions[i % descriptions.length],
-  };
-
-  // Add variants to specific product types
-  if (i % categories.length === 1) {
-    // Chips category
-    baseProduct.variants = [
-      {
-        name: "Original",
-        price: parseFloat(baseProduct.price),
-        stock: Math.floor(Math.random() * 100 + 20),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-      {
-        name: "Spicy",
-        price: (parseFloat(baseProduct.price) + 0.5).toFixed(2),
-        stock: Math.floor(Math.random() * 80 + 15),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-      {
-        name: "Cheese",
-        price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
-        stock: Math.floor(Math.random() * 90 + 10),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-    ];
-  } else if (i % categories.length === 2) {
-    // Mini Cakes category
-    baseProduct.variants = [
-      {
-        name: "Chocolate",
-        price: parseFloat(baseProduct.price),
-        stock: Math.floor(Math.random() * 50 + 10),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-      {
-        name: "Vanilla",
-        price: (parseFloat(baseProduct.price) - 0.2).toFixed(2),
-        stock: Math.floor(Math.random() * 60 + 15),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-      {
-        name: "Strawberry",
-        price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
-        stock: Math.floor(Math.random() * 40 + 8),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-    ];
-  } else if (i % categories.length === 4) {
-    // Juices category
-    baseProduct.variants = [
-      {
-        name: "Orange",
-        price: parseFloat(baseProduct.price),
-        stock: Math.floor(Math.random() * 100 + 30),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-      {
-        name: "Apple",
-        price: (parseFloat(baseProduct.price) - 0.1).toFixed(2),
-        stock: Math.floor(Math.random() * 120 + 25),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-      {
-        name: "Grape",
-        price: (parseFloat(baseProduct.price) + 0.2).toFixed(2),
-        stock: Math.floor(Math.random() * 80 + 20),
-        photo: productPhotos[i],
-        isAvailable: true,
-      },
-    ];
-  }
-
-  return baseProduct;
-});
-
 // Connect to MongoDB
 const connectDB = async () => {
   try {
@@ -425,16 +332,219 @@ const seedUsers = async () => {
   }
 };
 
-// Seed products
-const seedProducts = async () => {
+// Seed categories
+const seedCategories = async () => {
   try {
-    // Clear existing products
+    // Clear existing categories
+    await Category.deleteMany({});
+    console.log("Cleared existing categories");
+
+    const mainCategories = [
+      {
+        name: "Water & Beverages",
+        parent: null,
+        variants: ["500ml", "1L", "1.5L", "2L"],
+      },
+      {
+        name: "Juices",
+        parent: null,
+        variants: ["Orange", "Apple", "Grape", "Pineapple", "Mango"],
+      },
+      {
+        name: "Mini Cakes",
+        parent: null,
+        variants: ["Chocolate", "Vanilla", "Red Velvet", "Carrot", "Lemon"],
+      },
+      {
+        name: "Chips",
+        parent: null,
+        variants: ["Original", "BBQ", "Sour Cream & Onion", "Salt & Vinegar"],
+      },
+      {
+        name: "Groceries",
+        parent: null,
+        variants: ["Organic", "Fresh", "Frozen", "Canned"],
+      },
+    ];
+
+    const createdMainCategories = await Category.insertMany(mainCategories);
+    console.log(`Created ${createdMainCategories.length} main categories`);
+
+    // Create some subcategories
+    const subcategories = [
+      {
+        name: "Spring Water",
+        parent: createdMainCategories[0]._id, // Water & Beverages
+        variants: ["Natural", "Mineral", "Alkaline"],
+      },
+      {
+        name: "Sparkling Water",
+        parent: createdMainCategories[0]._id, // Water & Beverages
+        variants: ["Plain", "Lemon", "Lime", "Berry"],
+      },
+      {
+        name: "Fresh Fruits",
+        parent: createdMainCategories[4]._id, // Groceries
+        variants: ["Bananas", "Apples", "Oranges", "Berries"],
+      },
+      {
+        name: "Fresh Vegetables",
+        parent: createdMainCategories[4]._id, // Groceries
+        variants: ["Tomatoes", "Lettuce", "Carrots", "Onions"],
+      },
+    ];
+
+    const createdSubcategories = await Category.insertMany(subcategories);
+    console.log(`Created ${createdSubcategories.length} subcategories`);
+
+    return [...createdMainCategories, ...createdSubcategories];
+  } catch (error) {
+    console.error("Error seeding categories:", error);
+    throw error;
+  }
+};
+
+// Main seeding function
+const seedDatabase = async () => {
+  try {
+    await connectDB();
+
+    console.log("Starting database seeding...");
+
+    const users = await seedUsers();
+    const categories = await seedCategories();
+    // Build category name -> ObjectId map
+    const allCategories = await Category.find();
+    const categoryMap = {};
+    allCategories.forEach((cat) => {
+      categoryMap[cat.name] = cat._id;
+    });
+    const products = await seedProducts(categoryMap);
+    await seedOrders(users, products);
+
+    console.log("Database seeding completed successfully!");
+    console.log("\nSample login credentials:");
+    console.log("Admin: +15550000000 / password123");
+    console.log(
+      "Users: +15550000001, +15550000002, +15550000003 / password123",
+    );
+    console.log(
+      `\nCreated ${users.length} users, ${categories.length} categories, and ${products.length} products`,
+    );
+
+    process.exit(0);
+  } catch (error) {
+    console.error("Seeding failed:", error);
+    process.exit(1);
+  }
+};
+
+// Update seedProducts to accept categoryMap
+const seedProducts = async (categoryMap) => {
+  try {
     await Product.deleteMany({});
     console.log("Cleared existing products");
 
-    const createdProducts = await Product.insertMany(sampleProducts);
-    console.log(`Created ${createdProducts.length} products`);
+    const sampleProducts = Array.from({ length: 60 }, (_, i) => {
+      const categoryName = categories[i % categories.length];
+      const categoryId = categoryMap[categoryName];
+      if (!categoryId) {
+        console.warn("No categoryId for", categoryName);
+        return null; // skip this product
+      }
+      const baseProduct = {
+        name:
+          productNames[i % productNames.length] +
+          (i >= productNames.length ? ` (${i + 1})` : ""),
+        categoryId, // Use ObjectId
+        photo: productPhotos[i],
+        price: (Math.random() * 10 + 1).toFixed(2),
+        stock: Math.floor(Math.random() * 200 + 10),
+        description: descriptions[i % descriptions.length],
+      };
+      // ... (variants logic unchanged)
+      if (i % categories.length === 1) {
+        // Chips category
+        baseProduct.variants = [
+          {
+            name: "Original",
+            price: parseFloat(baseProduct.price),
+            stock: Math.floor(Math.random() * 100 + 20),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "Spicy",
+            price: (parseFloat(baseProduct.price) + 0.5).toFixed(2),
+            stock: Math.floor(Math.random() * 80 + 15),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "Cheese",
+            price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
+            stock: Math.floor(Math.random() * 90 + 10),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+        ];
+      }
+      // Mini Cakes category
+      baseProduct.variants = [
+        {
+          name: "Chocolate",
+          price: parseFloat(baseProduct.price),
+          stock: Math.floor(Math.random() * 50 + 10),
+          photo: productPhotos[i],
+          isAvailable: true,
+        },
+        {
+          name: "Vanilla",
+          price: (parseFloat(baseProduct.price) - 0.2).toFixed(2),
+          stock: Math.floor(Math.random() * 60 + 15),
+          photo: productPhotos[i],
+          isAvailable: true,
+        },
+        {
+          name: "Strawberry",
+          price: (parseFloat(baseProduct.price) + 0.3).toFixed(2),
+          stock: Math.floor(Math.random() * 40 + 8),
+          photo: productPhotos[i],
+          isAvailable: true,
+        },
+      ];
+      if (i % categories.length === 4) {
+        // Juices category
+        baseProduct.variants = [
+          {
+            name: "Orange",
+            price: parseFloat(baseProduct.price),
+            stock: Math.floor(Math.random() * 100 + 30),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "Apple",
+            price: (parseFloat(baseProduct.price) - 0.1).toFixed(2),
+            stock: Math.floor(Math.random() * 120 + 25),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+          {
+            name: "Grape",
+            price: (parseFloat(baseProduct.price) + 0.2).toFixed(2),
+            stock: Math.floor(Math.random() * 80 + 20),
+            photo: productPhotos[i],
+            isAvailable: true,
+          },
+        ];
+      }
+      return baseProduct;
+    });
 
+    const filteredProducts = sampleProducts.filter(Boolean);
+    const createdProducts = await Product.insertMany(filteredProducts);
+    console.log(`Created ${createdProducts.length} products`);
     return createdProducts;
   } catch (error) {
     console.error("Error seeding products:", error);
@@ -603,37 +713,6 @@ const seedOrders = async (users, products) => {
   }
 };
 
-// Main seeding function
-const seedDatabase = async () => {
-  try {
-    await connectDB();
-
-    console.log("Starting database seeding...");
-
-    const users = await seedUsers();
-    const products = await seedProducts();
-    await seedOrders(users, products);
-
-    console.log("Database seeding completed successfully!");
-    console.log("\nSample login credentials:");
-    console.log("Admin: +15550000000 / password123");
-    console.log(
-      "Users: +15550000001, +15550000002, +15550000003 / password123",
-    );
-    console.log(
-      `\nCreated ${users.length} users and ${products.length} products`,
-    );
-
-    process.exit(0);
-  } catch (error) {
-    console.error("Seeding failed:", error);
-    process.exit(1);
-  }
-};
-
-// Run the seeding
-seedDatabase();
-
 // MIGRATION: Convert old categories to recursive structure
 async function migrateCategories() {
   await mongoose.connect("mongodb://localhost:27017/YOUR_DB_NAME"); // <-- Set your DB name
@@ -669,6 +748,9 @@ async function migrateCategories() {
 }
 
 // Only run if called directly
-if (require.main === module) {
-  migrateCategories();
-}
+// if (require.main === module) {
+//   migrateCategories();
+// }
+
+// Run the seeding
+seedDatabase();

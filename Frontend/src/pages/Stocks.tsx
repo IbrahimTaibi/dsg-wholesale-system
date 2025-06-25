@@ -91,15 +91,6 @@ interface ProductFormData {
   sizes: string[];
 }
 
-const MAIN_CATEGORIES = [
-  "Groceries",
-  "Water",
-  "Mini Cakes",
-  "Chocolate",
-  "Chips",
-  "Juice",
-];
-
 const StocksManagementPage: React.FC = () => {
   const { user: currentUser } = useAuth();
   const { t } = useTranslation();
@@ -201,8 +192,14 @@ const StocksManagementPage: React.FC = () => {
   useEffect(() => {
     apiService
       .getAllCategories()
-      .then(setCategories)
-      .catch(() => setCategories([]));
+      .then((cats) => {
+        console.log("Loaded categories:", cats);
+        setCategories(cats);
+      })
+      .catch((error) => {
+        console.error("Error loading categories:", error);
+        setCategories([]);
+      });
   }, []);
 
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -268,7 +265,7 @@ const StocksManagementPage: React.FC = () => {
     try {
       const payload = {
         name: formData.name,
-        categoryId: selectedSubcategoryId || undefined,
+        categoryId: selectedSubcategoryId || selectedMainCategory,
         price: formData.price,
         stock: formData.stockQuantity,
         description: formData.description,
@@ -772,35 +769,77 @@ const StocksManagementPage: React.FC = () => {
                     }}
                     label="Main Category"
                     error={!selectedMainCategory}>
-                    {MAIN_CATEGORIES.map((main) => (
-                      <MenuItem key={main} value={main}>
-                        {main}
-                      </MenuItem>
-                    ))}
+                    {categories.filter((cat) => cat.parent === null).length >
+                    0 ? (
+                      categories
+                        .filter((cat) => cat.parent === null) // Show only top-level categories
+                        .map((main) => (
+                          <MenuItem key={main._id} value={main._id}>
+                            {main.name}
+                          </MenuItem>
+                        ))
+                    ) : (
+                      <MenuItem disabled>No categories available</MenuItem>
+                    )}
                   </Select>
                 </FormControl>
+                {(() => {
+                  console.log(
+                    "selectedMainCategory value:",
+                    selectedMainCategory,
+                  );
+                  console.log(
+                    "selectedMainCategory truthy check:",
+                    !!selectedMainCategory,
+                  );
+                  return null;
+                })()}
                 {selectedMainCategory && (
-                  <FormControl fullWidth required sx={{ mb: 2 }}>
-                    <InputLabel>Subcategory</InputLabel>
-                    <Select
-                      value={selectedSubcategoryId}
-                      onChange={(e) => {
-                        setSelectedSubcategoryId(e.target.value);
-                        setSelectedVariant("");
-                      }}
-                      label="Subcategory"
-                      error={!selectedSubcategoryId}>
-                      {categories
-                        .filter(
-                          (cat) => cat.parentCategory === selectedMainCategory,
-                        )
-                        .map((cat) => (
-                          <MenuItem key={cat._id} value={cat._id}>
-                            {cat.name}
+                  <>
+                    {(() => {
+                      console.log(
+                        "Selected main category:",
+                        selectedMainCategory,
+                      );
+                      console.log(
+                        "Categories:",
+                        categories.map((c) => ({
+                          name: c.name,
+                          _id: c._id,
+                          parent: c.parent,
+                        })),
+                      );
+                      return null;
+                    })()}
+                    <FormControl fullWidth sx={{ mb: 2 }}>
+                      <InputLabel>Subcategory (Optional)</InputLabel>
+                      <Select
+                        value={selectedSubcategoryId}
+                        onChange={(e) => {
+                          setSelectedSubcategoryId(e.target.value);
+                          setSelectedVariant("");
+                        }}
+                        label="Subcategory (Optional)">
+                        {categories.filter(
+                          (cat) => cat.parent === selectedMainCategory,
+                        ).length > 0 ? (
+                          categories
+                            .filter(
+                              (cat) => cat.parent === selectedMainCategory,
+                            )
+                            .map((cat) => (
+                              <MenuItem key={cat._id} value={cat._id}>
+                                {cat.name}
+                              </MenuItem>
+                            ))
+                        ) : (
+                          <MenuItem disabled>
+                            No subcategories available
                           </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
+                        )}
+                      </Select>
+                    </FormControl>
+                  </>
                 )}
                 {selectedSubcategoryId && (
                   <FormControl fullWidth sx={{ mb: 2 }}>
@@ -995,7 +1034,6 @@ const StocksManagementPage: React.FC = () => {
                 actionLoading ||
                 !formData.name ||
                 !selectedMainCategory ||
-                !selectedSubcategoryId ||
                 formData.price <= 0 ||
                 formData.stockQuantity < 0
               }>
