@@ -247,9 +247,8 @@ export const Sidebar: React.FC = () => {
                       <button
                         onClick={toggleShowAllCategories}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-left
-                          transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
-                          text-white/60 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/15
-                          mt-2"
+                          transition-all duration-300 group relative overflow-hidden
+                          text-white/60 hover:text-white mt-2"
                         aria-label={
                           showAllCategories
                             ? "Show less categories"
