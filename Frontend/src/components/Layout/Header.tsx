@@ -19,7 +19,13 @@ import PublicIcon from "@mui/icons-material/Public";
 // Header component for the main app navigation and user controls
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
-  const { setShowAuthModal, toggleSidebar, setHeaderHeight } = useUI();
+  const {
+    setShowAuthModal,
+    toggleSidebar,
+    setHeaderHeight,
+    searchQuery,
+    setSearchQuery,
+  } = useUI();
   const [cartOpen, setCartOpen] = React.useState(false);
   const navigate = useNavigate();
   const headerRef = useRef<HTMLElement>(null);
@@ -280,7 +286,11 @@ export const Header: React.FC = () => {
 
           {/* Center - Search Bar (hidden on very small screens) */}
           <div className="hidden sm:flex flex-1 max-w-md mx-4">
-            <SearchBar />
+            <SearchBar
+              value={searchQuery}
+              onSearch={setSearchQuery}
+              placeholder="Search products..."
+            />
           </div>
 
           {/* Right side - Auth and Theme toggle */}
@@ -354,7 +364,11 @@ export const Header: React.FC = () => {
         {/* Mobile Search Bar (collapsible, shown below header on small screens) */}
         {showMobileSearch && (
           <div className="sm:hidden px-2 pb-3 animate-fade-in">
-            <SearchBar />
+            <SearchBar
+              value={searchQuery}
+              onSearch={setSearchQuery}
+              placeholder="Search products..."
+            />
           </div>
         )}
 

@@ -9,6 +9,7 @@ interface SearchSortFilterProps {
   currentSort: string;
   currentFilters: FilterOptions;
   filterBadgeTheme: string;
+  searchValue: string;
 }
 
 export const SearchSortFilter: React.FC<SearchSortFilterProps> = ({
@@ -18,6 +19,7 @@ export const SearchSortFilter: React.FC<SearchSortFilterProps> = ({
   currentSort,
   currentFilters,
   filterBadgeTheme,
+  searchValue,
 }) => {
   return (
     <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 mb-8 relative z-20">
@@ -27,7 +29,7 @@ export const SearchSortFilter: React.FC<SearchSortFilterProps> = ({
           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Search Products
           </label>
-          <SearchBar onSearch={onSearchChange} />
+          <SearchBar onSearch={onSearchChange} value={searchValue} />
         </div>
 
         {/* Sort and Filter Controls */}

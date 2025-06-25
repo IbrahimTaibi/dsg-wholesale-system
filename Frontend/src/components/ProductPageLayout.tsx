@@ -104,6 +104,7 @@ export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
           currentSort={sortBy}
           currentFilters={filters}
           filterBadgeTheme={theme.filterBadge}
+          searchValue={searchQuery}
         />
 
         {/* Loading State */}
