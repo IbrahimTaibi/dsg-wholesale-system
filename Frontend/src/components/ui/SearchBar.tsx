@@ -2,14 +2,12 @@ import React from "react";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/RouteManager";
-import { useDebounce } from "../../hooks";
 
 interface SearchBarProps {
   onSearch?: (query: string) => void;
   value?: string;
   placeholder?: string;
   onSearchSubmit?: (query: string) => void;
-  debounceMs?: number;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -17,10 +15,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   value = "",
   placeholder = "Search water, juice, cakes, chips, groceries...",
   onSearchSubmit,
-  debounceMs = 300,
 }) => {
   const navigate = useNavigate();
-  const debouncedValue = useDebounce(value, debounceMs);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -41,13 +37,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       }
     }
   };
-
-  // Trigger search on debounced value change
-  React.useEffect(() => {
-    if (onSearch && debouncedValue !== value) {
-      onSearch(debouncedValue);
-    }
-  }, [debouncedValue, onSearch, value]);
 
   return (
     <div className="w-full">

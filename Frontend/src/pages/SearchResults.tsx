@@ -5,19 +5,23 @@ import { useProducts } from "../hooks";
 import { mapApiProductToProduct, Product } from "../types";
 import { useUI } from "../contexts/UIContext";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../hooks";
 
 export const SearchResults: React.FC = () => {
   const { searchQuery, setSearchQuery } = useUI();
   const navigate = useNavigate();
 
-  // Use the global search query from UI context
+  // Use debounced search query to prevent excessive API calls
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  // Use the debounced search query from UI context
   const {
     products: apiProducts,
     loading,
     error,
     pagination,
   } = useProducts({
-    search: searchQuery || undefined,
+    search: debouncedSearchQuery || undefined,
     limit: 20,
     sort: "createdAt",
   });

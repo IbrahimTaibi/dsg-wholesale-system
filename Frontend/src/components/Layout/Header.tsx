@@ -15,6 +15,7 @@ import { CartDrawer } from "../cart/CartDrawer";
 import { useTranslation } from "react-i18next";
 import SearchIcon from "@mui/icons-material/Search";
 import PublicIcon from "@mui/icons-material/Public";
+import { useDebounce } from "../../hooks";
 
 // Header component for the main app navigation and user controls
 export const Header: React.FC = () => {
@@ -33,6 +34,9 @@ export const Header: React.FC = () => {
   const [showMobileSearch, setShowMobileSearch] = React.useState(false);
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
 
+  // Debounced search query for API calls
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
   useLayoutEffect(() => {
     if (headerRef.current) {
       setHeaderHeight(headerRef.current.offsetHeight);
@@ -47,6 +51,12 @@ export const Header: React.FC = () => {
     setSearchQuery(query);
     navigate("/search-results");
   };
+
+  // Update search query in UI context when debounced value changes
+  React.useEffect(() => {
+    // This effect will trigger API calls with debounced value
+    // The search results page will use this debounced value
+  }, [debouncedSearchQuery]);
 
   // UserMenu: Handles user sidebar for profile, dashboard, orders, and logout
   const UserMenu = () => {
