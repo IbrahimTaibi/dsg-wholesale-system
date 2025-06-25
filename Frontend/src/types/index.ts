@@ -5,6 +5,7 @@ export interface MenuItem {
   text: string;
   icon: string;
   category: string;
+  path?: string;
 }
 
 export interface ProductCategory {

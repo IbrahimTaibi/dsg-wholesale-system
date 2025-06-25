@@ -39,6 +39,13 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: "ShoppingCart",
     category: "products",
   },
+  {
+    id: "categories",
+    text: "Categories",
+    icon: "Grid3x3",
+    category: "admin",
+    path: "/categories",
+  },
 ];
 
 export const PRODUCT_CATEGORIES: Record<string, ProductCategory> = {
