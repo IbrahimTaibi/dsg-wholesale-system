@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TreeView } from "@mui/x-tree-view/TreeView";
+// @ts-expect-error MUI X TreeView v8: missing type declarations for TreeView
+import TreeView from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useNavigate } from "react-router-dom";
 import { apiService, Category } from "../../config/api";
@@ -37,11 +38,7 @@ const CategoryTree: React.FC = () => {
   const tree = buildCategoryTree(categories);
 
   const renderTree = (nodes: CategoryNode) => (
-    <TreeItem
-      key={nodes._id}
-      nodeId={nodes._id}
-      label={nodes.name}
-      onLabelClick={() => navigate(`/categories/${nodes._id}`)}>
+    <TreeItem key={nodes._id} itemId={nodes._id} label={nodes.name}>
       {nodes.children.map((node) => renderTree(node))}
     </TreeItem>
   );
@@ -51,7 +48,10 @@ const CategoryTree: React.FC = () => {
   return (
     <TreeView
       defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}>
+      defaultExpandIcon={<ChevronRightIcon />}
+      onItemClick={(_event: React.MouseEvent, id: string) =>
+        navigate(`/categories/${id}`)
+      }>
       {tree.map((node) => renderTree(node))}
     </TreeView>
   );
