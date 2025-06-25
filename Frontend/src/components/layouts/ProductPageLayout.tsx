@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Loader2, LucideIcon } from "lucide-react";
-import { SearchSortFilter } from "./index";
-import { ProductItem } from "./products/ProductItem";
-import { useProducts } from "../hooks";
-import { mapApiProductToProduct, Product } from "../types";
+import { SearchSortFilter } from "../ui/SearchSortFilter";
+import { ProductItem } from "../products/ProductItem";
+import { useProducts } from "../../hooks";
+import { mapApiProductToProduct, Product } from "../../types";
 import { useTranslation } from "react-i18next";
-import { FilterOptions } from "./ui/SortFilter";
+import { FilterOptions } from "../ui/SortFilter";
 
 interface ProductPageLayoutProps {
   category: string;

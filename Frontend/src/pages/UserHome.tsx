@@ -20,7 +20,7 @@ import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
 import { Link } from "react-router-dom";
 import { PRODUCT_CATEGORIES, ICON_MAP } from "../config/constants";
 import { useTheme } from "@mui/material/styles";
-import AnimatedDSG from "../components/AnimatedDSG";
+import AnimatedDSG from "../components/ui/AnimatedDSG";
 
 const categoryRoutes: { [key: string]: string } = {
   waterAndBeverages: "/water",

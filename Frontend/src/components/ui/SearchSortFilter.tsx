@@ -1,6 +1,7 @@
 import React from "react";
-import { SearchBar, SortFilter } from "./index";
-import { FilterOptions } from "./ui/SortFilter";
+import { SearchBar } from "./SearchBar";
+import { SortFilter } from "./SortFilter";
+import { FilterOptions } from "./SortFilter";
 
 interface SearchSortFilterProps {
   onSearchChange: (query: string) => void;

@@ -17,14 +17,17 @@ export { MainContent } from "./Layout/MainContent";
 export { Sidebar } from "./Layout/Sidebar";
 export { SidebarMenuItem } from "./Layout/SidebarMenuItem";
 
+// Layouts
+export { ProductPageLayout } from "./layouts/ProductPageLayout";
+
 // Products
 export { ProductCard } from "./products/ProductCard";
 export { ProductItem } from "./products/ProductItem";
-export { ProductPageLayout } from "./ProductPageLayout";
 
 // UI
+export { default as AnimatedDSG } from "./ui/AnimatedDSG";
 export { SearchBar } from "./ui/SearchBar";
 export { SearchSuggestions } from "./ui/SearchSuggestions";
+export { SearchSortFilter } from "./ui/SearchSortFilter";
 export { ThemeToggle } from "./ui/ThemeToggle";
 export { SortFilter } from "./ui/SortFilter";
-export { SearchSortFilter } from "./SearchSortFilter";
