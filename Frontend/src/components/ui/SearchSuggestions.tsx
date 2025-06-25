@@ -22,19 +22,8 @@ export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   const handleProductClick = (product: Product) => {
     onSelectSuggestion(product);
 
-    // Navigate to the appropriate category page for the product
-    const categoryRoutes: { [key: string]: string } = {
-      "Water & Beverages": "/water",
-      Juices: "/juices",
-      Cakes: "/cakes",
-      Chips: "/chips",
-      Groceries: "/groceries",
-    };
-
-    const route = categoryRoutes[product.category];
-    if (route) {
-      navigate(route);
-    }
+    // Navigate directly to the product detail page
+    navigate(`/product/${product.id}`);
   };
 
   return (
