@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../routes/RouteManager";
+import { SearchSuggestions } from "./SearchSuggestions";
+import { useSearchSuggestions } from "../../hooks";
 
 interface SearchBarProps {
   onSearch?: (query: string) => void;
   value?: string;
   placeholder?: string;
   onSearchSubmit?: (query: string) => void;
+  showSuggestions?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -15,8 +18,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   value = "",
   placeholder = "Search water, juice, cakes, chips, groceries...",
   onSearchSubmit,
+  showSuggestions = true,
 }) => {
   const navigate = useNavigate();
+  const searchBarRef = useRef<HTMLDivElement>(null);
+
+  // Use search suggestions hook
+  const { suggestions, isVisible, hideSuggestions } = useSearchSuggestions({
+    query: value,
+    limit: 5,
+    minQueryLength: 2,
+    debounceMs: 300,
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -29,6 +42,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     e.preventDefault();
     const query = value.trim();
     if (query) {
+      hideSuggestions();
       if (onSearchSubmit) {
         onSearchSubmit(query);
       } else {
@@ -38,8 +52,30 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
+  const handleSuggestionSelect = () => {
+    hideSuggestions();
+    // The suggestion component will handle navigation
+  };
+
+  // Hide suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target as Node)
+      ) {
+        hideSuggestions();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [hideSuggestions]);
+
   return (
-    <div className="w-full">
+    <div className="w-full relative" ref={searchBarRef}>
       <form onSubmit={handleSubmit} className="relative">
         <Search
           className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-white/70"
@@ -59,6 +95,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <Search size={18} />
         </button>
       </form>
+
+      {/* Search Suggestions */}
+      {showSuggestions && (
+        <SearchSuggestions
+          suggestions={suggestions}
+          visible={isVisible}
+          onSelectSuggestion={handleSuggestionSelect}
+        />
+      )}
     </div>
   );
 };

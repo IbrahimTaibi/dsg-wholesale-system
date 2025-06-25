@@ -29,7 +29,11 @@ export const SearchSortFilter: React.FC<SearchSortFilterProps> = ({
           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Search Products
           </label>
-          <SearchBar onSearch={onSearchChange} value={searchValue} />
+          <SearchBar
+            onSearch={onSearchChange}
+            value={searchValue}
+            showSuggestions={false}
+          />
         </div>
 
         {/* Sort and Filter Controls */}
