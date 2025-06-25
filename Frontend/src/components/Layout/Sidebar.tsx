@@ -230,47 +230,54 @@ export const Sidebar: React.FC = () => {
                     );
                   })}
 
+                  {/* Fade overlay for seamless effect */}
+                  {!showAllCategories && rootCategories.length > 3 && (
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 pointer-events-none z-10" />
+                  )}
+
                   {/* Show More/Less Button */}
                   {rootCategories.length > 3 && (
-                    <>
-                      {/* Arrow indicator only */}
-                      {!showAllCategories && (
-                        <div className="flex justify-end pr-4 mb-1">
-                          <div className="text-white/40">
-                            <ChevronDown size={16} strokeWidth={2} />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Show More/Less Button - positioned outside fade effect */}
+                    <div className="relative z-20 mt-2">
                       <button
                         onClick={toggleShowAllCategories}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-left
-                          transition-all duration-300 group relative overflow-hidden
-                          text-white/60 hover:text-white mt-2"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-left
+                          transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
+                          text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-100 
+                          border border-transparent hover:border-white/10"
                         aria-label={
                           showAllCategories
                             ? "Show less categories"
                             : "Show more categories"
                         }>
-                        <span className="text-xs font-medium">
-                          {showAllCategories ? t("showLess") : t("showMore")}
-                        </span>
-                        {showAllCategories ? (
-                          <ChevronDown
-                            size={14}
-                            strokeWidth={2}
-                            className="transition-transform duration-300"
-                          />
-                        ) : (
-                          <ChevronDown
-                            size={14}
-                            strokeWidth={2}
-                            className="transition-transform duration-300"
-                          />
-                        )}
+                        {/* Content */}
+                        <div className="relative z-10 flex items-center gap-2">
+                          <span className="text-xs font-medium">
+                            {showAllCategories ? t("showLess") : t("showMore")}
+                          </span>
+                          <div className="transition-transform duration-300 group-hover:scale-110">
+                            {showAllCategories ? (
+                              <ChevronDown
+                                size={14}
+                                strokeWidth={2}
+                                className="transition-transform duration-300"
+                              />
+                            ) : (
+                              <ChevronDown
+                                size={14}
+                                strokeWidth={2}
+                                className="transition-transform duration-300"
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Hover glow effect */}
+                        <div
+                          className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
+                          bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100"
+                        />
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
               </>
