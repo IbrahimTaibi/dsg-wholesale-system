@@ -224,7 +224,7 @@ export interface AnalyticsData {
 
 export interface Category {
   _id: string;
-  parentCategory: string;
+  parent: string | null;
   name: string;
   variants: string[];
 }
@@ -621,25 +621,25 @@ export const apiService = {
   },
 
   async getAllCategories(): Promise<Category[]> {
-    const response = await api.get("/categories");
-    return response.data.categories || response.data;
+    const res = await api.get("/categories");
+    return res.data.categories;
   },
 
   async createCategory(data: {
-    parentCategory: string;
+    parent: string | null;
     name: string;
     variants: string[];
   }): Promise<Category> {
-    const response = await api.post("/categories", data);
-    return response.data.category || response.data;
+    const res = await api.post("/categories", data);
+    return res.data.category;
   },
 
   async updateCategory(
     id: string,
-    data: { parentCategory: string; name: string; variants: string[] },
+    data: { parent: string | null; name: string; variants: string[] },
   ): Promise<Category> {
-    const response = await api.put(`/categories/${id}`, data);
-    return response.data.category || response.data;
+    const res = await api.put(`/categories/${id}`, data);
+    return res.data.category;
   },
 
   async deleteCategory(id: string): Promise<void> {

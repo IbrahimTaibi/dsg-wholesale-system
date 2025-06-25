@@ -15,8 +15,8 @@ router.get("/", async (req, res, next) => {
 // POST /api/categories - Create a new category
 router.post("/", async (req, res, next) => {
   try {
-    const { parentCategory, name, variants } = req.body;
-    const category = new Category({ parentCategory, name, variants });
+    const { parent, name, variants } = req.body;
+    const category = new Category({ parent: parent || null, name, variants });
     await category.save();
     res.status(201).json({ category });
   } catch (err) {
@@ -27,10 +27,10 @@ router.post("/", async (req, res, next) => {
 // PUT /api/categories/:id - Update a category
 router.put("/:id", async (req, res, next) => {
   try {
-    const { parentCategory, name, variants } = req.body;
+    const { parent, name, variants } = req.body;
     const category = await Category.findByIdAndUpdate(
       req.params.id,
-      { parentCategory, name, variants },
+      { parent: parent || null, name, variants },
       { new: true, runValidators: true },
     );
     if (!category) {

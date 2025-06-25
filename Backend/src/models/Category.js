@@ -1,31 +1,17 @@
 const mongoose = require("mongoose");
 
-const MAIN_CATEGORIES = [
-  "Groceries",
-  "Water",
-  "Mini Cakes",
-  "Chocolate",
-  "Chips",
-  "Juice",
-];
-
 const categorySchema = new mongoose.Schema(
   {
-    parentCategory: {
-      type: String,
-      enum: {
-        values: MAIN_CATEGORIES,
-        message: `Parent category must be one of: ${MAIN_CATEGORIES.join(
-          ", ",
-        )}`,
-      },
-      required: [true, "Parent category is required"],
-    },
     name: {
       type: String,
-      required: [true, "Subcategory name is required"],
+      required: [true, "Category name is required"],
       trim: true,
-      maxlength: [50, "Subcategory name cannot exceed 50 characters"],
+      maxlength: [50, "Category name cannot exceed 50 characters"],
+    },
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      default: null,
     },
     variants: {
       type: [String],
@@ -47,6 +33,6 @@ const categorySchema = new mongoose.Schema(
   },
 );
 
-categorySchema.index({ parentCategory: 1, name: 1 }, { unique: true });
+categorySchema.index({ parent: 1, name: 1 }, { unique: true });
 
 module.exports = mongoose.model("Category", categorySchema);

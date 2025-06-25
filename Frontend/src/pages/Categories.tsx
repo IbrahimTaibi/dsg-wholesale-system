@@ -17,22 +17,9 @@ import {
   Tooltip,
   CircularProgress,
   Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { Edit, Delete, Plus, X } from "lucide-react";
 import { apiService, Category } from "../config/api";
-
-const MAIN_CATEGORIES = [
-  "Groceries",
-  "Water",
-  "Mini Cakes",
-  "Chocolate",
-  "Chips",
-  "Juice",
-];
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -45,7 +32,7 @@ const CategoriesPage: React.FC = () => {
   const [variants, setVariants] = useState<string[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
-  const [parentCategory, setParentCategory] = useState("");
+  const [parent, setParent] = useState<string | null>(null);
 
   // Fetch categories from backend
   const fetchCategories = async () => {
@@ -70,14 +57,14 @@ const CategoriesPage: React.FC = () => {
     setActionError(null);
     if (category) {
       setEditingCategory(category);
-      setParentCategory(category.parentCategory || "");
       setCategoryName(category.name);
       setVariants(category.variants);
+      setParent(category.parent);
     } else {
       setEditingCategory(null);
-      setParentCategory(MAIN_CATEGORIES[0]);
       setCategoryName("");
       setVariants([]);
+      setParent(null);
     }
     setOpenDialog(true);
   };
@@ -93,14 +80,13 @@ const CategoriesPage: React.FC = () => {
 
   // Add or update category via API
   const handleSaveCategory = async () => {
-    if (!parentCategory || !categoryName.trim() || variants.length === 0)
-      return;
+    if (!categoryName.trim() || variants.length === 0) return;
     setActionLoading(true);
     setActionError(null);
     try {
       if (editingCategory) {
         const updated = await apiService.updateCategory(editingCategory._id, {
-          parentCategory,
+          parent: parent || null,
           name: categoryName.trim(),
           variants,
         });
@@ -109,7 +95,7 @@ const CategoriesPage: React.FC = () => {
         );
       } else {
         const created = await apiService.createCategory({
-          parentCategory,
+          parent: parent || null,
           name: categoryName.trim(),
           variants,
         });
@@ -196,9 +182,6 @@ const CategoriesPage: React.FC = () => {
                 primary={cat.name}
                 secondary={
                   <Box>
-                    <Typography variant="caption" color="text.secondary">
-                      Main Category: {cat.parentCategory}
-                    </Typography>
                     <Box
                       sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
                       {cat.variants.map((variant) => (
@@ -237,19 +220,6 @@ const CategoriesPage: React.FC = () => {
           {editingCategory ? "Edit Category" : "Add Category"}
         </DialogTitle>
         <DialogContent>
-          <FormControl fullWidth required sx={{ mb: 2 }}>
-            <InputLabel>Main Category</InputLabel>
-            <Select
-              value={parentCategory}
-              onChange={(e) => setParentCategory(e.target.value)}
-              label="Main Category">
-              {MAIN_CATEGORIES.map((main) => (
-                <MenuItem key={main} value={main}>
-                  {main}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <TextField
             label="Category Name"
             value={categoryName}
@@ -307,10 +277,7 @@ const CategoriesPage: React.FC = () => {
             onClick={handleSaveCategory}
             variant="contained"
             disabled={
-              !parentCategory ||
-              !categoryName.trim() ||
-              variants.length === 0 ||
-              actionLoading
+              !categoryName.trim() || variants.length === 0 || actionLoading
             }>
             {actionLoading
               ? "Saving..."

@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const User = require("./src/models/User");
 const Product = require("./src/models/Product");
 const Order = require("./src/models/Order");
+const Category = require("./src/models/Category");
 require("dotenv").config();
 
 // Generate 30 unique users
@@ -632,3 +633,42 @@ const seedDatabase = async () => {
 
 // Run the seeding
 seedDatabase();
+
+// MIGRATION: Convert old categories to recursive structure
+async function migrateCategories() {
+  await mongoose.connect("mongodb://localhost:27017/YOUR_DB_NAME"); // <-- Set your DB name
+  const categories = await Category.find();
+
+  // Step 1: Find all main categories (parentCategory == itself)
+  const mainCategories = categories.filter(
+    (cat) => !cat.parentCategory || cat.parentCategory === cat.name,
+  );
+
+  // Step 2: Update main categories: set parent = null
+  for (const main of mainCategories) {
+    main.parent = null;
+    await main.save();
+  }
+
+  // Step 3: For subcategories, set parent to ObjectId of main category
+  for (const cat of categories) {
+    if (cat.parentCategory && cat.parentCategory !== cat.name) {
+      const parent = mainCategories.find((m) => m.name === cat.parentCategory);
+      if (parent) {
+        cat.parent = parent._id;
+        await cat.save();
+      }
+    }
+  }
+
+  // Step 4: Remove parentCategory field from all categories
+  await Category.updateMany({}, { $unset: { parentCategory: 1 } });
+
+  console.log("Migration complete!");
+  process.exit(0);
+}
+
+// Only run if called directly
+if (require.main === module) {
+  migrateCategories();
+}
