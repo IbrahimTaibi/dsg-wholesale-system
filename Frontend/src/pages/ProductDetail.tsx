@@ -19,6 +19,15 @@ import {
   Zoom,
   Alert,
   Skeleton,
+  Grid,
+  Paper,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import {
   ArrowLeft,
@@ -29,6 +38,16 @@ import {
   Truck,
   Shield,
   RotateCcw,
+  Package,
+  Info,
+  Star,
+  Calendar,
+  Tag,
+  ChevronDown,
+  Ruler,
+  Palette,
+  Weight,
+  Clock,
 } from "lucide-react";
 import { Product, ProductVariant, mapApiProductToProduct } from "../types";
 import { useCart } from "../contexts/CartContext";
@@ -161,9 +180,9 @@ export const ProductDetail: React.FC = () => {
             {t("back")}
           </Button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Grid container spacing={4}>
             {/* Product Images */}
-            <div>
+            <Grid item xs={12} md={6}>
               <Card
                 sx={{
                   borderRadius: 3,
@@ -219,10 +238,10 @@ export const ProductDetail: React.FC = () => {
                   ))}
                 </Box>
               )}
-            </div>
+            </Grid>
 
             {/* Product Details */}
-            <div>
+            <Grid item xs={12} md={6}>
               <Box
                 sx={{
                   height: "100%",
@@ -295,6 +314,50 @@ export const ProductDetail: React.FC = () => {
                   }}>
                   {product.description || "No description available."}
                 </Typography>
+
+                {/* Sizes Section */}
+                {product.sizes && product.sizes.length > 0 && (
+                  <Box sx={{ mb: 3 }}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ mb: 1, fontWeight: 600 }}>
+                      Available Sizes
+                    </Typography>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {product.sizes.map((size) => (
+                        <Chip
+                          key={size}
+                          label={size}
+                          variant="outlined"
+                          size="small"
+                          icon={<Ruler size={16} />}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+
+                {/* Flavors Section */}
+                {product.flavors && product.flavors.length > 0 && (
+                  <Box sx={{ mb: 3 }}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ mb: 1, fontWeight: 600 }}>
+                      Available Flavors
+                    </Typography>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {product.flavors.map((flavor) => (
+                        <Chip
+                          key={flavor}
+                          label={flavor}
+                          variant="outlined"
+                          size="small"
+                          icon={<Palette size={16} />}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
 
                 {/* Variant Selector */}
                 {product.variants && product.variants.length > 0 && (
@@ -421,8 +484,211 @@ export const ProductDetail: React.FC = () => {
                   </div>
                 </Box>
               </Box>
-            </div>
-          </div>
+            </Grid>
+
+            {/* Additional Product Information */}
+            <Grid item xs={12}>
+              <Divider sx={{ my: 4 }} />
+
+              <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+                Product Details
+              </Typography>
+
+              <Grid container spacing={3}>
+                {/* Product Specifications */}
+                <Grid item xs={12} md={6}>
+                  <Paper sx={{ p: 3, height: "100%" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 2,
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}>
+                      <Info size={20} />
+                      Product Specifications
+                    </Typography>
+                    <List dense>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Package size={16} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Product ID"
+                          secondary={product.id}
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Tag size={16} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Category"
+                          secondary={product.category}
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Weight size={16} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Unit"
+                          secondary={product.unit || "Piece"}
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Clock size={16} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Minimum Order"
+                          secondary={`${product.minOrderQuantity || 1} ${
+                            product.unit || "piece"
+                          }(s)`}
+                        />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+
+                {/* Stock Information */}
+                <Grid item xs={12} md={6}>
+                  <Paper sx={{ p: 3, height: "100%" }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 2,
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}>
+                      <Package size={20} />
+                      Stock Information
+                    </Typography>
+                    <List dense>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Check size={16} color="#4caf50" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Current Stock"
+                          secondary={`${currentStock} units available`}
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Star size={16} color="#ff9800" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Stock Status"
+                          secondary={
+                            currentStock > 50
+                              ? "In Stock"
+                              : currentStock > 20
+                              ? "Limited Stock"
+                              : "Low Stock"
+                          }
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Calendar size={16} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Availability"
+                          secondary={
+                            isVariantAvailable ? "Available" : "Out of Stock"
+                          }
+                        />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+
+                {/* Detailed Description */}
+                <Grid item xs={12}>
+                  <Paper sx={{ p: 3 }}>
+                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                      Detailed Description
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ lineHeight: 1.8, color: "text.secondary" }}>
+                      {product.description ||
+                        "No detailed description available for this product."}
+                    </Typography>
+                  </Paper>
+                </Grid>
+
+                {/* Product Features Accordion */}
+                <Grid item xs={12}>
+                  <Paper sx={{ p: 3 }}>
+                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                      Product Features & Benefits
+                    </Typography>
+                    <Accordion>
+                      <AccordionSummary expandIcon={<ChevronDown />}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: 600 }}>
+                          Quality & Standards
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary" }}>
+                          Our products meet the highest quality standards and
+                          are sourced from trusted suppliers. Each item
+                          undergoes rigorous quality control to ensure customer
+                          satisfaction.
+                        </Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                    <Accordion>
+                      <AccordionSummary expandIcon={<ChevronDown />}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: 600 }}>
+                          Shipping & Delivery
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary" }}>
+                          Fast and reliable shipping to your location. We offer
+                          competitive shipping rates and ensure your order
+                          arrives in perfect condition.
+                        </Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                    <Accordion>
+                      <AccordionSummary expandIcon={<ChevronDown />}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: 600 }}>
+                          Customer Support
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary" }}>
+                          Our dedicated customer support team is available to
+                          help with any questions or concerns. We're committed
+                          to providing excellent service and support.
+                        </Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Box>
       </Fade>
     </Container>
