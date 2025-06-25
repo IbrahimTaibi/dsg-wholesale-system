@@ -26,3 +26,4 @@ export { ProductPageLayout } from "./ProductPageLayout";
 export { SearchBar } from "./ui/SearchBar";
 export { ThemeToggle } from "./ui/ThemeToggle";
 export { SortFilter } from "./ui/SortFilter";
+export { SearchSortFilter } from "./SearchSortFilter";

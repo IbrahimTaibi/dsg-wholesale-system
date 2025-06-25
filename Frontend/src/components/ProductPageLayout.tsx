@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Loader2, LucideIcon } from "lucide-react";
-import { SearchBar, SortFilter } from "./index";
+import { SearchSortFilter } from "./index";
 import { ProductItem } from "./products/ProductItem";
 import { useProducts } from "../hooks";
 import { mapApiProductToProduct, Product } from "../types";
@@ -96,61 +96,15 @@ export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
           </div>
         </div>
 
-        {/* Enhanced Search and Filters Section */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 mb-8 relative z-40">
-          <div className="space-y-6">
-            {/* Search Bar */}
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                Search Products
-              </label>
-              <SearchBar onSearch={setSearchQuery} />
-            </div>
-
-            {/* Sort and Filter Controls */}
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                  Sort & Filter
-                </label>
-                <SortFilter
-                  onSortChange={setSortBy}
-                  onFilterChange={setFilters}
-                  currentSort={sortBy}
-                  currentFilters={filters}
-                />
-              </div>
-            </div>
-
-            {/* Active Filters Display */}
-            {(filters.priceRange?.min ||
-              filters.priceRange?.max ||
-              filters.inStock) && (
-              <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Active filters:
-                </span>
-                {filters.priceRange?.min && (
-                  <span
-                    className={`px-3 py-1 ${theme.filterBadge} rounded-full text-sm`}>
-                    Min: ${filters.priceRange.min}
-                  </span>
-                )}
-                {filters.priceRange?.max && (
-                  <span
-                    className={`px-3 py-1 ${theme.filterBadge} rounded-full text-sm`}>
-                    Max: ${filters.priceRange.max}
-                  </span>
-                )}
-                {filters.inStock && (
-                  <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm">
-                    In Stock Only
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Search and Filters Section */}
+        <SearchSortFilter
+          onSearchChange={setSearchQuery}
+          onSortChange={setSortBy}
+          onFilterChange={setFilters}
+          currentSort={sortBy}
+          currentFilters={filters}
+          filterBadgeTheme={theme.filterBadge}
+        />
 
         {/* Loading State */}
         {loading && (
