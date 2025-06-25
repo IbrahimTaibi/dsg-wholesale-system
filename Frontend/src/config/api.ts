@@ -623,6 +623,26 @@ export const apiService = {
     const response = await api.get("/categories");
     return response.data.categories || response.data;
   },
+
+  async createCategory(data: {
+    name: string;
+    variants: string[];
+  }): Promise<Category> {
+    const response = await api.post("/categories", data);
+    return response.data.category || response.data;
+  },
+
+  async updateCategory(
+    id: string,
+    data: { name: string; variants: string[] },
+  ): Promise<Category> {
+    const response = await api.put(`/categories/${id}`, data);
+    return response.data.category || response.data;
+  },
+
+  async deleteCategory(id: string): Promise<void> {
+    await api.delete(`/categories/${id}`);
+  },
 };
 
 // Error handling utilities

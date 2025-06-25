@@ -16,3 +16,4 @@ export { Orders } from "./Orders";
 export { default as Users } from "./Users";
 export { default as Stocks } from "./Stocks";
 export { SearchResults } from "./SearchResults";
+export { default as Categories } from "./Categories";
