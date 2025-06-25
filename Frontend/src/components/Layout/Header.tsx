@@ -43,6 +43,11 @@ export const Header: React.FC = () => {
     setShowAuthModal("login");
   };
 
+  const handleSearchSubmit = (query: string) => {
+    setSearchQuery(query);
+    navigate("/search-results");
+  };
+
   // UserMenu: Handles user sidebar for profile, dashboard, orders, and logout
   const UserMenu = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -289,6 +294,7 @@ export const Header: React.FC = () => {
             <SearchBar
               value={searchQuery}
               onSearch={setSearchQuery}
+              onSearchSubmit={handleSearchSubmit}
               placeholder="Search products..."
             />
           </div>
@@ -367,6 +373,7 @@ export const Header: React.FC = () => {
             <SearchBar
               value={searchQuery}
               onSearch={setSearchQuery}
+              onSearchSubmit={handleSearchSubmit}
               placeholder="Search products..."
             />
           </div>

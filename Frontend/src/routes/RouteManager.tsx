@@ -17,6 +17,7 @@ const {
   Checkout,
   Orders,
   ProductDetail,
+  SearchResults,
 } = {
   Home: lazy(() =>
     import("../pages").then((module) => ({ default: module.Home })),
@@ -53,6 +54,9 @@ const {
   ),
   ProductDetail: lazy(() =>
     import("../pages").then((module) => ({ default: module.ProductDetail })),
+  ),
+  SearchResults: lazy(() =>
+    import("../pages").then((module) => ({ default: module.SearchResults })),
   ),
 };
 
@@ -139,6 +143,7 @@ export const ROUTES = {
   PROFILE: "/profile",
   ORDERS: "/orders",
   PRODUCT_DETAIL: "/product/:id",
+  SEARCH_RESULTS: "/search-results",
 } as const;
 
 export const RouteManager: React.FC = () => {
@@ -252,6 +257,16 @@ export const RouteManager: React.FC = () => {
           <AdminRoute>
             <StocksManagementPage />
           </AdminRoute>
+        }
+      />
+
+      {/* Search Results Route */}
+      <Route
+        path="/search-results"
+        element={
+          <ProtectedRoute>
+            <SearchResults />
+          </ProtectedRoute>
         }
       />
 

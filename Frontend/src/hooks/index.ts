@@ -2,3 +2,4 @@
 
 export { useNavigation } from "./useNavigation";
 export { useProducts } from "./useProducts";
+export { default as useDebounce } from "./useDebounce";

@@ -15,3 +15,4 @@ export { default as MyOrders } from "./MyOrders";
 export { Orders } from "./Orders";
 export { default as Users } from "./Users";
 export { default as Stocks } from "./Stocks";
+export { SearchResults } from "./SearchResults";
