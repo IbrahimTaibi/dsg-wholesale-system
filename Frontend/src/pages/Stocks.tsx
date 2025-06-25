@@ -31,6 +31,9 @@ import {
   useTheme,
   useMediaQuery,
   Snackbar,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 import { apiService, Product, Category } from "../config/api";
@@ -90,6 +93,40 @@ interface ProductFormData {
   photo?: File;
   sizes: string[];
 }
+
+// Add common sizes array
+const COMMON_SIZES = [
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "XXXL",
+  "Small",
+  "Medium",
+  "Large",
+  "Extra Large",
+  "250ml",
+  "500ml",
+  "1L",
+  "1.5L",
+  "2L",
+  "100g",
+  "250g",
+  "500g",
+  "1kg",
+  "2kg",
+  "5kg",
+  "Single",
+  "Pack of 6",
+  "Pack of 12",
+  "Pack of 24",
+  "Mini",
+  "Regular",
+  "Family Size",
+  "Bulk",
+];
 
 const StocksManagementPage: React.FC = () => {
   const { user: currentUser } = useAuth();
@@ -959,21 +996,35 @@ const StocksManagementPage: React.FC = () => {
                 rows={3}
               />
               <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-                <TextField
-                  label="Sizes (comma separated)"
-                  value={formData.sizes.join(", ")}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      sizes: e.target.value
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter(Boolean),
-                    })
-                  }
-                  fullWidth
-                  placeholder="e.g. Small, Medium, Large"
-                />
+                <FormControl fullWidth>
+                  <InputLabel>Sizes</InputLabel>
+                  <Select
+                    multiple
+                    value={formData.sizes}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFormData({
+                        ...formData,
+                        sizes:
+                          typeof value === "string" ? value.split(",") : value,
+                      });
+                    }}
+                    input={<OutlinedInput label="Sizes" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} size="small" />
+                        ))}
+                      </Box>
+                    )}>
+                    {COMMON_SIZES.map((size) => (
+                      <MenuItem key={size} value={size}>
+                        <Checkbox checked={formData.sizes.indexOf(size) > -1} />
+                        <ListItemText primary={size} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
 
               {/* Photo Upload Section */}
