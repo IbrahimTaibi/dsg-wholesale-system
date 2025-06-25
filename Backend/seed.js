@@ -519,7 +519,7 @@ const seedProducts = async (categoryMap) => {
     console.log("Cleared existing products");
 
     const sampleProducts = Array.from({ length: 60 }, (_, i) => {
-      const categoryName = categories[i % categories.length];
+      const categoryName = categories[i]; // Use the categories array directly
       const categoryId = categoryMap[categoryName];
       if (!categoryId) {
         console.warn("No categoryId for", categoryName);
