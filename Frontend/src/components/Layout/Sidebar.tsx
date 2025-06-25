@@ -263,15 +263,15 @@ export const Sidebar: React.FC = () => {
                   {/* Show More/Less Button */}
                   {rootCategories.length > 3 && (
                     <div
-                      className="relative z-20 mt-2 animate-fade-in"
+                      className="relative z-20 mt-2 animate-fade-in-slow"
                       style={{
-                        animationDelay: "200ms",
+                        animationDelay: "600ms",
                         animationFillMode: "both",
                       }}>
                       <button
                         onClick={toggleShowAllCategories}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-left
-                          transition-all duration-300 ease-out group relative overflow-hidden backdrop-blur-sm
+                          transition-all duration-500 ease-in-out group relative overflow-hidden backdrop-blur-sm
                           text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-[1.02] 
                           border border-transparent hover:border-white/10 active:scale-[0.98]"
                         aria-label={
@@ -281,21 +281,21 @@ export const Sidebar: React.FC = () => {
                         }>
                         {/* Content */}
                         <div className="relative z-10 flex items-center gap-2">
-                          <span className="text-xs font-medium transition-all duration-300 ease-out group-hover:translate-x-1">
+                          <span className="text-xs font-medium transition-all duration-500 ease-in-out group-hover:translate-x-1">
                             {showAllCategories ? t("showLess") : t("showMore")}
                           </span>
-                          <div className="transition-all duration-300 ease-out group-hover:scale-110">
+                          <div className="transition-all duration-500 ease-in-out group-hover:scale-110">
                             {showAllCategories ? (
                               <ChevronDown
                                 size={14}
                                 strokeWidth={2}
-                                className="transition-all duration-300 ease-out group-hover:-translate-y-0.5"
+                                className="transition-all duration-700 ease-in-out group-hover:-translate-y-1"
                               />
                             ) : (
                               <ChevronDown
                                 size={14}
                                 strokeWidth={2}
-                                className="transition-all duration-300 ease-out group-hover:translate-y-0.5"
+                                className="transition-all duration-700 ease-in-out group-hover:translate-y-1"
                               />
                             )}
                           </div>
@@ -303,7 +303,7 @@ export const Sidebar: React.FC = () => {
 
                         {/* Hover glow effect */}
                         <div
-                          className="absolute inset-0 rounded-xl transition-all duration-300 ease-out pointer-events-none
+                          className="absolute inset-0 rounded-xl transition-all duration-500 ease-in-out pointer-events-none
                           bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100 group-hover:scale-105"
                         />
                       </button>
