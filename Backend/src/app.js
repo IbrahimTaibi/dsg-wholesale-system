@@ -149,6 +149,10 @@ console.log("Loading product routes...");
 const productRoutes = require("./routes/products");
 app.use("/api/products", productRoutes);
 
+console.log("Loading category routes...");
+const categoriesRoutes = require("./routes/categories");
+app.use("/api/categories", categoriesRoutes);
+
 // Health check with performance monitoring
 app.get("/health", (req, res) => {
   const health = {
