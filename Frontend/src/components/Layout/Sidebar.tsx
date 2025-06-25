@@ -232,18 +232,20 @@ export const Sidebar: React.FC = () => {
 
                   {/* Show More/Less Button */}
                   {rootCategories.length > 3 && (
-                    <div className="relative">
+                    <>
+                      {/* Fade out effect and arrow indicator */}
                       {!showAllCategories && (
-                        <>
+                        <div className="relative">
                           {/* Fade out effect */}
                           <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-orange-800 via-orange-800/80 to-transparent pointer-events-none" />
                           {/* Arrow indicator */}
                           <div className="absolute bottom-2 right-4 text-white/40">
                             <ChevronDown size={16} strokeWidth={2} />
                           </div>
-                        </>
+                        </div>
                       )}
 
+                      {/* Show More/Less Button - positioned outside fade effect */}
                       <button
                         onClick={toggleShowAllCategories}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-left
@@ -271,7 +273,7 @@ export const Sidebar: React.FC = () => {
                           />
                         )}
                       </button>
-                    </div>
+                    </>
                   )}
                 </div>
               </>
