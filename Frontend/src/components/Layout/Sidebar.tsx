@@ -129,42 +129,48 @@ export const Sidebar: React.FC = () => {
 
                 {/* Category Items */}
                 <div className="space-y-1 relative">
-                  {displayedCategories.map((category) => {
+                  {displayedCategories.map((category, index) => {
                     const subcategories = getSubcategories(category._id);
                     const isExpanded = expandedCategories.has(category._id);
                     const hasSubcategories = subcategories.length > 0;
 
                     return (
-                      <div key={category._id} className="space-y-1">
+                      <div
+                        key={category._id}
+                        className="space-y-1 animate-fade-in"
+                        style={{
+                          animationDelay: `${index * 50}ms`,
+                          animationFillMode: "both",
+                        }}>
                         {/* Main Category Button */}
                         <div className="flex items-center">
                           <button
                             onClick={() => handleCategoryClick(category._id)}
                             className="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-lg text-left
-                              transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
-                              text-white/80 hover:text-white hover:bg-white/10 hover:transform hover:scale-100 
-                              border border-transparent hover:border-white/15"
+                              transition-all duration-300 ease-out group relative overflow-hidden backdrop-blur-sm
+                              text-white/80 hover:text-white hover:bg-white/10 hover:transform hover:scale-[1.02] 
+                              border border-transparent hover:border-white/15 active:scale-[0.98]"
                             aria-label={`Navigate to ${category.name}`}>
                             {/* Content */}
                             <div className="relative z-10 flex items-center gap-3 w-full">
                               {/* Icon container */}
-                              <div className="transition-all duration-300 relative flex items-center justify-center">
+                              <div className="transition-all duration-300 ease-out relative flex items-center justify-center">
                                 <Package2
                                   size={18}
                                   strokeWidth={2}
-                                  className="transition-all duration-300 drop-shadow-sm text-white/80 group-hover:text-white group-hover:scale-110"
+                                  className="transition-all duration-300 ease-out drop-shadow-sm text-white/80 group-hover:text-white group-hover:scale-110 group-hover:rotate-3"
                                 />
                               </div>
 
-                              <span className="font-medium text-sm transition-all duration-300 tracking-normal text-white/85 group-hover:text-white">
+                              <span className="font-medium text-sm transition-all duration-300 ease-out tracking-normal text-white/85 group-hover:text-white group-hover:translate-x-1">
                                 {category.name}
                               </span>
                             </div>
 
                             {/* Hover glow effect */}
                             <div
-                              className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
-                              bg-gradient-to-r from-white/5 via-white/10 to-transparent opacity-0 group-hover:opacity-100"
+                              className="absolute inset-0 rounded-xl transition-all duration-300 ease-out pointer-events-none
+                              bg-gradient-to-r from-white/5 via-white/10 to-transparent opacity-0 group-hover:opacity-100 group-hover:scale-105"
                             />
                           </button>
 
@@ -174,53 +180,72 @@ export const Sidebar: React.FC = () => {
                               onClick={() =>
                                 toggleCategoryExpansion(category._id)
                               }
-                              className="p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
+                              className="p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300 ease-out hover:scale-110 active:scale-95"
                               aria-label={`${
                                 isExpanded ? "Collapse" : "Expand"
                               } ${category.name}`}>
                               {isExpanded ? (
-                                <ChevronDown size={16} strokeWidth={2} />
+                                <ChevronDown
+                                  size={16}
+                                  strokeWidth={2}
+                                  className="transition-transform duration-300 ease-out"
+                                />
                               ) : (
-                                <ChevronRight size={16} strokeWidth={2} />
+                                <ChevronRight
+                                  size={16}
+                                  strokeWidth={2}
+                                  className="transition-transform duration-300 ease-out"
+                                />
                               )}
                             </button>
                           )}
                         </div>
 
                         {/* Subcategories */}
-                        {hasSubcategories && isExpanded && (
-                          <div className="ml-6 space-y-1">
-                            {subcategories.map((subcategory) => (
+                        {hasSubcategories && (
+                          <div
+                            className={`ml-6 space-y-1 overflow-hidden transition-all duration-500 ease-out ${
+                              isExpanded
+                                ? "max-h-96 opacity-100"
+                                : "max-h-0 opacity-0"
+                            }`}>
+                            {subcategories.map((subcategory, subIndex) => (
                               <button
                                 key={subcategory._id}
                                 onClick={() =>
                                   handleCategoryClick(subcategory._id)
                                 }
                                 className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left
-                                  transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
-                                  text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-100 
-                                  border border-transparent hover:border-white/10"
+                                  transition-all duration-300 ease-out group relative overflow-hidden backdrop-blur-sm
+                                  text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-[1.02] 
+                                  border border-transparent hover:border-white/10 active:scale-[0.98]"
+                                style={{
+                                  animationDelay: isExpanded
+                                    ? `${subIndex * 100}ms`
+                                    : "0ms",
+                                  animationFillMode: "both",
+                                }}
                                 aria-label={`Navigate to ${subcategory.name}`}>
                                 {/* Content */}
                                 <div className="relative z-10 flex items-center gap-3 w-full">
                                   {/* Icon container */}
-                                  <div className="transition-all duration-300 relative flex items-center justify-center">
+                                  <div className="transition-all duration-300 ease-out relative flex items-center justify-center">
                                     <Package2
                                       size={16}
                                       strokeWidth={2}
-                                      className="transition-all duration-300 drop-shadow-sm text-white/70 group-hover:text-white group-hover:scale-110"
+                                      className="transition-all duration-300 ease-out drop-shadow-sm text-white/70 group-hover:text-white group-hover:scale-110 group-hover:rotate-2"
                                     />
                                   </div>
 
-                                  <span className="font-medium text-xs transition-all duration-300 tracking-normal text-white/70 group-hover:text-white">
+                                  <span className="font-medium text-xs transition-all duration-300 ease-out tracking-normal text-white/70 group-hover:text-white group-hover:translate-x-1">
                                     {subcategory.name}
                                   </span>
                                 </div>
 
                                 {/* Hover glow effect */}
                                 <div
-                                  className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
-                                  bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100"
+                                  className="absolute inset-0 rounded-xl transition-all duration-300 ease-out pointer-events-none
+                                  bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100 group-hover:scale-105"
                                 />
                               </button>
                             ))}
@@ -232,18 +257,23 @@ export const Sidebar: React.FC = () => {
 
                   {/* Fade overlay for seamless effect */}
                   {!showAllCategories && rootCategories.length > 3 && (
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 pointer-events-none z-10" />
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 pointer-events-none z-10 animate-pulse-slow" />
                   )}
 
                   {/* Show More/Less Button */}
                   {rootCategories.length > 3 && (
-                    <div className="relative z-20 mt-2">
+                    <div
+                      className="relative z-20 mt-2 animate-fade-in"
+                      style={{
+                        animationDelay: "200ms",
+                        animationFillMode: "both",
+                      }}>
                       <button
                         onClick={toggleShowAllCategories}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-left
-                          transition-all duration-300 group relative overflow-hidden backdrop-blur-sm
-                          text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-100 
-                          border border-transparent hover:border-white/10"
+                          transition-all duration-300 ease-out group relative overflow-hidden backdrop-blur-sm
+                          text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-[1.02] 
+                          border border-transparent hover:border-white/10 active:scale-[0.98]"
                         aria-label={
                           showAllCategories
                             ? "Show less categories"
@@ -251,21 +281,21 @@ export const Sidebar: React.FC = () => {
                         }>
                         {/* Content */}
                         <div className="relative z-10 flex items-center gap-2">
-                          <span className="text-xs font-medium">
+                          <span className="text-xs font-medium transition-all duration-300 ease-out group-hover:translate-x-1">
                             {showAllCategories ? t("showLess") : t("showMore")}
                           </span>
-                          <div className="transition-transform duration-300 group-hover:scale-110">
+                          <div className="transition-all duration-300 ease-out group-hover:scale-110">
                             {showAllCategories ? (
                               <ChevronDown
                                 size={14}
                                 strokeWidth={2}
-                                className="transition-transform duration-300"
+                                className="transition-all duration-300 ease-out group-hover:-translate-y-0.5"
                               />
                             ) : (
                               <ChevronDown
                                 size={14}
                                 strokeWidth={2}
-                                className="transition-transform duration-300"
+                                className="transition-all duration-300 ease-out group-hover:translate-y-0.5"
                               />
                             )}
                           </div>
@@ -273,8 +303,8 @@ export const Sidebar: React.FC = () => {
 
                         {/* Hover glow effect */}
                         <div
-                          className="absolute inset-0 rounded-xl transition-opacity duration-300 pointer-events-none
-                          bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100"
+                          className="absolute inset-0 rounded-xl transition-all duration-300 ease-out pointer-events-none
+                          bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100 group-hover:scale-105"
                         />
                       </button>
                     </div>
