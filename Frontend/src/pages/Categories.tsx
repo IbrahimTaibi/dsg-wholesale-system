@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Plus, X } from "lucide-react";
 import { apiService, Category } from "../config/api";
+import CategoryTree from "../components/categories/CategoryTree";
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -161,6 +162,9 @@ const CategoriesPage: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Category Management
       </Typography>
+      <Box sx={{ mb: 4 }}>
+        <CategoryTree />
+      </Box>
       <Button
         variant="contained"
         startIcon={<Plus size={20} />}

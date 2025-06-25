@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Box, CircularProgress } from "@mui/material";
-import { RouteManager } from "./RouteManager"; // Assuming RouteManager is in the same directory
+import { RouteManager } from "./RouteManager";
 
 const LoadingFallback = () => (
   <Box

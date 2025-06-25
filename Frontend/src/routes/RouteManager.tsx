@@ -75,6 +75,11 @@ const StocksManagementPage = lazy(() =>
 const CategoriesPage = lazy(() =>
   import("../pages").then((module) => ({ default: module.Categories })),
 );
+const CategoryProductsPage = lazy(() =>
+  import("../pages").then((module) => ({
+    default: module.CategoryProductsPage,
+  })),
+);
 
 const LoadingFallback = () => (
   <Box
@@ -280,6 +285,16 @@ export const RouteManager: React.FC = () => {
           <AdminRoute>
             <CategoriesPage />
           </AdminRoute>
+        }
+      />
+
+      {/* Category Products Route */}
+      <Route
+        path="/categories/:id"
+        element={
+          <ProtectedRoute>
+            <CategoryProductsPage />
+          </ProtectedRoute>
         }
       />
 
