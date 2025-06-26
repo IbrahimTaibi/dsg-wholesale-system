@@ -12,12 +12,7 @@ import {
   NavigateNext,
 } from "@mui/icons-material";
 import { CustomThemeContext } from "../contexts/ThemeContext";
-import {
-  getUIGradient,
-  getButtonGradient,
-  getShadow,
-  getTabColor,
-} from "../config/theme";
+import { getButtonGradient, getShadow, getTabColor } from "../config/theme";
 
 const CategoryProductsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -227,12 +222,13 @@ const CategoryProductsPage: React.FC = () => {
                   width: 80,
                   height: 80,
                   borderRadius: 3,
-                  background: getUIGradient(mode, "header"),
+                  background:
+                    "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   mr: 3,
-                  boxShadow: getShadow(mode),
+                  boxShadow: "0 8px 32px rgba(255, 107, 107, 0.3)",
                 }}>
                 <CategoryIcon sx={{ fontSize: 40, color: "white" }} />
               </Mui.Box>
@@ -241,7 +237,8 @@ const CategoryProductsPage: React.FC = () => {
                   variant="h3"
                   sx={{
                     fontWeight: 700,
-                    background: getUIGradient(mode, "header"),
+                    background:
+                      "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -263,7 +260,8 @@ const CategoryProductsPage: React.FC = () => {
                         label={variant}
                         size="small"
                         sx={{
-                          background: getUIGradient(mode, "header"),
+                          background:
+                            "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
                           color: "white",
                           fontWeight: 500,
                         }}
