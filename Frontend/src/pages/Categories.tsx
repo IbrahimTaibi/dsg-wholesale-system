@@ -109,14 +109,14 @@ const CategoriesPage: React.FC = () => {
   // Get gradient background based on theme mode
   const getGradientBackground = () => {
     if (mode === "dark") {
-      return "linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%)";
+      return "linear-gradient(135deg, #2a3441 0%, #1e2634 50%, #161c28 100%)";
     }
     return "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)";
   };
 
   const getGradientBackgroundHover = () => {
     if (mode === "dark") {
-      return "linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%)";
+      return "linear-gradient(135deg, #1e2634 0%, #161c28 50%, #0f1419 100%)";
     }
     return "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)";
   };
@@ -299,6 +299,13 @@ const CategoriesPage: React.FC = () => {
           py: 6,
           position: "relative",
           overflow: "hidden",
+          borderRadius: 3,
+          boxShadow:
+            mode === "dark"
+              ? "0 8px 32px rgba(42, 52, 65, 0.3)"
+              : "0 8px 32px rgba(255, 107, 107, 0.3)",
+          margin: { xs: 2, md: 3 },
+          marginTop: 4,
         }}>
         <Container maxWidth="xl">
           <Breadcrumbs
