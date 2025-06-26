@@ -250,11 +250,12 @@ const Dashboard: React.FC = () => {
                   background: getButtonGradient(),
                   color: "white",
                   fontWeight: 700,
-                  py: 1.5,
+                  py: { xs: 1, sm: 1.5 },
                   borderRadius: 2,
                   boxShadow: getShadow(mode),
                   textTransform: "none",
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
+                  mb: { xs: 1.5, sm: 0 },
                   "&:hover": {
                     background:
                       "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
@@ -274,11 +275,12 @@ const Dashboard: React.FC = () => {
                   background: getButtonGradient(),
                   color: "white",
                   fontWeight: 700,
-                  py: 1.5,
+                  py: { xs: 1, sm: 1.5 },
                   borderRadius: 2,
                   boxShadow: getShadow(mode),
                   textTransform: "none",
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
+                  mb: { xs: 1.5, sm: 0 },
                   "&:hover": {
                     background:
                       "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
@@ -298,11 +300,12 @@ const Dashboard: React.FC = () => {
                   background: getButtonGradient(),
                   color: "white",
                   fontWeight: 700,
-                  py: 1.5,
+                  py: { xs: 1, sm: 1.5 },
                   borderRadius: 2,
                   boxShadow: getShadow(mode),
                   textTransform: "none",
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
+                  mb: { xs: 1.5, sm: 0 },
                   "&:hover": {
                     background:
                       "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
@@ -322,11 +325,12 @@ const Dashboard: React.FC = () => {
                   background: getButtonGradient(),
                   color: "white",
                   fontWeight: 700,
-                  py: 1.5,
+                  py: { xs: 1, sm: 1.5 },
                   borderRadius: 2,
                   boxShadow: getShadow(mode),
                   textTransform: "none",
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
+                  mb: { xs: 1.5, sm: 0 },
                   "&:hover": {
                     background:
                       "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
