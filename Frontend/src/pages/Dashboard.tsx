@@ -1,5 +1,5 @@
 /**
- * Modern, coral-themed Dashboard redesign
+ * Full modern dashboard redesign: hero banner, quick stats, quick actions, charts, and category tree.
  */
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -7,26 +7,17 @@ import {
   Typography,
   Container,
   Paper,
-  Fade,
   CircularProgress,
-  Alert,
   IconButton,
   Tooltip,
   Button,
-  Grid,
-  Divider,
+  Avatar,
+  Stack,
 } from "@mui/material";
-import {
-  TrendingUp,
-  Package,
-  Users,
-  DollarSign,
-  RefreshCw,
-  Grid3x3,
-} from "lucide-react";
+import Grid from "@mui/material/Grid";
+import { Package, Users, RefreshCw, Grid3x3 } from "lucide-react";
 import { apiService, DashboardOverview } from "../config/api";
 import { useAuth } from "../hooks/useAuth";
-import { StatsCard } from "../components/dashboard/StatsCard";
 import { RevenueChart } from "../components/dashboard/RevenueChart";
 import { CategoryChart } from "../components/dashboard/CategoryChart";
 import { useNavigate } from "react-router-dom";
@@ -39,29 +30,27 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { mode } = React.useContext(CustomThemeContext);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
 
   const fetchOverview = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    setRefreshing(true);
     try {
       const data = await apiService.getDashboardOverview();
       setOverview(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : t("failedToLoadDashboard"));
+      console.error(
+        err instanceof Error ? err.message : t("failedToLoadDashboard"),
+      );
     } finally {
-      setLoading(false);
+      setRefreshing(false);
     }
   }, [t]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchOverview();
-    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -91,32 +80,46 @@ const Dashboard: React.FC = () => {
           background:
             "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
           color: "white",
-          borderRadius: "0 0 18px 18px",
+          borderRadius: "0 0 24px 24px",
           boxShadow: getShadow(mode),
-          px: { xs: 1, sm: 2, md: 0 },
-          pt: 8,
+          px: { xs: 0, sm: 0, md: 0 },
+          pt: 7,
           pb: 4,
           mb: 4,
         }}>
         <Container maxWidth="xl">
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", md: "row" },
-              alignItems: { xs: "flex-start", md: "center" },
-              justifyContent: "space-between",
-              gap: 3,
-            }}>
-            <Box sx={{ mb: { xs: 3, md: 0 } }}>
-              <Typography
-                variant="h3"
-                sx={{ fontWeight: 800, mb: 1, letterSpacing: 1 }}>
-                {t("adminDashboard")}
-              </Typography>
-              <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 400 }}>
-                {t("manageStore")}
-              </Typography>
-            </Box>
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            alignItems={{ xs: "flex-start", md: "center" }}
+            justifyContent="space-between"
+            spacing={3}
+            sx={{ mb: 2 }}>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Avatar
+                src={user?.photo || undefined}
+                alt={user?.name || "Admin"}
+                sx={{
+                  width: 64,
+                  height: 64,
+                  fontWeight: 700,
+                  fontSize: 32,
+                  bgcolor: "#ff6b6b",
+                }}>
+                {user?.name?.[0]?.toUpperCase() || "A"}
+              </Avatar>
+              <Box>
+                <Typography
+                  variant="h4"
+                  sx={{ fontWeight: 800, mb: 0.5, letterSpacing: 1 }}>
+                  {t("welcomeBack", { name: user?.name || "Admin" })}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{ opacity: 0.9, fontWeight: 400 }}>
+                  {t("adminDashboard")}
+                </Typography>
+              </Box>
+            </Stack>
             <Tooltip title={t("refreshDashboard") || "Refresh"}>
               <IconButton
                 onClick={handleRefresh}
@@ -134,128 +137,102 @@ const Dashboard: React.FC = () => {
                 />
               </IconButton>
             </Tooltip>
-          </Box>
+          </Stack>
 
-          {/* Quick Stats in Banner (always visible, responsive) */}
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid item xs={6} sm={3}>
-              <Paper
-                sx={{
-                  p: 2,
-                  textAlign: "center",
-                  background: "rgba(255,255,255,0.08)",
-                  color: "white",
-                  boxShadow: "none",
-                  borderRadius: 2,
-                }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                  {overview ? (
-                    overview.totalUsers?.toLocaleString()
-                  ) : (
-                    <CircularProgress size={20} color="inherit" thickness={5} />
-                  )}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                  {t("totalUsers")}
-                </Typography>
-              </Paper>
+          {/* Horizontally scrollable quick stats on mobile, grid on desktop */}
+          <Box sx={{ overflowX: { xs: "auto", md: "visible" }, mt: 2 }}>
+            <Grid
+              container
+              spacing={2}
+              wrap="nowrap"
+              sx={{ flexWrap: { xs: "nowrap", md: "wrap" } }}>
+              <Grid item xs={12} sm={4} md={4}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    background: "rgba(255,255,255,0.08)",
+                    color: "white",
+                    boxShadow: "none",
+                    borderRadius: 2,
+                  }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    {overview ? (
+                      overview.summary.totalUsers?.toLocaleString()
+                    ) : (
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                        thickness={5}
+                      />
+                    )}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                    {t("totalUsers")}
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={4} md={4}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    background: "rgba(255,255,255,0.08)",
+                    color: "white",
+                    boxShadow: "none",
+                    borderRadius: 2,
+                  }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    {overview ? (
+                      overview.summary.totalOrders?.toLocaleString()
+                    ) : (
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                        thickness={5}
+                      />
+                    )}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                    {t("totalOrders")}
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={4} md={4}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    background: "rgba(255,255,255,0.08)",
+                    color: "white",
+                    boxShadow: "none",
+                    borderRadius: 2,
+                  }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    {overview ? (
+                      overview.summary.totalRevenue?.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })
+                    ) : (
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                        thickness={5}
+                      />
+                    )}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                    {t("totalRevenue")}
+                  </Typography>
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs={6} sm={3}>
-              <Paper
-                sx={{
-                  p: 2,
-                  textAlign: "center",
-                  background: "rgba(255,255,255,0.08)",
-                  color: "white",
-                  boxShadow: "none",
-                  borderRadius: 2,
-                }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                  {overview ? (
-                    overview.totalOrders?.toLocaleString()
-                  ) : (
-                    <CircularProgress size={20} color="inherit" thickness={5} />
-                  )}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                  {t("totalOrders")}
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <Paper
-                sx={{
-                  p: 2,
-                  textAlign: "center",
-                  background: "rgba(255,255,255,0.08)",
-                  color: "white",
-                  boxShadow: "none",
-                  borderRadius: 2,
-                }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                  {overview ? (
-                    overview.totalStocks?.toLocaleString()
-                  ) : (
-                    <CircularProgress size={20} color="inherit" thickness={5} />
-                  )}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                  {t("totalStocks")}
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <Paper
-                sx={{
-                  p: 2,
-                  textAlign: "center",
-                  background: "rgba(255,255,255,0.08)",
-                  color: "white",
-                  boxShadow: "none",
-                  borderRadius: 2,
-                }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                  {overview ? (
-                    overview.totalRevenue?.toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    })
-                  ) : (
-                    <CircularProgress size={20} color="inherit" thickness={5} />
-                  )}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                  {t("totalRevenue")}
-                </Typography>
-              </Paper>
-            </Grid>
-          </Grid>
+          </Box>
         </Container>
       </Box>
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        {/* Charts Section */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={7}>
-            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
-              {overview ? (
-                <RevenueChart monthlyRevenue={overview.monthlyRevenue} />
-              ) : (
-                <CircularProgress />
-              )}
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
-              {overview ? (
-                <CategoryChart categorySales={overview.categorySales} />
-              ) : (
-                <CircularProgress />
-              )}
-            </Paper>
-          </Grid>
-        </Grid>
-
         {/* Quick Actions */}
         <Paper
           sx={{ p: 3, borderRadius: 3, mb: 4, boxShadow: getShadow(mode) }}>
@@ -361,6 +338,28 @@ const Dashboard: React.FC = () => {
             </Grid>
           </Grid>
         </Paper>
+
+        {/* Charts Section */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} md={7}>
+            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+              {overview ? (
+                <RevenueChart monthlyRevenue={overview.monthlyRevenue} />
+              ) : (
+                <CircularProgress />
+              )}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+              {overview ? (
+                <CategoryChart categorySales={overview.categorySales} />
+              ) : (
+                <CircularProgress />
+              )}
+            </Paper>
+          </Grid>
+        </Grid>
 
         {/* Category Tree */}
         <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
