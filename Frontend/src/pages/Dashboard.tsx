@@ -239,7 +239,111 @@ const Dashboard: React.FC = () => {
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>
             {t("quickActions")}
           </Typography>
-          <Grid container spacing={2}>
+          <Box
+            sx={{
+              display: { xs: "flex", sm: "none" },
+              overflowX: "auto",
+              gap: 2,
+              pb: 1,
+              mb: 2,
+            }}>
+            <Button
+              size="large"
+              startIcon={<Users size={20} />}
+              onClick={() => navigate("/admin-users")}
+              sx={{
+                minWidth: 180,
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: 1,
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: "1rem",
+                flexShrink: 0,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageUsers")}
+            </Button>
+            <Button
+              size="large"
+              startIcon={<Package size={20} />}
+              onClick={() => navigate("/admin-orders")}
+              sx={{
+                minWidth: 180,
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: 1,
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: "1rem",
+                flexShrink: 0,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageOrders")}
+            </Button>
+            <Button
+              size="large"
+              startIcon={<Grid3x3 size={20} />}
+              onClick={() => navigate("/admin-stocks")}
+              sx={{
+                minWidth: 180,
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: 1,
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: "1rem",
+                flexShrink: 0,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageStocks")}
+            </Button>
+            <Button
+              size="large"
+              startIcon={<Grid3x3 size={20} />}
+              onClick={() => navigate("/categories")}
+              sx={{
+                minWidth: 180,
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: 1,
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: "1rem",
+                flexShrink: 0,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageCategories")}
+            </Button>
+          </Box>
+          <Grid
+            container
+            spacing={2}
+            sx={{ display: { xs: "none", sm: "flex" } }}>
             <Grid item xs={12} sm={6} md={3}>
               <Button
                 fullWidth
