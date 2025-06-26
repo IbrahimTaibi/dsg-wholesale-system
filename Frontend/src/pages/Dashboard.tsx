@@ -1,3 +1,6 @@
+/**
+ * Modern, coral-themed Dashboard redesign
+ */
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
@@ -10,6 +13,8 @@ import {
   IconButton,
   Tooltip,
   Button,
+  Grid,
+  Divider,
 } from "@mui/material";
 import {
   TrendingUp,
@@ -17,7 +22,6 @@ import {
   Users,
   DollarSign,
   RefreshCw,
-  ArrowRight,
   Grid3x3,
 } from "lucide-react";
 import { apiService, DashboardOverview } from "../config/api";
@@ -60,22 +64,6 @@ const Dashboard: React.FC = () => {
     setRefreshing(false);
   };
 
-  const handleViewOrders = () => {
-    navigate("/admin-orders");
-  };
-
-  const handleViewUsers = () => {
-    navigate("/admin-users");
-  };
-
-  const handleViewStocks = () => {
-    navigate("/admin-stocks");
-  };
-
-  const handleViewCategories = () => {
-    navigate("/categories");
-  };
-
   useEffect(() => {
     if (user?.role === "admin") {
       fetchOverview();
@@ -91,251 +79,243 @@ const Dashboard: React.FC = () => {
         <Typography align="center" sx={{ color: "text.secondary", mb: 4 }}>
           {t("premierDestination")}
         </Typography>
-        {/* Optionally, show the old dashboard for non-admins here */}
       </Container>
     );
   }
 
   return (
-    <Box
-      sx={{ bgcolor: "background.default", pt: 10, pb: 4, minHeight: "100vh" }}>
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Fade in timeout={800}>
-          <Box>
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 700,
-                mb: 1,
-                textAlign: "center",
-                color: "text.primary",
-              }}>
-              {t("adminDashboard")}
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                mb: 2,
-              }}>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      {/* Hero Banner */}
+      <Box
+        sx={{
+          background:
+            "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+          color: "white",
+          borderRadius: "0 0 18px 18px",
+          boxShadow: getShadow(mode),
+          px: { xs: 2, md: 0 },
+          pt: 8,
+          pb: 6,
+          mb: 4,
+        }}>
+        <Container maxWidth="xl">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 2,
+            }}>
+            <Box>
               <Typography
-                variant="h6"
-                sx={{
-                  color: "text.secondary",
-                  fontWeight: 400,
-                  mr: 2,
-                }}>
+                variant="h3"
+                sx={{ fontWeight: 800, mb: 1, letterSpacing: 1 }}>
+                {t("adminDashboard")}
+              </Typography>
+              <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 400 }}>
                 {t("manageStore")}
               </Typography>
-              <Tooltip title={t("refreshDashboard")}>
-                <IconButton
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  sx={{
-                    color: "primary.main",
-                    "&:hover": { color: "primary.dark" },
-                  }}>
-                  <RefreshCw
-                    size={20}
-                    className={refreshing ? "animate-spin" : ""}
-                  />
-                </IconButton>
-              </Tooltip>
             </Box>
-
-            {/* Navigation Links Section */}
-            <Paper sx={{ p: 3, mb: 4 }}>
-              <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-                {t("quickNavigation")}
-              </Typography>
-              <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<Users size={20} />}
-                  onClick={handleViewUsers}
-                  sx={{
-                    background: getButtonGradient(),
-                    color: "white",
-                    boxShadow: getShadow(mode),
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                    },
-                  }}>
-                  {t("manageUsers")}
-                </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<Package size={20} />}
-                  onClick={handleViewOrders}
-                  sx={{
-                    background: getButtonGradient(),
-                    color: "white",
-                    boxShadow: getShadow(mode),
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                    },
-                  }}>
-                  {t("manageOrders")}
-                </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<Package size={20} />}
-                  onClick={handleViewStocks}
-                  sx={{
-                    background: getButtonGradient(),
-                    color: "white",
-                    boxShadow: getShadow(mode),
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                    },
-                  }}>
-                  {t("manageStocks")}
-                </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<Grid3x3 size={20} />}
-                  onClick={handleViewCategories}
-                  sx={{
-                    background: getButtonGradient(),
-                    color: "white",
-                    boxShadow: getShadow(mode),
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                    },
-                  }}>
-                  {t("manageCategories")}
-                </Button>
-              </Box>
-            </Paper>
-
-            <Box sx={{ mb: 4 }}>
-              <CategoryTree />
-            </Box>
-
-            {loading ? (
-              <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-                <CircularProgress size={60} />
-              </Box>
-            ) : error ? (
-              <Alert severity="error" sx={{ mb: 4 }}>
-                {error}
-              </Alert>
-            ) : overview ? (
-              <>
-                {/* Stats Cards */}
-                <div className="grid grid-cols-4 gap-4 mb-4">
-                  <div className="col-span-4 sm:col-span-2 md:col-span-1">
-                    <StatsCard
-                      title={t("totalSales")}
-                      value={`$${
-                        overview.summary.totalRevenue?.toLocaleString() ?? "0"
-                      }`}
-                      change={undefined}
-                      icon={TrendingUp}
-                      color="success.main"
-                    />
-                  </div>
-                  <div className="col-span-4 sm:col-span-2 md:col-span-1">
-                    <StatsCard
-                      title={t("products")}
-                      value={
-                        overview.summary.totalProducts?.toLocaleString() ?? "0"
-                      }
-                      change={undefined}
-                      icon={Package}
-                      color="info.main"
-                    />
-                  </div>
-                  <div className="col-span-4 sm:col-span-2 md:col-span-1">
-                    <StatsCard
-                      title={t("customers")}
-                      value={
-                        overview.summary.totalUsers?.toLocaleString() ?? "0"
-                      }
-                      change={undefined}
-                      icon={Users}
-                      color="warning.main"
-                    />
-                  </div>
-                  <div className="col-span-4 sm:col-span-2 md:col-span-1">
-                    <StatsCard
-                      title={t("orders")}
-                      value={
-                        overview.summary.totalOrders?.toLocaleString() ?? "0"
-                      }
-                      change={undefined}
-                      icon={DollarSign}
-                      color="error.main"
-                    />
-                  </div>
-                </div>
-
-                {/* Charts */}
-                <div className="grid grid-cols-12 gap-4 mb-4">
-                  <div className="col-span-12 md:col-span-6">
-                    <Paper sx={{ p: 3, minHeight: 400 }}>
-                      <RevenueChart monthlyRevenue={overview.monthlyRevenue} />
-                    </Paper>
-                  </div>
-                  <div className="col-span-12 md:col-span-6">
-                    <Paper sx={{ p: 3, minHeight: 400 }}>
-                      <CategoryChart categorySales={overview.categorySales} />
-                    </Paper>
-                  </div>
-                </div>
-
-                {/* Orders Management Section */}
-                <Paper sx={{ p: 3, mt: 4 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mb: 2,
-                    }}>
-                    <Typography variant="h5">{t("recentOrders")}</Typography>
-                    <Button
-                      variant="contained"
-                      endIcon={<ArrowRight size={20} />}
-                      onClick={handleViewOrders}
-                      sx={{
-                        background:
-                          "linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)",
-                        color: "white",
-                        "&:hover": {
-                          background:
-                            "linear-gradient(45deg, #1565c0 30%, #1976d2 90%)",
-                        },
-                      }}>
-                      {t("viewAllOrders")}
-                    </Button>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Manage customer orders, update statuses, and track
-                    deliveries from the dedicated orders page.
-                  </Typography>
-                </Paper>
-              </>
-            ) : null}
+            <Tooltip title={t("refreshDashboard") || "Refresh"}>
+              <IconButton
+                onClick={handleRefresh}
+                disabled={refreshing}
+                sx={{
+                  color: "white",
+                  background: "rgba(255,255,255,0.08)",
+                  ml: 2,
+                  "&:hover": { background: "rgba(255,255,255,0.18)" },
+                }}>
+                <RefreshCw
+                  size={24}
+                  className={refreshing ? "animate-spin" : ""}
+                />
+              </IconButton>
+            </Tooltip>
           </Box>
-        </Fade>
+          {/* Quick Stats Cards */}
+          <Grid container spacing={3} sx={{ mt: 4 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <StatsCard
+                title={t("totalUsers")}
+                value={overview?.totalUsers?.toLocaleString() || "-"}
+                icon={Users}
+                color="#ff6b6b"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <StatsCard
+                title={t("totalOrders")}
+                value={overview?.totalOrders?.toLocaleString() || "-"}
+                icon={Package}
+                color="#ff6b6b"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <StatsCard
+                title={t("totalStocks")}
+                value={overview?.totalStocks?.toLocaleString() || "-"}
+                icon={Grid3x3}
+                color="#ff6b6b"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <StatsCard
+                title={t("totalRevenue")}
+                value={
+                  overview?.totalRevenue?.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }) || "-"
+                }
+                icon={DollarSign}
+                color="#ff6b6b"
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Charts Section */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} md={7}>
+            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+              {overview ? (
+                <RevenueChart monthlyRevenue={overview.monthlyRevenue} />
+              ) : (
+                <CircularProgress />
+              )}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+              {overview ? (
+                <CategoryChart categorySales={overview.categorySales} />
+              ) : (
+                <CircularProgress />
+              )}
+            </Paper>
+          </Grid>
+        </Grid>
+
+        {/* Quick Actions */}
+        <Paper
+          sx={{ p: 3, borderRadius: 3, mb: 4, boxShadow: getShadow(mode) }}>
+          <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>
+            {t("quickActions")}
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                size="large"
+                startIcon={<Users size={20} />}
+                onClick={() => navigate("/admin-users")}
+                sx={{
+                  background: getButtonGradient(),
+                  color: "white",
+                  fontWeight: 700,
+                  py: 1.5,
+                  borderRadius: 2,
+                  boxShadow: getShadow(mode),
+                  textTransform: "none",
+                  fontSize: "1.1rem",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                  },
+                }}>
+                {t("manageUsers")}
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                size="large"
+                startIcon={<Package size={20} />}
+                onClick={() => navigate("/admin-orders")}
+                sx={{
+                  background: getButtonGradient(),
+                  color: "white",
+                  fontWeight: 700,
+                  py: 1.5,
+                  borderRadius: 2,
+                  boxShadow: getShadow(mode),
+                  textTransform: "none",
+                  fontSize: "1.1rem",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                  },
+                }}>
+                {t("manageOrders")}
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                size="large"
+                startIcon={<Grid3x3 size={20} />}
+                onClick={() => navigate("/admin-stocks")}
+                sx={{
+                  background: getButtonGradient(),
+                  color: "white",
+                  fontWeight: 700,
+                  py: 1.5,
+                  borderRadius: 2,
+                  boxShadow: getShadow(mode),
+                  textTransform: "none",
+                  fontSize: "1.1rem",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                  },
+                }}>
+                {t("manageStocks")}
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                size="large"
+                startIcon={<Grid3x3 size={20} />}
+                onClick={() => navigate("/categories")}
+                sx={{
+                  background: getButtonGradient(),
+                  color: "white",
+                  fontWeight: 700,
+                  py: 1.5,
+                  borderRadius: 2,
+                  boxShadow: getShadow(mode),
+                  textTransform: "none",
+                  fontSize: "1.1rem",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                  },
+                }}>
+                {t("manageCategories")}
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        {/* Category Tree */}
+        <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
+            {t("categoryHierarchy")}
+          </Typography>
+          <CategoryTree />
+        </Paper>
       </Container>
     </Box>
   );
 };
 
 export default Dashboard;
-export { Dashboard };
