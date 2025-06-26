@@ -28,10 +28,13 @@ import { CategoryChart } from "../components/dashboard/CategoryChart";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CategoryTree from "../components/categories/CategoryTree";
+import { CustomThemeContext } from "../contexts/ThemeContext";
+import { getButtonGradient, getShadow } from "../config/theme";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { mode } = React.useContext(CustomThemeContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
@@ -153,12 +156,13 @@ const Dashboard: React.FC = () => {
                   startIcon={<Users size={20} />}
                   onClick={handleViewUsers}
                   sx={{
-                    background:
-                      "linear-gradient(45deg, #ff9800 30%, #ffb74d 90%)",
+                    background: getButtonGradient(),
                     color: "white",
+                    boxShadow: getShadow(mode),
                     "&:hover": {
                       background:
-                        "linear-gradient(45deg, #f57c00 30%, #ff9800 90%)",
+                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
                     },
                   }}>
                   {t("manageUsers")}
@@ -169,12 +173,13 @@ const Dashboard: React.FC = () => {
                   startIcon={<Package size={20} />}
                   onClick={handleViewOrders}
                   sx={{
-                    background:
-                      "linear-gradient(45deg, #2196f3 30%, #64b5f6 90%)",
+                    background: getButtonGradient(),
                     color: "white",
+                    boxShadow: getShadow(mode),
                     "&:hover": {
                       background:
-                        "linear-gradient(45deg, #1976d2 30%, #2196f3 90%)",
+                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
                     },
                   }}>
                   {t("manageOrders")}
@@ -185,12 +190,13 @@ const Dashboard: React.FC = () => {
                   startIcon={<Package size={20} />}
                   onClick={handleViewStocks}
                   sx={{
-                    background:
-                      "linear-gradient(45deg, #4caf50 30%, #81c784 90%)",
+                    background: getButtonGradient(),
                     color: "white",
+                    boxShadow: getShadow(mode),
                     "&:hover": {
                       background:
-                        "linear-gradient(45deg, #388e3c 30%, #4caf50 90%)",
+                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
                     },
                   }}>
                   {t("manageStocks")}
@@ -201,15 +207,16 @@ const Dashboard: React.FC = () => {
                   startIcon={<Grid3x3 size={20} />}
                   onClick={handleViewCategories}
                   sx={{
-                    background:
-                      "linear-gradient(45deg, #ab47bc 30%, #ce93d8 90%)",
+                    background: getButtonGradient(),
                     color: "white",
+                    boxShadow: getShadow(mode),
                     "&:hover": {
                       background:
-                        "linear-gradient(45deg, #8e24aa 30%, #ab47bc 90%)",
+                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
                     },
                   }}>
-                  Manage Categories
+                  {t("manageCategories")}
                 </Button>
               </Box>
             </Paper>
