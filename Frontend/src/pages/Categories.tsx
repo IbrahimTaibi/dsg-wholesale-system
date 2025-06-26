@@ -63,7 +63,12 @@ import { useNavigate } from "react-router-dom";
 import { apiService, Category as CategoryType } from "../config/api";
 import CategoryTree from "../components/categories/CategoryTree";
 import { CustomThemeContext } from "../contexts/ThemeContext";
-import { getUIGradient, getTabColor, getShadow } from "../config/theme";
+import {
+  getUIGradient,
+  getTabColor,
+  getShadow,
+  getButtonGradient,
+} from "../config/theme";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -113,9 +118,6 @@ const CategoriesPage: React.FC = () => {
   };
 
   const getGradientBackgroundHover = () => {
-    if (mode === "dark") {
-      return "linear-gradient(135deg, #1e2634 0%, #161c28 50%, #0f1419 100%)";
-    }
     return "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)";
   };
 
@@ -299,8 +301,8 @@ const CategoriesPage: React.FC = () => {
           overflow: "hidden",
           borderRadius: 3,
           boxShadow: getShadow(mode),
-          margin: { xs: 2, md: 3 },
-          marginTop: 4,
+          margin: { xs: 0, md: 0 },
+          marginTop: 0,
         }}>
         <Container maxWidth="xl">
           <Breadcrumbs
@@ -484,7 +486,7 @@ const CategoriesPage: React.FC = () => {
                     startIcon={<Add />}
                     onClick={() => handleOpenDialog()}
                     sx={{
-                      background: getGradientBackground(),
+                      background: getButtonGradient(),
                       "&:hover": {
                         background: getGradientBackgroundHover(),
                       },
@@ -527,7 +529,7 @@ const CategoriesPage: React.FC = () => {
                       startIcon={<Add />}
                       onClick={() => handleOpenDialog()}
                       sx={{
-                        background: getGradientBackground(),
+                        background: getButtonGradient(),
                         "&:hover": {
                           background: getGradientBackgroundHover(),
                         },
@@ -979,7 +981,7 @@ const CategoriesPage: React.FC = () => {
               !categoryName.trim() || variants.length === 0 || actionLoading
             }
             sx={{
-              background: getGradientBackground(),
+              background: getButtonGradient(),
               "&:hover": {
                 background: getGradientBackgroundHover(),
               },
