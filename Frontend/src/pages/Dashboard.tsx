@@ -87,12 +87,14 @@ const Dashboard: React.FC = () => {
           background:
             "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
           color: "white",
-          borderRadius: "0 0 24px 24px",
+          py: 6,
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: "0 0 12px 12px",
           boxShadow: getShadow(mode),
-          px: 0,
-          pt: 7,
-          pb: 4,
-          mb: 0,
+          margin: { xs: 0, md: 0 },
+          marginTop: 0,
+          mb: 1,
         }}>
         <Container maxWidth="xl" sx={{ p: 0, m: 0 }}>
           <Stack
