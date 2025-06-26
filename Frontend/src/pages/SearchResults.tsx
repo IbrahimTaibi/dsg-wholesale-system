@@ -1,15 +1,13 @@
 import React, { useEffect } from "react";
 import { Loader2, Search } from "lucide-react";
-import ProductDisplayCard from "../components/products/ProductDisplayCard";
+import { ProductItem } from "../components/products/ProductItem";
 import { useProducts } from "../hooks";
 import { mapApiProductToProduct, Product } from "../types";
 import { useUI } from "../contexts/UIContext";
-import { useNavigate } from "react-router-dom";
 import { useDebounce } from "../hooks";
 
 export const SearchResults: React.FC = () => {
   const { searchQuery, setSearchQuery } = useUI();
-  const navigate = useNavigate();
 
   // Use debounced search query to prevent excessive API calls
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -35,22 +33,6 @@ export const SearchResults: React.FC = () => {
       // Don't clear search query on unmount to preserve search state
     };
   }, []);
-
-  const handleProductClick = (product: Product) => {
-    // Navigate to the appropriate category page for the product
-    const categoryRoutes: { [key: string]: string } = {
-      "Water & Beverages": "/water",
-      Juices: "/juices",
-      Cakes: "/cakes",
-      Chips: "/chips",
-      Groceries: "/groceries",
-    };
-
-    const route = categoryRoutes[product.category];
-    if (route) {
-      navigate(route);
-    }
-  };
 
   const theme = {
     background:
@@ -187,13 +169,9 @@ export const SearchResults: React.FC = () => {
                 </div>
 
                 {/* Products Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
                   {products.map((product: Product) => (
-                    <div
-                      key={product.id}
-                      onClick={() => handleProductClick(product)}>
-                      <ProductDisplayCard product={product} />
-                    </div>
+                    <ProductItem key={product.id} product={product} />
                   ))}
                 </div>
 

@@ -4,7 +4,7 @@ import { apiService, Category } from "../config/api";
 import { Product } from "../types";
 import { mapApiProductToProduct } from "../types";
 import * as Mui from "@mui/material";
-import ProductDisplayCard from "../components/products/ProductDisplayCard";
+import { ProductItem } from "../components/products/ProductItem";
 import { ArrowBack, Home, Category as CategoryIcon } from "@mui/icons-material";
 
 const CategoryProductsPage: React.FC = () => {
@@ -340,25 +340,15 @@ const CategoryProductsPage: React.FC = () => {
                   sx={{
                     display: "grid",
                     gridTemplateColumns: {
-                      xs: "1fr",
-                      sm: "repeat(2, 1fr)",
+                      xs: "repeat(2, 1fr)",
                       md: "repeat(3, 1fr)",
                       lg: "repeat(4, 1fr)",
+                      xl: "repeat(6, 1fr)",
                     },
                     gap: 3,
                   }}>
                   {products.map((product) => (
-                    <Mui.Box
-                      key={product.id}
-                      sx={{
-                        height: "100%",
-                        transition: "transform 0.2s ease-in-out",
-                        "&:hover": {
-                          transform: "translateY(-4px)",
-                        },
-                      }}>
-                      <ProductDisplayCard product={product} />
-                    </Mui.Box>
+                    <ProductItem key={product.id} product={product} />
                   ))}
                 </Mui.Box>
 

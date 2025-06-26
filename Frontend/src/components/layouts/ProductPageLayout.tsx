@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Loader2, LucideIcon } from "lucide-react";
 import { SearchSortFilter } from "../ui/SearchSortFilter";
-import ProductDisplayCard from "../products/ProductDisplayCard";
+import { ProductItem } from "../products/ProductItem";
 import { useProducts } from "../../hooks";
 import { mapApiProductToProduct, Product } from "../../types";
 import { useTranslation } from "react-i18next";
@@ -178,9 +178,9 @@ export const ProductPageLayout: React.FC<ProductPageLayoutProps> = ({
                 </div>
 
                 {/* Products Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
                   {filteredProducts.map((product: Product) => (
-                    <ProductDisplayCard key={product.id} product={product} />
+                    <ProductItem key={product.id} product={product} />
                   ))}
                 </div>
 

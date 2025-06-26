@@ -10,11 +10,8 @@ import {
 import { apiService, Category } from "../config/api";
 import { mapApiProductToProduct, Product as FrontendProduct } from "../types";
 import { ProductItem } from "../components/products/ProductItem";
-import { useTheme } from "@mui/material/styles";
-import AnimatedDSG from "../components/ui/AnimatedDSG";
 
 export const UserHome: React.FC = () => {
-  const theme = useTheme();
   const { t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryProducts, setCategoryProducts] = useState<
@@ -57,14 +54,12 @@ export const UserHome: React.FC = () => {
             mb: 6,
             borderRadius: 3,
             overflow: "hidden",
-            background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-            color: theme.palette.getContrastText(theme.palette.primary.main),
+            background:
+              "linear-gradient(135deg, rgb(255, 107, 107) 0%, rgb(255, 87, 87) 100%)",
+            color: "white",
             boxShadow: 3,
             p: { xs: 3, md: 5 },
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: "center",
-            justifyContent: "space-between",
+            textAlign: "center",
           }}>
           <Box>
             <Typography
@@ -77,13 +72,6 @@ export const UserHome: React.FC = () => {
                 defaultValue: "Explore our best deals and categories!",
               })}
             </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: { xs: "none", md: "block" },
-              ml: { md: 4 },
-            }}>
-            <AnimatedDSG />
           </Box>
         </Box>
         {/* End Welcoming Banner */}
