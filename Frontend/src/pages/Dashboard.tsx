@@ -140,94 +140,126 @@ const Dashboard: React.FC = () => {
           </Stack>
 
           {/* Horizontally scrollable quick stats on mobile, grid on desktop */}
-          <Box sx={{ overflowX: { xs: "auto", md: "visible" }, mt: 2 }}>
-            <Grid
-              container
-              spacing={2}
-              wrap="nowrap"
-              sx={{ flexWrap: { xs: "nowrap", md: "wrap" } }}>
-              <Grid item xs={12} sm={4} md={4}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    textAlign: "center",
-                    background: "rgba(255,255,255,0.08)",
-                    color: "white",
-                    boxShadow: "none",
-                    borderRadius: 2,
-                  }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                    {overview ? (
-                      overview.summary.totalUsers?.toLocaleString()
-                    ) : (
-                      <CircularProgress
-                        size={20}
-                        color="inherit"
-                        thickness={5}
-                      />
-                    )}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                    {t("totalUsers")}
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} sm={4} md={4}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    textAlign: "center",
-                    background: "rgba(255,255,255,0.08)",
-                    color: "white",
-                    boxShadow: "none",
-                    borderRadius: 2,
-                  }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                    {overview ? (
-                      overview.summary.totalOrders?.toLocaleString()
-                    ) : (
-                      <CircularProgress
-                        size={20}
-                        color="inherit"
-                        thickness={5}
-                      />
-                    )}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                    {t("totalOrders")}
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} sm={4} md={4}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    textAlign: "center",
-                    background: "rgba(255,255,255,0.08)",
-                    color: "white",
-                    boxShadow: "none",
-                    borderRadius: 2,
-                  }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                    {overview ? (
-                      overview.summary.totalRevenue?.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })
-                    ) : (
-                      <CircularProgress
-                        size={20}
-                        color="inherit"
-                        thickness={5}
-                      />
-                    )}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                    {t("totalRevenue")}
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              gap: 3,
+              mt: 2,
+              mb: 2,
+              alignItems: "stretch",
+            }}>
+            {/* Total Users */}
+            <Paper
+              sx={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                p: 3,
+                borderRadius: 3,
+                boxShadow: 3,
+                background: "rgba(255,255,255,0.10)",
+                color: "white",
+                transition: "box-shadow 0.2s, transform 0.2s",
+                "&:hover": {
+                  boxShadow: 8,
+                  transform: "translateY(-4px) scale(1.03)",
+                },
+              }}>
+              <Avatar sx={{ bgcolor: "#ff6b6b", width: 56, height: 56 }}>
+                <Users size={28} />
+              </Avatar>
+              <Box>
+                <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>
+                  {overview ? (
+                    overview.summary.totalUsers?.toLocaleString()
+                  ) : (
+                    <CircularProgress size={24} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ opacity: 0.85, fontWeight: 500 }}>
+                  {t("totalUsers")}
+                </Typography>
+              </Box>
+            </Paper>
+            {/* Total Orders */}
+            <Paper
+              sx={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                p: 3,
+                borderRadius: 3,
+                boxShadow: 3,
+                background: "rgba(255,255,255,0.10)",
+                color: "white",
+                transition: "box-shadow 0.2s, transform 0.2s",
+                "&:hover": {
+                  boxShadow: 8,
+                  transform: "translateY(-4px) scale(1.03)",
+                },
+              }}>
+              <Avatar sx={{ bgcolor: "#4ecdc4", width: 56, height: 56 }}>
+                <Package size={28} />
+              </Avatar>
+              <Box>
+                <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>
+                  {overview ? (
+                    overview.summary.totalOrders?.toLocaleString()
+                  ) : (
+                    <CircularProgress size={24} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ opacity: 0.85, fontWeight: 500 }}>
+                  {t("totalOrders")}
+                </Typography>
+              </Box>
+            </Paper>
+            {/* Total Revenue */}
+            <Paper
+              sx={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                p: 3,
+                borderRadius: 3,
+                boxShadow: 3,
+                background: "rgba(255,255,255,0.10)",
+                color: "white",
+                transition: "box-shadow 0.2s, transform 0.2s",
+                "&:hover": {
+                  boxShadow: 8,
+                  transform: "translateY(-4px) scale(1.03)",
+                },
+              }}>
+              <Avatar sx={{ bgcolor: "#ffb347", width: 56, height: 56 }}>
+                <Grid3x3 size={28} />
+              </Avatar>
+              <Box>
+                <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>
+                  {overview ? (
+                    overview.summary.totalRevenue?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })
+                  ) : (
+                    <CircularProgress size={24} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ opacity: 0.85, fontWeight: 500 }}>
+                  {t("totalRevenue")}
+                </Typography>
+              </Box>
+            </Paper>
           </Box>
         </Container>
       </Box>
@@ -450,9 +482,33 @@ const Dashboard: React.FC = () => {
         </Paper>
 
         {/* Charts Section */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={7}>
-            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            mb: 4,
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "center", md: "stretch" },
+          }}>
+          <Grid
+            item
+            xs={12}
+            md={7}
+            sx={{
+              width: "100%",
+              maxWidth: { xs: 500, md: "100%" },
+              mx: { xs: "auto", md: 0 },
+            }}>
+            <Paper
+              sx={{
+                p: 3,
+                borderRadius: 3,
+                boxShadow: getShadow(mode),
+                width: "100%",
+                maxWidth: 600,
+                mx: "auto",
+                mb: { xs: 3, md: 0 },
+              }}>
               {overview ? (
                 <RevenueChart monthlyRevenue={overview.monthlyRevenue} />
               ) : (
@@ -460,8 +516,24 @@ const Dashboard: React.FC = () => {
               )}
             </Paper>
           </Grid>
-          <Grid item xs={12} md={5}>
-            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+          <Grid
+            item
+            xs={12}
+            md={5}
+            sx={{
+              width: "100%",
+              maxWidth: { xs: 500, md: "100%" },
+              mx: { xs: "auto", md: 0 },
+            }}>
+            <Paper
+              sx={{
+                p: 3,
+                borderRadius: 3,
+                boxShadow: getShadow(mode),
+                width: "100%",
+                maxWidth: 600,
+                mx: "auto",
+              }}>
               {overview ? (
                 <CategoryChart categorySales={overview.categorySales} />
               ) : (
@@ -472,7 +544,13 @@ const Dashboard: React.FC = () => {
         </Grid>
 
         {/* Category Tree */}
-        <Paper sx={{ p: 3, borderRadius: 3, boxShadow: getShadow(mode) }}>
+        <Paper
+          sx={{
+            p: 3,
+            borderRadius: 3,
+            boxShadow: getShadow(mode),
+            mt: { xs: 4, md: 0 },
+          }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
             {t("categoryHierarchy")}
           </Typography>
