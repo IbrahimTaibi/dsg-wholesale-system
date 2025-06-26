@@ -260,7 +260,7 @@ export const Sidebar: React.FC = () => {
 
                   {/* Fade overlay for seamless effect */}
                   {!showAllCategories && rootCategories.length > 3 && (
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent dark:from-gray-900/80 dark:via-gray-900/40 pointer-events-none z-10 animate-pulse-slow" />
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-transparent via-transparent to-transparent pointer-events-none z-10 animate-pulse-slow" />
                   )}
 
                   {/* Show More/Less Button */}
@@ -274,9 +274,9 @@ export const Sidebar: React.FC = () => {
                       <button
                         onClick={toggleShowAllCategories}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-left
-                          transition-all duration-500 ease-in-out group relative overflow-hidden backdrop-blur-sm
-                          text-white/70 hover:text-white hover:bg-white/8 hover:transform hover:scale-[1.02] 
-                          border border-transparent hover:border-white/10 active:scale-[0.98]"
+                          transition-all duration-500 ease-in-out group relative overflow-hidden
+                          text-white/70 hover:text-white hover:transform hover:scale-[1.02] 
+                          border border-transparent active:scale-[0.98]"
                         aria-label={
                           showAllCategories
                             ? "Show less categories"
@@ -303,12 +303,6 @@ export const Sidebar: React.FC = () => {
                             )}
                           </div>
                         </div>
-
-                        {/* Hover glow effect */}
-                        <div
-                          className="absolute inset-0 rounded-xl transition-all duration-500 ease-in-out pointer-events-none
-                          bg-gradient-to-r from-white/3 via-white/8 to-transparent opacity-0 group-hover:opacity-100 group-hover:scale-105"
-                        />
                       </button>
                     </div>
                   )}
