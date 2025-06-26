@@ -10,6 +10,8 @@ import {
 import { apiService, Category } from "../config/api";
 import { mapApiProductToProduct, Product as FrontendProduct } from "../types";
 import { ProductItem } from "../components/products/ProductItem";
+import { userHomeBanner, bannerText } from "../config/styles";
+import "../config/componentStyles.css";
 
 export const UserHome: React.FC = () => {
   const { t } = useTranslation();
@@ -49,25 +51,12 @@ export const UserHome: React.FC = () => {
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         {/* Welcoming Banner */}
-        <Box
-          sx={{
-            mb: 6,
-            borderRadius: 3,
-            overflow: "hidden",
-            background:
-              "linear-gradient(135deg, rgb(255, 107, 107) 0%, rgb(255, 87, 87) 100%)",
-            color: "white",
-            boxShadow: 3,
-            p: { xs: 3, md: 5 },
-            textAlign: "center",
-          }}>
+        <Box sx={userHomeBanner} className="user-home-banner">
           <Box>
-            <Typography
-              variant="h3"
-              sx={{ fontWeight: 800, mb: 1, letterSpacing: 1 }}>
+            <Typography variant="h3" sx={bannerText.title}>
               {t("greeting")}
             </Typography>
-            <Typography variant="h6" sx={{ opacity: 0.9 }}>
+            <Typography variant="h6" sx={bannerText.subtitle}>
               {t("welcomeBannerSubtext", {
                 defaultValue: "Explore our best deals and categories!",
               })}
