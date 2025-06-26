@@ -80,9 +80,12 @@ export const Sidebar: React.FC = () => {
         className={`
         fixed top-0 left-0 h-full w-80 z-50 transform transition-all duration-300 ease-in-out
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        bg-gradient-to-b from-orange-800 via-orange-900 to-red-800 dark:from-gray-800 dark:via-gray-850 dark:to-gray-900
         shadow-2xl border-r border-white/10
-      `}>
+      `}
+        style={{
+          background:
+            "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+        }}>
         <div className="pt-20 pb-4 h-full overflow-y-auto relative flex flex-col">
           {/* Decorative gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-black/10 pointer-events-none" />
