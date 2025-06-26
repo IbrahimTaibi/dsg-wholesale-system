@@ -19,36 +19,69 @@ import {
   TextField,
   Card,
   CardContent,
-  Grid,
   Paper,
   Divider,
-  Fab,
   Container,
   Avatar,
-  Badge,
-  Stack,
   Breadcrumbs,
   Link,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemSecondaryAction,
+  Switch,
+  Badge,
+  Fade,
+  Zoom,
+  Slide,
 } from "@mui/material";
 import {
   Edit,
   Delete,
-  X,
+  Add,
   Folder,
   FolderOpen,
   Category,
   ShoppingCart,
-  TrendingUp,
-  Star,
   ArrowForward,
   Home,
   NavigateNext,
+  Search,
+  FilterList,
+  ViewList,
+  ViewModule,
+  MoreVert,
+  Star,
+  TrendingUp,
+  Visibility,
+  VisibilityOff,
 } from "@mui/icons-material";
-import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { apiService, Category as CategoryType } from "../config/api";
 import CategoryTree from "../components/categories/CategoryTree";
-import { useTranslation } from "react-i18next";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`category-tabpanel-${index}`}
+      aria-labelledby={`category-tab-${index}`}
+      {...other}>
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+    </div>
+  );
+}
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
@@ -64,12 +97,12 @@ const CategoriesPage: React.FC = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [parent, setParent] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
-    null,
-  );
+  const [tabValue, setTabValue] = useState(0);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showInactive, setShowInactive] = useState(false);
 
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   // Fetch categories from backend
   const fetchCategories = async () => {
@@ -226,346 +259,496 @@ const CategoriesPage: React.FC = () => {
     return colors[index];
   };
 
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Header Section */}
-      <Box sx={{ mb: 4 }}>
-        <Breadcrumbs
-          separator={<NavigateNext fontSize="small" />}
-          sx={{ mb: 2 }}>
-          <Link
-            component="button"
-            variant="body1"
-            onClick={() => navigate("/")}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              textDecoration: "none",
-            }}>
-            <Home sx={{ mr: 0.5 }} />
-            Home
-          </Link>
-          <Typography color="text.primary">Categories</Typography>
-        </Breadcrumbs>
+  // Filter categories based on search
+  const filteredCategories = categories.filter(
+    (cat) =>
+      cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cat.variants.some((variant) =>
+        variant.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+  );
 
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: 700,
-            mb: 1,
-            background:
-              "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>
-          Category Management
-        </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
-          Organize and manage your product categories with ease
-        </Typography>
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
+  return (
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+      {/* Hero Section */}
+      <Box
+        sx={{
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          color: "white",
+          py: 6,
+          position: "relative",
+          overflow: "hidden",
+        }}>
+        <Container maxWidth="xl">
+          <Breadcrumbs
+            separator={<NavigateNext fontSize="small" />}
+            sx={{ mb: 3, color: "white" }}>
+            <Link
+              component="button"
+              variant="body1"
+              onClick={() => navigate("/")}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                color: "white",
+                "&:hover": { color: "rgba(255,255,255,0.8)" },
+              }}>
+              <Home sx={{ mr: 0.5 }} />
+              Home
+            </Link>
+            <Typography color="white">Categories</Typography>
+          </Breadcrumbs>
+
+          <Typography
+            variant="h2"
+            sx={{
+              fontWeight: 800,
+              mb: 2,
+              fontSize: { xs: "2rem", md: "3rem" },
+            }}>
+            Category Management
+          </Typography>
+          <Typography variant="h6" sx={{ opacity: 0.9, mb: 4 }}>
+            Organize your product catalog with powerful category management
+            tools
+          </Typography>
+
+          {/* Stats Cards */}
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+            <Paper
+              sx={{
+                p: 2,
+                minWidth: 120,
+                textAlign: "center",
+                background: "rgba(255,255,255,0.1)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                {stats.totalCategories}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                Total Categories
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                p: 2,
+                minWidth: 120,
+                textAlign: "center",
+                background: "rgba(255,255,255,0.1)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                {stats.rootCategories}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                Root Categories
+              </Typography>
+            </Paper>
+            <Paper
+              sx={{
+                p: 2,
+                minWidth: 120,
+                textAlign: "center",
+                background: "rgba(255,255,255,0.1)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                {stats.totalVariants}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                Total Variants
+              </Typography>
+            </Paper>
+          </Box>
+        </Container>
       </Box>
 
-      {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              color: "white",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-            <CardContent>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        {/* Tabs Section */}
+        <Paper sx={{ mb: 3, borderRadius: 2 }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs value={tabValue} onChange={handleTabChange} sx={{ px: 2 }}>
+              <Tab
+                label="All Categories"
+                icon={<Category />}
+                iconPosition="start"
+              />
+              <Tab
+                label="Category Tree"
+                icon={<Folder />}
+                iconPosition="start"
+              />
+              <Tab
+                label="Analytics"
+                icon={<TrendingUp />}
+                iconPosition="start"
+              />
+            </Tabs>
+          </Box>
+
+          {/* Tab Panels */}
+          <TabPanel value={tabValue} index={0}>
+            {/* All Categories Tab */}
+            <Box sx={{ px: 2 }}>
+              {/* Search and Controls */}
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
                   justifyContent: "space-between",
-                }}>
-                <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {stats.totalCategories}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    Total Categories
-                  </Typography>
-                </Box>
-                <Category sx={{ fontSize: 40, opacity: 0.8 }} />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-              color: "white",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  mb: 3,
+                  flexWrap: "wrap",
+                  gap: 2,
                 }}>
-                <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {stats.rootCategories}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    Root Categories
-                  </Typography>
-                </Box>
-                <Folder sx={{ fontSize: 40, opacity: 0.8 }} />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-              color: "white",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {stats.subCategories}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    Sub Categories
-                  </Typography>
-                </Box>
-                <FolderOpen sx={{ fontSize: 40, opacity: 0.8 }} />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-              color: "white",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {stats.totalVariants}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    Total Variants
-                  </Typography>
-                </Box>
-                <ShoppingCart sx={{ fontSize: 40, opacity: 0.8 }} />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Main Content */}
-      <Grid container spacing={4}>
-        {/* Category Tree Section */}
-        <Grid xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 3,
-              height: "fit-content",
-              background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-              borderRadius: 3,
-            }}>
-            <Typography
-              variant="h6"
-              sx={{
-                mb: 2,
-                fontWeight: 600,
-                display: "flex",
-                alignItems: "center",
-              }}>
-              <Category sx={{ mr: 1 }} />
-              Category Tree
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Box sx={{ maxHeight: 500, overflow: "auto" }}>
-              <CategoryTree />
-            </Box>
-          </Paper>
-        </Grid>
-
-        {/* Categories List Section */}
-        <Grid xs={12} md={8}>
-          <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 3,
-              }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                All Categories
-              </Typography>
-              <Button
-                variant="contained"
-                startIcon={<Plus size={20} />}
-                onClick={() => handleOpenDialog()}
-                sx={{
-                  background:
-                    "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                  },
-                }}>
-                Add Category
-              </Button>
-            </Box>
-
-            {loading ? (
-              <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-                <CircularProgress size={60} />
-              </Box>
-            ) : error ? (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            ) : categories.length === 0 ? (
-              <Box sx={{ textAlign: "center", py: 8 }}>
-                <Category
-                  sx={{ fontSize: 80, color: "text.secondary", mb: 2 }}
-                />
-                <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-                  No categories found
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}>
-                  Start by creating your first category
-                </Typography>
-                <Button
-                  variant="contained"
-                  startIcon={<Plus size={20} />}
-                  onClick={() => handleOpenDialog()}
+                <Box
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                    },
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    flex: 1,
+                    minWidth: 300,
                   }}>
-                  Create First Category
-                </Button>
+                  <TextField
+                    placeholder="Search categories..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <Search sx={{ mr: 1, color: "text.secondary" }} />
+                      ),
+                    }}
+                    size="small"
+                    sx={{ flex: 1 }}
+                  />
+                  <IconButton>
+                    <FilterList />
+                  </IconButton>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <IconButton
+                    onClick={() => setViewMode("list")}
+                    color={viewMode === "list" ? "primary" : "default"}>
+                    <ViewList />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => setViewMode("grid")}
+                    color={viewMode === "grid" ? "primary" : "default"}>
+                    <ViewModule />
+                  </IconButton>
+                  <Button
+                    variant="contained"
+                    startIcon={<Add />}
+                    onClick={() => handleOpenDialog()}
+                    sx={{
+                      background:
+                        "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+                      "&:hover": {
+                        background:
+                          "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                      },
+                    }}>
+                    Add Category
+                  </Button>
+                </Box>
               </Box>
-            ) : (
-              <Grid container spacing={2}>
-                {categories.map((cat) => (
-                  <Grid xs={12} sm={6} key={cat._id}>
-                    <Card
+
+              {loading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                  <CircularProgress size={60} />
+                </Box>
+              ) : error ? (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              ) : filteredCategories.length === 0 ? (
+                <Box sx={{ textAlign: "center", py: 8 }}>
+                  <Category
+                    sx={{ fontSize: 80, color: "text.secondary", mb: 2 }}
+                  />
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{ mb: 1 }}>
+                    {searchQuery ? "No categories found" : "No categories yet"}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 3 }}>
+                    {searchQuery
+                      ? "Try adjusting your search terms"
+                      : "Start by creating your first category"}
+                  </Typography>
+                  {!searchQuery && (
+                    <Button
+                      variant="contained"
+                      startIcon={<Add />}
+                      onClick={() => handleOpenDialog()}
                       sx={{
-                        height: "100%",
-                        transition: "all 0.3s ease",
+                        background:
+                          "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
                         "&:hover": {
-                          transform: "translateY(-4px)",
-                          boxShadow: 4,
+                          background:
+                            "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
                         },
-                        cursor: "pointer",
-                      }}
-                      onClick={() => navigate(`/categories/${cat._id}`)}>
-                      <CardContent>
+                      }}>
+                      Create First Category
+                    </Button>
+                  )}
+                </Box>
+              ) : viewMode === "grid" ? (
+                // Grid View
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(300px, 1fr))",
+                    gap: 3,
+                  }}>
+                  {filteredCategories.map((cat, index) => (
+                    <Zoom in timeout={300 + index * 100} key={cat._id}>
+                      <Card
+                        sx={{
+                          height: "100%",
+                          transition: "all 0.3s ease",
+                          "&:hover": {
+                            transform: "translateY(-8px)",
+                            boxShadow: 8,
+                          },
+                          cursor: "pointer",
+                          position: "relative",
+                          overflow: "visible",
+                        }}
+                        onClick={() => navigate(`/categories/${cat._id}`)}>
                         <Box
-                          sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                          sx={{
+                            position: "absolute",
+                            top: -20,
+                            left: 20,
+                            zIndex: 1,
+                          }}>
                           <Avatar
                             sx={{
                               bgcolor: getCategoryColor(cat.name),
-                              mr: 2,
-                              width: 40,
-                              height: 40,
+                              width: 56,
+                              height: 56,
+                              boxShadow: 3,
                             }}>
+                            <Category sx={{ fontSize: 28 }} />
+                          </Avatar>
+                        </Box>
+
+                        <CardContent sx={{ pt: 4 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "flex-start",
+                              mb: 2,
+                            }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 600, mb: 0.5 }}>
+                                {cat.name}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary">
+                                {cat.variants.length} variants •{" "}
+                                {cat.parent ? "Sub-category" : "Root category"}
+                              </Typography>
+                            </Box>
+                            <IconButton size="small">
+                              <MoreVert />
+                            </IconButton>
+                          </Box>
+
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: 0.5,
+                              mb: 2,
+                            }}>
+                            {cat.variants.slice(0, 3).map((variant) => (
+                              <Chip
+                                key={variant}
+                                label={variant}
+                                size="small"
+                                sx={{
+                                  bgcolor: getCategoryColor(cat.name) + "15",
+                                  color: getCategoryColor(cat.name),
+                                  fontWeight: 500,
+                                  fontSize: "0.75rem",
+                                }}
+                              />
+                            ))}
+                            {cat.variants.length > 3 && (
+                              <Chip
+                                label={`+${cat.variants.length - 3} more`}
+                                size="small"
+                                variant="outlined"
+                                sx={{ fontSize: "0.75rem" }}
+                              />
+                            )}
+                          </Box>
+
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}>
+                            <Button
+                              size="small"
+                              endIcon={<ArrowForward />}
+                              sx={{ color: getCategoryColor(cat.name) }}>
+                              View Products
+                            </Button>
+                            <Box>
+                              <Tooltip title="Edit">
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenDialog(cat);
+                                  }}
+                                  sx={{ mr: 1 }}>
+                                  <Edit sx={{ fontSize: 16 }} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Delete">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteCategory(cat._id);
+                                  }}
+                                  disabled={actionLoading}>
+                                  <Delete sx={{ fontSize: 16 }} />
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Zoom>
+                  ))}
+                </Box>
+              ) : (
+                // List View
+                <List>
+                  {filteredCategories.map((cat, index) => (
+                    <Slide
+                      direction="up"
+                      in
+                      timeout={300 + index * 100}
+                      key={cat._id}>
+                      <ListItem
+                        sx={{
+                          mb: 2,
+                          bgcolor: "background.paper",
+                          borderRadius: 2,
+                          boxShadow: 1,
+                          "&:hover": {
+                            boxShadow: 3,
+                            transform: "translateX(4px)",
+                          },
+                          transition: "all 0.3s ease",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => navigate(`/categories/${cat._id}`)}>
+                        <ListItemAvatar>
+                          <Avatar sx={{ bgcolor: getCategoryColor(cat.name) }}>
                             <Category />
                           </Avatar>
-                          <Box sx={{ flex: 1 }}>
-                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                              {cat.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {cat.variants.length} variants
-                            </Typography>
-                          </Box>
-                          <ArrowForward sx={{ color: "text.secondary" }} />
-                        </Box>
-
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 0.5,
-                            mb: 2,
-                          }}>
-                          {cat.variants.slice(0, 3).map((variant) => (
-                            <Chip
-                              key={variant}
-                              label={variant}
-                              size="small"
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Box
                               sx={{
-                                bgcolor: getCategoryColor(cat.name) + "20",
-                                color: getCategoryColor(cat.name),
-                                fontWeight: 500,
-                              }}
-                            />
-                          ))}
-                          {cat.variants.length > 3 && (
-                            <Chip
-                              label={`+${cat.variants.length - 3} more`}
-                              size="small"
-                              variant="outlined"
-                            />
-                          )}
-                        </Box>
-
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {cat.parent ? "Sub-category" : "Root category"}
-                          </Typography>
-                          <Box>
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}>
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {cat.name}
+                              </Typography>
+                              <Chip
+                                label={cat.parent ? "Sub" : "Root"}
+                                size="small"
+                                variant="outlined"
+                                sx={{ fontSize: "0.7rem" }}
+                              />
+                            </Box>
+                          }
+                          secondary={
+                            <Box>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ mb: 1 }}>
+                                {cat.variants.length} variants available
+                              </Typography>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 0.5,
+                                }}>
+                                {cat.variants.slice(0, 4).map((variant) => (
+                                  <Chip
+                                    key={variant}
+                                    label={variant}
+                                    size="small"
+                                    sx={{
+                                      bgcolor:
+                                        getCategoryColor(cat.name) + "15",
+                                      color: getCategoryColor(cat.name),
+                                      fontWeight: 500,
+                                      fontSize: "0.7rem",
+                                    }}
+                                  />
+                                ))}
+                                {cat.variants.length > 4 && (
+                                  <Chip
+                                    label={`+${cat.variants.length - 4} more`}
+                                    size="small"
+                                    variant="outlined"
+                                    sx={{ fontSize: "0.7rem" }}
+                                  />
+                                )}
+                              </Box>
+                            </Box>
+                          }
+                        />
+                        <ListItemSecondaryAction>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                            }}>
                             <Tooltip title="Edit">
                               <IconButton
                                 size="small"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleOpenDialog(cat);
-                                }}
-                                sx={{ mr: 1 }}>
-                                <Edit sx={{ fontSize: 16 }} />
+                                }}>
+                                <Edit sx={{ fontSize: 18 }} />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Delete">
@@ -577,39 +760,91 @@ const CategoriesPage: React.FC = () => {
                                   handleDeleteCategory(cat._id);
                                 }}
                                 disabled={actionLoading}>
-                                <Delete sx={{ fontSize: 16 }} />
+                                <Delete sx={{ fontSize: 18 }} />
                               </IconButton>
                             </Tooltip>
+                            <IconButton size="small">
+                              <ArrowForward />
+                            </IconButton>
                           </Box>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            )}
-          </Paper>
-        </Grid>
-      </Grid>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    </Slide>
+                  ))}
+                </List>
+              )}
+            </Box>
+          </TabPanel>
 
-      {/* Floating Action Button */}
-      <Fab
-        color="primary"
-        aria-label="add category"
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          background:
-            "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
-          "&:hover": {
-            background:
-              "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-          },
-        }}
-        onClick={() => handleOpenDialog()}>
-        <Plus />
-      </Fab>
+          <TabPanel value={tabValue} index={1}>
+            {/* Category Tree Tab */}
+            <Box sx={{ px: 2 }}>
+              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                Category Hierarchy
+              </Typography>
+              <Paper sx={{ p: 3, borderRadius: 2 }}>
+                <CategoryTree />
+              </Paper>
+            </Box>
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={2}>
+            {/* Analytics Tab */}
+            <Box sx={{ px: 2 }}>
+              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                Category Analytics
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                  gap: 3,
+                }}>
+                <Card sx={{ p: 3, textAlign: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 700, color: "primary.main" }}>
+                    {stats.totalCategories}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Categories
+                  </Typography>
+                </Card>
+                <Card sx={{ p: 3, textAlign: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 700, color: "success.main" }}>
+                    {stats.rootCategories}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Root Categories
+                  </Typography>
+                </Card>
+                <Card sx={{ p: 3, textAlign: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 700, color: "info.main" }}>
+                    {stats.subCategories}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Sub Categories
+                  </Typography>
+                </Card>
+                <Card sx={{ p: 3, textAlign: "center" }}>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 700, color: "warning.main" }}>
+                    {stats.totalVariants}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Variants
+                  </Typography>
+                </Card>
+              </Box>
+            </Box>
+          </TabPanel>
+        </Paper>
+      </Container>
 
       {/* Add/Edit Category Dialog */}
       <Dialog
@@ -681,7 +916,7 @@ const CategoriesPage: React.FC = () => {
               disabled={
                 !variantInput.trim() || variants.includes(variantInput.trim())
               }
-              startIcon={<Plus size={16} />}>
+              startIcon={<Add />}>
               Add
             </Button>
           </Box>
@@ -692,7 +927,7 @@ const CategoriesPage: React.FC = () => {
                 key={variant}
                 label={variant}
                 onDelete={() => handleRemoveVariant(variant)}
-                deleteIcon={<X size={16} />}
+                deleteIcon={<Delete sx={{ fontSize: 16 }} />}
                 sx={{ mb: 1 }}
               />
             ))}
@@ -730,7 +965,7 @@ const CategoriesPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </Box>
   );
 };
 
