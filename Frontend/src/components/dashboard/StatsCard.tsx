@@ -7,7 +7,7 @@ interface StatsCardProps {
   value: string;
   change?: string;
   icon: React.ElementType;
-  color: string;
+  color: string; // Can be hex or palette string
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({
@@ -17,6 +17,20 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   icon: Icon,
   color,
 }) => {
+  // Helper to get background color (supports hex or palette)
+  const getBgColor = (theme: any) => {
+    if (color.startsWith("#")) {
+      return alpha(color, 0.1);
+    }
+    // palette string, e.g. "primary.main"
+    const [category, shade] = color.split(".");
+    const colorValue =
+      (theme.palette as unknown as Record<string, Record<string, string>>)[
+        category
+      ]?.[shade] || color;
+    return alpha(colorValue, 0.1);
+  };
+
   return (
     <Paper
       sx={{
@@ -36,13 +50,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           width: 60,
           height: 60,
           borderRadius: "50%",
-          bgcolor: (theme) => {
-            const [category, shade] = color.split(".");
-            const colorValue = (
-              theme.palette as unknown as Record<string, Record<string, string>>
-            )[category][shade];
-            return alpha(colorValue, 0.1);
-          },
+          bgcolor: (theme) => getBgColor(theme),
           color: color,
           mx: "auto",
           mb: 2,
@@ -61,16 +69,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           sx={{
             color: color,
             fontWeight: 600,
-            bgcolor: (theme) => {
-              const [category, shade] = color.split(".");
-              const colorValue = (
-                theme.palette as unknown as Record<
-                  string,
-                  Record<string, string>
-                >
-              )[category][shade];
-              return alpha(colorValue, 0.1);
-            },
+            bgcolor: (theme) => getBgColor(theme),
             px: 1.5,
             py: 0.5,
             borderRadius: 1,
