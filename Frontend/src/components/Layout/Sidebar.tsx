@@ -70,7 +70,7 @@ export const Sidebar: React.FC = () => {
   // Get sidebar background based on theme mode
   const getSidebarBackground = () => {
     if (mode === "dark") {
-      return "linear-gradient(135deg, #1e1e2e 0%, #1a1a2e 50%, #16213e 100%)";
+      return "linear-gradient(135deg, #2a3441 0%, #1e2634 50%, #161c28 100%)";
     }
     return "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)";
   };
