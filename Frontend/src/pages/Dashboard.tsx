@@ -246,6 +246,8 @@ const Dashboard: React.FC = () => {
               gap: 2,
               pb: 1,
               mb: 2,
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": { display: "none" },
             }}>
             <Button
               size="large"
