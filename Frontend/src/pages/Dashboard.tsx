@@ -14,7 +14,6 @@ import {
   Avatar,
   Stack,
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import { Package, Users, RefreshCw, Grid3x3 } from "lucide-react";
 import { apiService, DashboardOverview } from "../config/api";
 import { useAuth } from "../hooks/useAuth";
@@ -73,7 +72,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", p: 0, m: 0 }}>
       {/* Hero Banner */}
       <Box
         sx={{
@@ -82,12 +81,12 @@ const Dashboard: React.FC = () => {
           color: "white",
           borderRadius: "0 0 24px 24px",
           boxShadow: getShadow(mode),
-          px: { xs: 0, sm: 0, md: 0 },
+          px: 0,
           pt: 7,
           pb: 4,
-          mb: 4,
+          mb: 0,
         }}>
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ p: 0, m: 0 }}>
           <Stack
             direction={{ xs: "column", md: "row" }}
             alignItems={{ xs: "flex-start", md: "center" }}
@@ -264,7 +263,7 @@ const Dashboard: React.FC = () => {
         </Container>
       </Box>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container maxWidth="xl" sx={{ py: 4, mt: 0 }}>
         {/* Quick Actions */}
         <Paper
           sx={{ p: 3, borderRadius: 3, mb: 4, boxShadow: getShadow(mode) }}>
@@ -374,140 +373,136 @@ const Dashboard: React.FC = () => {
               {t("manageCategories")}
             </Button>
           </Box>
-          <Grid
-            container
-            spacing={2}
-            sx={{ display: { xs: "none", sm: "flex" } }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <Button
-                fullWidth
-                size="large"
-                startIcon={<Users size={20} />}
-                onClick={() => navigate("/admin-users")}
-                sx={{
-                  background: getButtonGradient(),
-                  color: "white",
-                  fontWeight: 700,
-                  py: { xs: 1, sm: 1.5 },
-                  borderRadius: 2,
-                  boxShadow: getShadow(mode),
-                  textTransform: "none",
-                  fontSize: { xs: "1rem", sm: "1.1rem" },
-                  mb: { xs: 1.5, sm: 0 },
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                  },
-                }}>
-                {t("manageUsers")}
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Button
-                fullWidth
-                size="large"
-                startIcon={<Package size={20} />}
-                onClick={() => navigate("/admin-orders")}
-                sx={{
-                  background: getButtonGradient(),
-                  color: "white",
-                  fontWeight: 700,
-                  py: { xs: 1, sm: 1.5 },
-                  borderRadius: 2,
-                  boxShadow: getShadow(mode),
-                  textTransform: "none",
-                  fontSize: { xs: "1rem", sm: "1.1rem" },
-                  mb: { xs: 1.5, sm: 0 },
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                  },
-                }}>
-                {t("manageOrders")}
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Button
-                fullWidth
-                size="large"
-                startIcon={<Grid3x3 size={20} />}
-                onClick={() => navigate("/admin-stocks")}
-                sx={{
-                  background: getButtonGradient(),
-                  color: "white",
-                  fontWeight: 700,
-                  py: { xs: 1, sm: 1.5 },
-                  borderRadius: 2,
-                  boxShadow: getShadow(mode),
-                  textTransform: "none",
-                  fontSize: { xs: "1rem", sm: "1.1rem" },
-                  mb: { xs: 1.5, sm: 0 },
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                  },
-                }}>
-                {t("manageStocks")}
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Button
-                fullWidth
-                size="large"
-                startIcon={<Grid3x3 size={20} />}
-                onClick={() => navigate("/categories")}
-                sx={{
-                  background: getButtonGradient(),
-                  color: "white",
-                  fontWeight: 700,
-                  py: { xs: 1, sm: 1.5 },
-                  borderRadius: 2,
-                  boxShadow: getShadow(mode),
-                  textTransform: "none",
-                  fontSize: { xs: "1rem", sm: "1.1rem" },
-                  mb: { xs: 1.5, sm: 0 },
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
-                    boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
-                  },
-                }}>
-                {t("manageCategories")}
-              </Button>
-            </Grid>
-          </Grid>
+          <Box
+            sx={{
+              display: { xs: "none", sm: "flex" },
+              gap: 2,
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+            }}>
+            <Button
+              fullWidth
+              size="large"
+              startIcon={<Users size={20} />}
+              onClick={() => navigate("/admin-users")}
+              sx={{
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: { xs: 1, sm: 1.5 },
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: { xs: "1rem", sm: "1.1rem" },
+                mb: { xs: 1.5, sm: 0 },
+                flex: 1,
+                minWidth: 180,
+                maxWidth: 300,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageUsers")}
+            </Button>
+            <Button
+              fullWidth
+              size="large"
+              startIcon={<Package size={20} />}
+              onClick={() => navigate("/admin-orders")}
+              sx={{
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: { xs: 1, sm: 1.5 },
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: { xs: "1rem", sm: "1.1rem" },
+                mb: { xs: 1.5, sm: 0 },
+                flex: 1,
+                minWidth: 180,
+                maxWidth: 300,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageOrders")}
+            </Button>
+            <Button
+              fullWidth
+              size="large"
+              startIcon={<Grid3x3 size={20} />}
+              onClick={() => navigate("/admin-stocks")}
+              sx={{
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: { xs: 1, sm: 1.5 },
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: { xs: "1rem", sm: "1.1rem" },
+                mb: { xs: 1.5, sm: 0 },
+                flex: 1,
+                minWidth: 180,
+                maxWidth: 300,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageStocks")}
+            </Button>
+            <Button
+              fullWidth
+              size="large"
+              startIcon={<Grid3x3 size={20} />}
+              onClick={() => navigate("/categories")}
+              sx={{
+                background: getButtonGradient(),
+                color: "white",
+                fontWeight: 700,
+                py: { xs: 1, sm: 1.5 },
+                borderRadius: 2,
+                boxShadow: getShadow(mode),
+                textTransform: "none",
+                fontSize: { xs: "1rem", sm: "1.1rem" },
+                mb: { xs: 1.5, sm: 0 },
+                flex: 1,
+                minWidth: 180,
+                maxWidth: 300,
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                  boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
+                },
+              }}>
+              {t("manageCategories")}
+            </Button>
+          </Box>
         </Paper>
 
         {/* Charts Section */}
-        <Grid
-          container
-          spacing={3}
+        <Box
           sx={{
+            display: { xs: "block", sm: "flex" },
+            gap: 3,
             mb: 4,
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "center", md: "stretch" },
+            alignItems: "stretch",
           }}>
-          <Grid
-            item
-            xs={12}
-            md={7}
-            sx={{
-              width: "100%",
-              maxWidth: { xs: 500, md: "100%" },
-              mx: { xs: "auto", md: 0 },
-            }}>
+          <Box sx={{ flex: 7, p: 0, mb: { xs: 3, sm: 0 } }}>
             <Paper
               sx={{
                 p: 3,
                 borderRadius: 3,
                 boxShadow: getShadow(mode),
                 width: "100%",
-                maxWidth: 600,
-                mx: "auto",
-                mb: { xs: 3, md: 0 },
+                height: "100%",
               }}>
               {overview ? (
                 <RevenueChart monthlyRevenue={overview.monthlyRevenue} />
@@ -515,24 +510,15 @@ const Dashboard: React.FC = () => {
                 <CircularProgress />
               )}
             </Paper>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={5}
-            sx={{
-              width: "100%",
-              maxWidth: { xs: 500, md: "100%" },
-              mx: { xs: "auto", md: 0 },
-            }}>
+          </Box>
+          <Box sx={{ flex: 5, p: 0 }}>
             <Paper
               sx={{
                 p: 3,
                 borderRadius: 3,
                 boxShadow: getShadow(mode),
                 width: "100%",
-                maxWidth: 600,
-                mx: "auto",
+                height: "100%",
               }}>
               {overview ? (
                 <CategoryChart categorySales={overview.categorySales} />
@@ -540,8 +526,8 @@ const Dashboard: React.FC = () => {
                 <CircularProgress />
               )}
             </Paper>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {/* Category Tree */}
         <Paper
