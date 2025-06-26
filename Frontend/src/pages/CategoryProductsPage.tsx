@@ -5,9 +5,19 @@ import { Product } from "../types";
 import { mapApiProductToProduct } from "../types";
 import * as Mui from "@mui/material";
 import { ProductItem } from "../components/products/ProductItem";
-import { ArrowBack, Home, Category as CategoryIcon } from "@mui/icons-material";
+import {
+  ArrowBack,
+  Home,
+  Category as CategoryIcon,
+  NavigateNext,
+} from "@mui/icons-material";
 import { CustomThemeContext } from "../contexts/ThemeContext";
-import { getUIGradient, getButtonGradient, getShadow } from "../config/theme";
+import {
+  getUIGradient,
+  getButtonGradient,
+  getShadow,
+  getTabColor,
+} from "../config/theme";
 
 const CategoryProductsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -160,7 +170,7 @@ const CategoryProductsPage: React.FC = () => {
               }}
               separator={
                 <Mui.Icon sx={{ fontSize: 20, color: "text.secondary" }}>
-                  chevron_right
+                  <NavigateNext />
                 </Mui.Icon>
               }>
               <Mui.Link
@@ -170,10 +180,10 @@ const CategoryProductsPage: React.FC = () => {
                   display: "flex",
                   alignItems: "center",
                   textDecoration: "none",
-                  color: "primary.main",
+                  color: getTabColor(),
                   fontWeight: 500,
                   "&:hover": {
-                    color: "primary.dark",
+                    color: "#ff5757",
                   },
                 }}>
                 <Home sx={{ mr: 0.5, fontSize: 20 }} />
@@ -186,10 +196,10 @@ const CategoryProductsPage: React.FC = () => {
                   display: "flex",
                   alignItems: "center",
                   textDecoration: "none",
-                  color: "primary.main",
+                  color: getTabColor(),
                   fontWeight: 500,
                   "&:hover": {
-                    color: "primary.dark",
+                    color: "#ff5757",
                   },
                 }}>
                 <CategoryIcon sx={{ mr: 0.5, fontSize: 20 }} />
