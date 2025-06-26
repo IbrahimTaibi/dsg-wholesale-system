@@ -6,9 +6,12 @@ import { mapApiProductToProduct } from "../types";
 import * as Mui from "@mui/material";
 import { ProductItem } from "../components/products/ProductItem";
 import { ArrowBack, Home, Category as CategoryIcon } from "@mui/icons-material";
+import { CustomThemeContext } from "../contexts/ThemeContext";
+import { getUIGradient, getButtonGradient, getShadow } from "../config/theme";
 
 const CategoryProductsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { mode } = React.useContext(CustomThemeContext);
   const [category, setCategory] = React.useState<Category | null>(null);
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -214,13 +217,12 @@ const CategoryProductsPage: React.FC = () => {
                   width: 80,
                   height: 80,
                   borderRadius: 3,
-                  background:
-                    "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
+                  background: getUIGradient(mode, "header"),
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   mr: 3,
-                  boxShadow: "0 4px 20px rgba(230, 81, 0, 0.3)",
+                  boxShadow: getShadow(mode),
                 }}>
                 <CategoryIcon sx={{ fontSize: 40, color: "white" }} />
               </Mui.Box>
@@ -229,8 +231,7 @@ const CategoryProductsPage: React.FC = () => {
                   variant="h3"
                   sx={{
                     fontWeight: 700,
-                    background:
-                      "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
+                    background: getUIGradient(mode, "header"),
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -252,8 +253,7 @@ const CategoryProductsPage: React.FC = () => {
                         label={variant}
                         size="small"
                         sx={{
-                          background:
-                            "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
+                          background: getUIGradient(mode, "header"),
                           color: "white",
                           fontWeight: 500,
                         }}
@@ -315,19 +315,18 @@ const CategoryProductsPage: React.FC = () => {
                   variant="contained"
                   startIcon={<ArrowBack />}
                   sx={{
-                    background:
-                      "linear-gradient(135deg, #E65100 0%, #D84315 100%)",
+                    background: getButtonGradient(),
                     borderRadius: 2,
                     px: 4,
                     py: 1.5,
                     textTransform: "none",
                     fontSize: "1.1rem",
                     fontWeight: 600,
-                    boxShadow: "0 4px 20px rgba(230, 81, 0, 0.3)",
+                    boxShadow: getShadow(mode),
                     "&:hover": {
                       background:
-                        "linear-gradient(135deg, #D84315 0%, #C62828 100%)",
-                      boxShadow: "0 6px 25px rgba(230, 81, 0, 0.4)",
+                        "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                      boxShadow: "0 6px 25px rgba(255, 107, 107, 0.4)",
                     },
                   }}>
                   Back to Categories

@@ -299,7 +299,7 @@ const CategoriesPage: React.FC = () => {
           py: 6,
           position: "relative",
           overflow: "hidden",
-          borderRadius: 3,
+          borderRadius: "0 0 12px 12px",
           boxShadow: getShadow(mode),
           margin: { xs: 0, md: 0 },
           marginTop: 0,
