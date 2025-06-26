@@ -22,6 +22,7 @@ import { Product, ProductVariant } from "../../types";
 import { useCart } from "../../contexts/CartContext";
 import { useAuth } from "../../hooks/useAuth";
 import { useUI } from "../../contexts/UIContext";
+import { CustomThemeContext } from "../../contexts/ThemeContext";
 
 interface ProductItemProps {
   product: Product;
@@ -31,6 +32,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { setShowAuthModal } = useUI();
+  const { mode } = React.useContext(CustomThemeContext);
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(product.minOrderQuantity || 1);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
@@ -45,6 +47,35 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const currentPrice = selectedVariant ? selectedVariant.price : product.price;
   const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
   const currentPhoto = selectedVariant?.photo || product.photo;
+
+  // Get gradient backgrounds based on theme mode
+  const getTopBorderGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(90deg, #3b82f6, #10b981, #8b5cf6, #f59e0b)";
+    }
+    return "linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4)";
+  };
+
+  const getPriceGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(45deg, #60a5fa, #34d399)";
+    }
+    return "linear-gradient(45deg, #ff6b6b, #4ecdc4)";
+  };
+
+  const getButtonGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(45deg, #3b82f6, #1d4ed8)";
+    }
+    return "linear-gradient(45deg, #ff6b6b, #ee5a52)";
+  };
+
+  const getSuccessGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(45deg, #10b981, #059669)";
+    }
+    return "linear-gradient(45deg, #4caf50, #66bb6a)";
+  };
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
@@ -105,8 +136,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             left: 0,
             right: 0,
             height: 2,
-            background:
-              "linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4)",
+            background: getTopBorderGradient(),
             transform: "scaleX(0)",
             transition: "transform 0.3s ease",
             zIndex: 1,
@@ -201,7 +231,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
               variant="h6"
               sx={{
                 fontWeight: 700,
-                background: "linear-gradient(45deg, #ff6b6b, #4ecdc4)",
+                background: getPriceGradient(),
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -345,8 +375,8 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 width: "100%",
                 minWidth: "110px",
                 background: isAdded
-                  ? "linear-gradient(45deg, #4caf50, #66bb6a)"
-                  : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
+                  ? getSuccessGradient()
+                  : getButtonGradient(),
                 borderRadius: 1,
                 px: 1.5,
                 py: 0.5,

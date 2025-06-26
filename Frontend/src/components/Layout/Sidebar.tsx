@@ -11,6 +11,7 @@ import { ThemeToggle } from "../ui/ThemeToggle";
 import PublicIcon from "@mui/icons-material/Public";
 import { useNavigation } from "../../hooks/useNavigation";
 import { Package2 } from "lucide-react";
+import { CustomThemeContext } from "../../contexts/ThemeContext";
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useUI();
@@ -18,6 +19,7 @@ export const Sidebar: React.FC = () => {
   const { categories, loading: categoriesLoading } = useCategories();
   const { t, i18n } = useTranslation();
   const { navigateToRoute } = useNavigation();
+  const { mode } = React.useContext(CustomThemeContext);
   const [langMenuOpen, setLangMenuOpen] = React.useState(false);
   const [expandedCategories, setExpandedCategories] = React.useState<
     Set<string>
@@ -65,6 +67,14 @@ export const Sidebar: React.FC = () => {
     setShowAllCategories((prev) => !prev);
   };
 
+  // Get sidebar background based on theme mode
+  const getSidebarBackground = () => {
+    if (mode === "dark") {
+      return "linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%)";
+    }
+    return "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)";
+  };
+
   return (
     <>
       {/* Overlay for mobile */}
@@ -83,8 +93,7 @@ export const Sidebar: React.FC = () => {
         shadow-2xl border-r border-white/10
       `}
         style={{
-          background:
-            "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+          background: getSidebarBackground(),
         }}>
         <div className="pt-20 pb-4 h-full overflow-y-auto relative flex flex-col">
           {/* Decorative gradient overlay */}

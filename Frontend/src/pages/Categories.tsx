@@ -62,6 +62,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { apiService, Category as CategoryType } from "../config/api";
 import CategoryTree from "../components/categories/CategoryTree";
+import { CustomThemeContext } from "../contexts/ThemeContext";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -84,6 +85,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const CategoriesPage: React.FC = () => {
+  const { mode } = React.useContext(CustomThemeContext);
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,6 +105,21 @@ const CategoriesPage: React.FC = () => {
   const [showInactive, setShowInactive] = useState(false);
 
   const navigate = useNavigate();
+
+  // Get gradient background based on theme mode
+  const getGradientBackground = () => {
+    if (mode === "dark") {
+      return "linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%)";
+    }
+    return "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)";
+  };
+
+  const getGradientBackgroundHover = () => {
+    if (mode === "dark") {
+      return "linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%)";
+    }
+    return "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)";
+  };
 
   // Fetch categories from backend
   const fetchCategories = async () => {
@@ -277,7 +294,7 @@ const CategoriesPage: React.FC = () => {
       {/* Hero Section */}
       <Box
         sx={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: getGradientBackground(),
           color: "white",
           py: 6,
           position: "relative",
@@ -450,11 +467,9 @@ const CategoriesPage: React.FC = () => {
                     startIcon={<Add />}
                     onClick={() => handleOpenDialog()}
                     sx={{
-                      background:
-                        "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+                      background: getGradientBackground(),
                       "&:hover": {
-                        background:
-                          "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                        background: getGradientBackgroundHover(),
                       },
                     }}>
                     Add Category
@@ -495,11 +510,9 @@ const CategoriesPage: React.FC = () => {
                       startIcon={<Add />}
                       onClick={() => handleOpenDialog()}
                       sx={{
-                        background:
-                          "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+                        background: getGradientBackground(),
                         "&:hover": {
-                          background:
-                            "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                          background: getGradientBackgroundHover(),
                         },
                       }}>
                       Create First Category
@@ -857,8 +870,7 @@ const CategoriesPage: React.FC = () => {
         }}>
         <DialogTitle
           sx={{
-            background:
-              "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+            background: getGradientBackground(),
             color: "white",
             fontWeight: 600,
           }}>
@@ -950,11 +962,9 @@ const CategoriesPage: React.FC = () => {
               !categoryName.trim() || variants.length === 0 || actionLoading
             }
             sx={{
-              background:
-                "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+              background: getGradientBackground(),
               "&:hover": {
-                background:
-                  "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+                background: getGradientBackgroundHover(),
               },
             }}>
             {actionLoading

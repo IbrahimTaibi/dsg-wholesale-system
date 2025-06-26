@@ -54,6 +54,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../contexts/UIContext";
 import { useTranslation } from "react-i18next";
 import { apiService } from "../config/api";
+import { CustomThemeContext } from "../contexts/ThemeContext";
 
 export const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -62,6 +63,7 @@ export const ProductDetail: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { setShowAuthModal } = useUI();
   const { t } = useTranslation();
+  const { mode } = React.useContext(CustomThemeContext);
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,6 +74,28 @@ export const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string>("");
+
+  // Get gradient backgrounds based on theme mode
+  const getTitleGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(45deg, #60a5fa, #34d399)";
+    }
+    return "linear-gradient(45deg, #ff6b6b, #4ecdc4)";
+  };
+
+  const getButtonGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(45deg, #3b82f6, #1d4ed8)";
+    }
+    return "linear-gradient(45deg, #ff6b6b, #ee5a52)";
+  };
+
+  const getSuccessGradient = () => {
+    if (mode === "dark") {
+      return "linear-gradient(45deg, #10b981, #059669)";
+    }
+    return "linear-gradient(45deg, #4caf50, #66bb6a)";
+  };
 
   useEffect(() => {
     if (productId) {
@@ -292,7 +316,7 @@ export const ProductDetail: React.FC = () => {
                   sx={{
                     fontWeight: 700,
                     mb: 1,
-                    background: "linear-gradient(45deg, #ff6b6b, #4ecdc4)",
+                    background: getTitleGradient(),
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -488,8 +512,8 @@ export const ProductDetail: React.FC = () => {
                       fontWeight: 600,
                       borderRadius: 2,
                       background: isAdded
-                        ? "linear-gradient(45deg, #4caf50, #66bb6a)"
-                        : "linear-gradient(45deg, #ff6b6b, #ee5a52)",
+                        ? getSuccessGradient()
+                        : getButtonGradient(),
                       transition: "all 0.3s ease",
                       "&:hover": {
                         transform: "translateY(-2px)",

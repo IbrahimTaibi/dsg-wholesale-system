@@ -17,6 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import PublicIcon from "@mui/icons-material/Public";
 import { useDebounce } from "../../hooks";
 import { ShoppingCart } from "@mui/icons-material";
+import { CustomThemeContext } from "../../contexts/ThemeContext";
 
 // Header component for the main app navigation and user controls
 export const Header: React.FC = () => {
@@ -28,6 +29,7 @@ export const Header: React.FC = () => {
     searchQuery,
     setSearchQuery,
   } = useUI();
+  const { mode } = React.useContext(CustomThemeContext);
   const [cartOpen, setCartOpen] = React.useState(false);
   const navigate = useNavigate();
   const headerRef = useRef<HTMLElement>(null);
@@ -58,6 +60,14 @@ export const Header: React.FC = () => {
     // This effect will trigger API calls with debounced value
     // The search results page will use this debounced value
   }, [debouncedSearchQuery]);
+
+  // Get header background based on theme mode
+  const getHeaderBackground = () => {
+    if (mode === "dark") {
+      return "linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%)";
+    }
+    return "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)";
+  };
 
   // UserMenu: Handles user sidebar for profile, dashboard, orders, and logout
   const UserMenu = () => {
@@ -285,8 +295,7 @@ export const Header: React.FC = () => {
       ref={headerRef}
       className="fixed top-0 left-0 right-0 z-30 transition-all duration-300 shadow-lg border-b border-white/10"
       style={{
-        background:
-          "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+        background: getHeaderBackground(),
       }}>
       <div className="container mx-auto px-2 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
