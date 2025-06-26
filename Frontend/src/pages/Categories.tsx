@@ -69,6 +69,7 @@ import {
   getShadow,
   getButtonGradient,
 } from "../config/theme";
+import { useUI } from "../contexts/UIContext";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -109,6 +110,7 @@ const CategoriesPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [showInactive, setShowInactive] = useState(false);
+  const { headerHeight } = useUI();
 
   const navigate = useNavigate();
 
@@ -290,7 +292,12 @@ const CategoriesPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        pt: { xs: `${headerHeight}px`, md: 0 },
+      }}>
       {/* Hero Section */}
       <Box
         sx={{
