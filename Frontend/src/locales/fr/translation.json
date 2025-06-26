@@ -228,5 +228,8 @@
   "noWaterFoundMatching": "Aucun produit d'eau et de boisson trouvé correspondant à",
   "noWaterAvailable": "Aucun produit d'eau et de boisson disponible pour le moment.",
   "quickActions": "Actions rapides",
-  "welcomeBack": "Bon retour, {{name}} !"
+  "welcomeBack": "Bon retour, {{name}} !",
+  "totalRevenue": "Revenu total",
+  "totalUsers": "Nombre d'utilisateurs",
+  "totalOrders": "Nombre de commandes"
 }

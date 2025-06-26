@@ -229,5 +229,8 @@
   "noWaterAvailable": "No water & beverage products available at the moment.",
   "generalInformation": "General Information",
   "quickActions": "Quick Actions",
-  "welcomeBack": "Welcome back, {{name}}!"
+  "welcomeBack": "Welcome back, {{name}}!",
+  "totalRevenue": "Total Revenue",
+  "totalUsers": "Total Users",
+  "totalOrders": "Total Orders"
 }
