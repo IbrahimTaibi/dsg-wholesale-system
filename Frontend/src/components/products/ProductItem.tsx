@@ -65,7 +65,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
 
   const getButtonGradient = () => {
     if (mode === "dark") {
-      return "linear-gradient(45deg, #3b82f6, #1d4ed8)";
+      return "linear-gradient(45deg, #ff6b6b, #ee5a52)";
     }
     return "linear-gradient(45deg, #ff6b6b, #ee5a52)";
   };
