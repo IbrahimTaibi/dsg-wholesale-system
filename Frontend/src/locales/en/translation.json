@@ -227,5 +227,7 @@
   "freshAndPure": "Fresh & Pure",
   "noWaterFoundMatching": "No water & beverage products found matching",
   "noWaterAvailable": "No water & beverage products available at the moment.",
-  "generalInformation": "General Information"
+  "generalInformation": "General Information",
+  "quickActions": "Quick Actions",
+  "welcomeBack": "Welcome back, {{name}}!"
 }

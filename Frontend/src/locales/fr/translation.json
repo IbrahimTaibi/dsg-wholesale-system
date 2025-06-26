@@ -226,5 +226,7 @@
   "phone": "Téléphone",
   "freshAndPure": "Frais et pur",
   "noWaterFoundMatching": "Aucun produit d'eau et de boisson trouvé correspondant à",
-  "noWaterAvailable": "Aucun produit d'eau et de boisson disponible pour le moment."
+  "noWaterAvailable": "Aucun produit d'eau et de boisson disponible pour le moment.",
+  "quickActions": "Actions rapides",
+  "welcomeBack": "Bon retour, {{name}} !"
 }
