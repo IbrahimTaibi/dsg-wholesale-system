@@ -63,6 +63,7 @@ import { useNavigate } from "react-router-dom";
 import { apiService, Category as CategoryType } from "../config/api";
 import CategoryTree from "../components/categories/CategoryTree";
 import { CustomThemeContext } from "../contexts/ThemeContext";
+import { getUIGradient, getTabColor, getShadow } from "../config/theme";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -108,10 +109,7 @@ const CategoriesPage: React.FC = () => {
 
   // Get gradient background based on theme mode
   const getGradientBackground = () => {
-    if (mode === "dark") {
-      return "linear-gradient(135deg, #2a3441 0%, #1e2634 50%, #161c28 100%)";
-    }
-    return "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)";
+    return getUIGradient(mode, "header");
   };
 
   const getGradientBackgroundHover = () => {
@@ -300,10 +298,7 @@ const CategoriesPage: React.FC = () => {
           position: "relative",
           overflow: "hidden",
           borderRadius: 3,
-          boxShadow:
-            mode === "dark"
-              ? "0 8px 32px rgba(42, 52, 65, 0.3)"
-              : "0 8px 32px rgba(255, 107, 107, 0.3)",
+          boxShadow: getShadow(mode),
           margin: { xs: 2, md: 3 },
           marginTop: 4,
         }}>
@@ -400,7 +395,22 @@ const CategoriesPage: React.FC = () => {
         {/* Tabs Section */}
         <Paper sx={{ mb: 3, borderRadius: 2 }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs value={tabValue} onChange={handleTabChange} sx={{ px: 2 }}>
+            <Tabs
+              value={tabValue}
+              onChange={handleTabChange}
+              sx={{
+                px: 2,
+                "& .MuiTab-root": {
+                  color: "text.secondary",
+                  "&.Mui-selected": {
+                    color: getTabColor(),
+                  },
+                },
+                "& .MuiTabs-indicator": {
+                  backgroundColor: getTabColor(),
+                  height: 3,
+                },
+              }}>
               <Tab
                 label="All Categories"
                 icon={<Category />}

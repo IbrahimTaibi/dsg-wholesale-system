@@ -89,3 +89,81 @@ export const getTheme = (mode: PaletteMode) => {
   theme = responsiveFontSizes(theme);
   return theme;
 };
+
+// Theme configuration with organized color variables
+export const themeColors = {
+  // Primary brand colors
+  primary: {
+    light: "#ff6b6b",
+    main: "#ff5757",
+    dark: "#ff4444",
+    gradient: "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+    hover: "linear-gradient(135deg, #ff5757 0%, #ff4444 50%, #ff3333 100%)",
+  },
+
+  // Dark mode colors (matching page background rgb(22, 28, 36))
+  dark: {
+    light: "#2a3441",
+    main: "#1e2634",
+    dark: "#161c28",
+    gradient: "linear-gradient(135deg, #2a3441 0%, #1e2634 50%, #161c28 100%)",
+    hover: "linear-gradient(135deg, #1e2634 0%, #161c28 50%, #0f1419 100%)",
+  },
+
+  // UI element colors
+  ui: {
+    header: {
+      light: "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+      dark: "linear-gradient(135deg, #2a3441 0%, #1e2634 50%, #161c28 100%)",
+    },
+    sidebar: {
+      light: "linear-gradient(135deg, #ff6b6b 0%, #ff5757 50%, #ff4444 100%)",
+      dark: "linear-gradient(135deg, #2a3441 0%, #1e2634 50%, #161c28 100%)",
+    },
+    tabs: {
+      light: "#ff6b6b",
+      dark: "#ff6b6b", // Same color for both modes as requested
+    },
+    buttons: {
+      light: "linear-gradient(45deg, #ff6b6b, #ee5a52)",
+      dark: "linear-gradient(45deg, #ff6b6b, #ee5a52)", // Same as light mode
+    },
+  },
+
+  // Shadows
+  shadows: {
+    light: "0 8px 32px rgba(255, 107, 107, 0.3)",
+    dark: "0 8px 32px rgba(42, 52, 65, 0.3)",
+  },
+};
+
+// Helper functions to get theme-aware colors
+export const getThemeColor = (
+  mode: "light" | "dark",
+  colorType: keyof typeof themeColors.primary,
+) => {
+  return mode === "dark"
+    ? themeColors.dark[colorType]
+    : themeColors.primary[colorType];
+};
+
+export const getUIGradient = (
+  mode: "light" | "dark",
+  element: keyof typeof themeColors.ui,
+) => {
+  return mode === "dark"
+    ? themeColors.ui[element].dark
+    : themeColors.ui[element].light;
+};
+
+export const getTabColor = () => {
+  return themeColors.ui.tabs.light; // Same color for both modes
+};
+
+export const getButtonGradient = () => {
+  return themeColors.ui.buttons.light; // Same gradient for both modes
+};
+
+export const getShadow = (mode: "light" | "dark") => {
+  return mode === "dark" ? themeColors.shadows.dark : themeColors.shadows.light;
+};
