@@ -72,7 +72,15 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", p: 0, m: 0 }}>
+    <Box
+      sx={{
+        bgcolor: "background.default",
+        minHeight: "100vh",
+        p: 0,
+        m: 0,
+        pt: 0,
+        mt: 0,
+      }}>
       {/* Hero Banner */}
       <Box
         sx={{
