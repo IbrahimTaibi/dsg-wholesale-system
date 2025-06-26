@@ -93,21 +93,21 @@ const Dashboard: React.FC = () => {
           color: "white",
           borderRadius: "0 0 18px 18px",
           boxShadow: getShadow(mode),
-          px: { xs: 2, md: 0 },
+          px: { xs: 1, sm: 2, md: 0 },
           pt: 8,
-          pb: 6,
+          pb: 4,
           mb: 4,
         }}>
         <Container maxWidth="xl">
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: { xs: "column", md: "row" },
+              alignItems: { xs: "flex-start", md: "center" },
               justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: 2,
+              gap: 3,
             }}>
-            <Box>
+            <Box sx={{ mb: { xs: 3, md: 0 } }}>
               <Typography
                 variant="h3"
                 sx={{ fontWeight: 800, mb: 1, letterSpacing: 1 }}>
@@ -124,7 +124,8 @@ const Dashboard: React.FC = () => {
                 sx={{
                   color: "white",
                   background: "rgba(255,255,255,0.08)",
-                  ml: 2,
+                  ml: { xs: 0, md: 2 },
+                  mb: { xs: 2, md: 0 },
                   "&:hover": { background: "rgba(255,255,255,0.18)" },
                 }}>
                 <RefreshCw
@@ -134,44 +135,99 @@ const Dashboard: React.FC = () => {
               </IconButton>
             </Tooltip>
           </Box>
-          {/* Quick Stats Cards */}
-          <Grid container spacing={3} sx={{ mt: 4 }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard
-                title={t("totalUsers")}
-                value={overview?.totalUsers?.toLocaleString() || "-"}
-                icon={Users}
-                color="#ff6b6b"
-              />
+
+          {/* Quick Stats in Banner (always visible, responsive) */}
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6} sm={3}>
+              <Paper
+                sx={{
+                  p: 2,
+                  textAlign: "center",
+                  background: "rgba(255,255,255,0.08)",
+                  color: "white",
+                  boxShadow: "none",
+                  borderRadius: 2,
+                }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                  {overview ? (
+                    overview.totalUsers?.toLocaleString()
+                  ) : (
+                    <CircularProgress size={20} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                  {t("totalUsers")}
+                </Typography>
+              </Paper>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard
-                title={t("totalOrders")}
-                value={overview?.totalOrders?.toLocaleString() || "-"}
-                icon={Package}
-                color="#ff6b6b"
-              />
+            <Grid item xs={6} sm={3}>
+              <Paper
+                sx={{
+                  p: 2,
+                  textAlign: "center",
+                  background: "rgba(255,255,255,0.08)",
+                  color: "white",
+                  boxShadow: "none",
+                  borderRadius: 2,
+                }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                  {overview ? (
+                    overview.totalOrders?.toLocaleString()
+                  ) : (
+                    <CircularProgress size={20} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                  {t("totalOrders")}
+                </Typography>
+              </Paper>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard
-                title={t("totalStocks")}
-                value={overview?.totalStocks?.toLocaleString() || "-"}
-                icon={Grid3x3}
-                color="#ff6b6b"
-              />
+            <Grid item xs={6} sm={3}>
+              <Paper
+                sx={{
+                  p: 2,
+                  textAlign: "center",
+                  background: "rgba(255,255,255,0.08)",
+                  color: "white",
+                  boxShadow: "none",
+                  borderRadius: 2,
+                }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                  {overview ? (
+                    overview.totalStocks?.toLocaleString()
+                  ) : (
+                    <CircularProgress size={20} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                  {t("totalStocks")}
+                </Typography>
+              </Paper>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard
-                title={t("totalRevenue")}
-                value={
-                  overview?.totalRevenue?.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }) || "-"
-                }
-                icon={DollarSign}
-                color="#ff6b6b"
-              />
+            <Grid item xs={6} sm={3}>
+              <Paper
+                sx={{
+                  p: 2,
+                  textAlign: "center",
+                  background: "rgba(255,255,255,0.08)",
+                  color: "white",
+                  boxShadow: "none",
+                  borderRadius: 2,
+                }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                  {overview ? (
+                    overview.totalRevenue?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })
+                  ) : (
+                    <CircularProgress size={20} color="inherit" thickness={5} />
+                  )}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                  {t("totalRevenue")}
+                </Typography>
+              </Paper>
             </Grid>
           </Grid>
         </Container>
